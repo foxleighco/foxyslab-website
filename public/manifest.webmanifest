@@ -1,0 +1,16 @@
+{
+  "name": "Foxy's Lab - Smart Home & Tech Education",
+  "short_name": "Foxy's Lab",
+  "description": "Expert tutorials on smart home technology and tech education",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#32002d",
+  "theme_color": "#d32365",
+  "icons": [
+    {
+      "src": "/images/foxys-lab-logo-round.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}

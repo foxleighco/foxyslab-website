@@ -19,7 +19,7 @@ export default async function Home() {
             src="/images/background.png"
             alt=""
             fill
-            className="object-cover opacity-30"
+            className="object-cover opacity-80"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-secondary/50 via-secondary/80 to-secondary" />

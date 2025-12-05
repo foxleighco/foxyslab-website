@@ -49,6 +49,7 @@ export const siteConfig = {
       { href: "/", label: "Home" },
       { href: "/videos", label: "Videos" },
       { href: "/about", label: "About" },
+      { href: "/enquiries", label: "Enquiries" },
     ],
     // CTA button in navigation
     cta: {
@@ -77,6 +78,21 @@ export const siteConfig = {
     newsletter: true,
     // Set to true when newsletter service is connected
     newsletterEnabled: false,
+  },
+
+  // Enquiries / Contact Configuration
+  enquiries: {
+    // Email address to receive enquiries (set in ENQUIRIES_EMAIL env var)
+    // Types of enquiries accepted
+    types: [
+      { value: "product-review", label: "Product Review Request" },
+      { value: "sponsorship", label: "Sponsorship Opportunity" },
+      { value: "collaboration", label: "Collaboration" },
+      { value: "media", label: "Media / Press Inquiry" },
+      { value: "other", label: "Other" },
+    ],
+    // Rate limit: max submissions per IP per hour
+    rateLimitPerHour: 5,
   },
 } as const;
 

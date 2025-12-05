@@ -17,11 +17,7 @@ import type { Root as HastRoot, Element } from "hast";
 import { visit } from "unist-util-visit";
 
 import { getHighlighter, SHIKI_THEME } from "./highlighter";
-import {
-  parseFrontmatter,
-  type Frontmatter,
-  isCommunityFrontmatter,
-} from "./frontmatter";
+import { parseFrontmatter, type Frontmatter } from "./frontmatter";
 import { extractHeadings, buildTocTree } from "./headings";
 import { calculateReadingTime, generateExcerpt } from "./reading-time";
 import type {
@@ -30,7 +26,6 @@ import type {
   TocHeading,
   TocTree,
   ReadingTime,
-  BlogPostSource,
 } from "@/types/blog";
 
 // Processed markdown result
@@ -41,7 +36,6 @@ export interface ProcessedMarkdown {
   headings: TocHeading[];
   tocTree: TocTree[];
   readingTime: ReadingTime;
-  source: BlogPostSource;
 }
 
 // Result type following ApiResult pattern
@@ -57,7 +51,6 @@ export type MarkdownMetaResult =
         frontmatter: Frontmatter;
         excerpt: string;
         readingTime: ReadingTime;
-        source: BlogPostSource;
       };
     }
   | { success: false; error: string };
@@ -183,11 +176,6 @@ export async function processMarkdown(
     const file = await htmlProcessor.process(content);
     const html = String(file);
 
-    // Determine source type
-    const source: BlogPostSource = isCommunityFrontmatter(frontmatter)
-      ? "community"
-      : "markdown";
-
     return {
       success: true,
       data: {
@@ -197,7 +185,6 @@ export async function processMarkdown(
         headings,
         tocTree,
         readingTime,
-        source,
       },
     };
   } catch (error) {
@@ -230,9 +217,6 @@ export function parseMarkdownMeta(rawContent: string): MarkdownMetaResult {
     const frontmatter = frontmatterResult.data;
     const readingTime = calculateReadingTime(content);
     const excerpt = generateExcerpt(content);
-    const source: BlogPostSource = isCommunityFrontmatter(frontmatter)
-      ? "community"
-      : "markdown";
 
     return {
       success: true,
@@ -240,7 +224,6 @@ export function parseMarkdownMeta(rawContent: string): MarkdownMetaResult {
         frontmatter,
         excerpt,
         readingTime,
-        source,
       },
     };
   } catch (error) {
@@ -262,7 +245,6 @@ export function toBlogPost(
 ): BlogPost {
   return {
     slug,
-    source: processed.source,
     frontmatter: processed.frontmatter,
     html: processed.html,
     excerpt: processed.excerpt,
@@ -277,7 +259,6 @@ export interface ParsedMeta {
   frontmatter: Frontmatter;
   excerpt: string;
   readingTime: ReadingTime;
-  source: BlogPostSource;
 }
 
 /**
@@ -289,7 +270,6 @@ export function toBlogPostMeta(
 ): BlogPostMeta {
   return {
     slug,
-    source: meta.source,
     frontmatter: meta.frontmatter,
     excerpt: meta.excerpt,
     readingTime: meta.readingTime,

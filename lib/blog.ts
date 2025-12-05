@@ -17,7 +17,6 @@ import type {
   BlogPost,
   BlogPostMeta,
   BlogQueryOptions,
-  FeedItem,
 } from "@/types/blog";
 
 // Re-use ApiResult pattern from youtube.ts
@@ -25,9 +24,8 @@ export type ApiResult<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
-// Content directories
+// Content directory
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
-const COMMUNITY_DIR = path.join(BLOG_DIR, "community");
 
 /**
  * Check if a directory exists
@@ -42,7 +40,7 @@ async function directoryExists(dir: string): Promise<boolean> {
 }
 
 /**
- * Recursively find all markdown files in a directory
+ * Find all markdown files in a directory
  */
 async function findMarkdownFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
@@ -57,11 +55,7 @@ async function findMarkdownFiles(dir: string): Promise<string[]> {
     const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      // Skip community directory when scanning main blog dir
-      // (it's handled separately)
-      if (entry.name !== "community") {
-        files.push(...(await findMarkdownFiles(fullPath)));
-      }
+      files.push(...(await findMarkdownFiles(fullPath)));
     } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
       files.push(fullPath);
     }
@@ -89,7 +83,7 @@ export async function getAllBlogPosts(
   try {
     const posts: BlogPostMeta[] = [];
 
-    // Get markdown posts from main blog directory
+    // Get markdown posts from blog directory
     const blogFiles = await findMarkdownFiles(BLOG_DIR);
 
     for (const filePath of blogFiles) {
@@ -103,25 +97,6 @@ export async function getAllBlogPosts(
 
       const slug = filePathToSlug(filePath, BLOG_DIR);
       posts.push(toBlogPostMeta(slug, result.data));
-    }
-
-    // Get community posts
-    const communityFiles = await findMarkdownFiles(COMMUNITY_DIR);
-
-    for (const filePath of communityFiles) {
-      const content = await fs.readFile(filePath, "utf-8");
-      const result = parseMarkdownMeta(content);
-
-      if (!result.success) {
-        console.warn(`Skipping community post ${filePath}: ${result.error}`);
-        continue;
-      }
-
-      const slug = "community/" + filePathToSlug(filePath, COMMUNITY_DIR);
-      posts.push({
-        ...toBlogPostMeta(slug, result.data),
-        source: "community",
-      });
     }
 
     // Apply filters
@@ -138,11 +113,6 @@ export async function getAllBlogPosts(
       filtered = filtered.filter(
         (p) => p.frontmatter.status === "published" || includeDrafts
       );
-    }
-
-    // Filter by source
-    if (options?.source) {
-      filtered = filtered.filter((p) => p.source === options.source);
     }
 
     // Filter by tag
@@ -196,15 +166,10 @@ export async function getBlogPostBySlug(
   slug: string
 ): Promise<ApiResult<BlogPost>> {
   try {
-    // Determine if this is a community post
-    const isCommunity = slug.startsWith("community/");
-    const baseDir = isCommunity ? COMMUNITY_DIR : BLOG_DIR;
-    const actualSlug = isCommunity ? slug.replace("community/", "") : slug;
-
     // Try both .md and .mdx extensions
     const possiblePaths = [
-      path.join(baseDir, `${actualSlug}.md`),
-      path.join(baseDir, `${actualSlug}.mdx`),
+      path.join(BLOG_DIR, `${slug}.md`),
+      path.join(BLOG_DIR, `${slug}.mdx`),
     ];
 
     let filePath: string | null = null;
@@ -350,13 +315,4 @@ export async function getAdjacentPosts(
       next: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined,
     },
   };
-}
-
-/**
- * Get unified feed (for combined blog/community view)
- */
-export async function getUnifiedFeed(
-  options?: BlogQueryOptions
-): Promise<ApiResult<FeedItem[]>> {
-  return getAllBlogPosts(options);
 }

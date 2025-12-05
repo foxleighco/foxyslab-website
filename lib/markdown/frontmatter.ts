@@ -37,10 +37,6 @@ export const frontmatterSchema = z.object({
 
   // Related content
   relatedPosts: z.array(z.string()).optional(),
-
-  // Community post fields (for synced YouTube posts)
-  youtubePostId: z.string().optional(),
-  youtubeUrl: z.string().url().optional(),
 });
 
 // Type inference from schema
@@ -72,11 +68,4 @@ export function parseFrontmatter(data: unknown): FrontmatterResult {
   }
 
   return { success: true, data: result.data };
-}
-
-/**
- * Check if frontmatter indicates a community post
- */
-export function isCommunityFrontmatter(data: Frontmatter): boolean {
-  return !!data.youtubePostId;
 }

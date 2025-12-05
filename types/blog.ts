@@ -1,7 +1,7 @@
 /**
  * Blog Type Definitions
  *
- * Types for blog posts, frontmatter, and the unified feed.
+ * Types for blog posts and frontmatter.
  */
 
 import type { z } from "zod";
@@ -30,13 +30,9 @@ export interface ReadingTime {
   words: number;
 }
 
-// Source discriminator for feed items
-export type BlogPostSource = "markdown" | "community";
-
 // Full blog post with rendered content
 export interface BlogPost {
   slug: string;
-  source: BlogPostSource;
   frontmatter: Frontmatter;
   html: string;
   excerpt: string;
@@ -48,21 +44,10 @@ export interface BlogPost {
 // Lightweight metadata for listing pages (no HTML processing)
 export interface BlogPostMeta {
   slug: string;
-  source: BlogPostSource;
   frontmatter: Frontmatter;
   excerpt: string;
   readingTime: ReadingTime;
 }
-
-// Community post specific fields (extends base)
-export interface CommunityPostMeta extends BlogPostMeta {
-  source: "community";
-  youtubePostId?: string;
-  youtubeUrl?: string;
-}
-
-// Unified feed item (discriminated union for type safety)
-export type FeedItem = BlogPostMeta | CommunityPostMeta;
 
 // Filter options for querying posts
 export interface BlogQueryOptions {
@@ -72,14 +57,4 @@ export interface BlogQueryOptions {
   category?: string;
   status?: "draft" | "published" | "all";
   featured?: boolean;
-  source?: BlogPostSource;
-}
-
-// Type guards for discriminated unions
-export function isCommunityPost(item: FeedItem): item is CommunityPostMeta {
-  return item.source === "community";
-}
-
-export function isMarkdownPost(item: FeedItem): item is BlogPostMeta {
-  return item.source === "markdown";
 }

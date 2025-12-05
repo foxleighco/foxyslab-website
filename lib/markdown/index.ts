@@ -20,7 +20,6 @@ export {
 export {
   frontmatterSchema,
   parseFrontmatter,
-  isCommunityFrontmatter,
   type Frontmatter,
   type FrontmatterInput,
   type FrontmatterResult,

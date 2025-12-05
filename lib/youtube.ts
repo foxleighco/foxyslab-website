@@ -1,6 +1,7 @@
 import { YouTubeVideo, YouTubeChannel } from "@/types/youtube";
 
-const CHANNEL_ID = "UCoxyslab"; // Replace with actual channel ID
+const CHANNEL_HANDLE = "foxyslab";
+const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3";
 
 function getApiKey(): string {
   const apiKey = process.env.YOUTUBE_API_KEY;
@@ -10,58 +11,191 @@ function getApiKey(): string {
   return apiKey || "";
 }
 
-// Mock data for development (replace with real API calls when API key is available)
-export async function getLatestVideos(maxResults: number = 6): Promise<YouTubeVideo[]> {
-  // In production, use YouTube Data API v3
-  // For now, returning mock data
-  return [
-    {
-      id: "video1",
-      title: "Getting Started with Home Assistant",
-      description: "Learn how to set up Home Assistant from scratch and create your first automation.",
-      thumbnail: "/images/foxys-lab-logo-round.png",
-      publishedAt: new Date().toISOString(),
-      viewCount: "15000",
-      likeCount: "1200",
-      duration: "PT15M30S",
-      url: "https://www.youtube.com/@foxyslab",
-    },
-    {
-      id: "video2",
-      title: "Smart Home Security: Best Practices",
-      description: "Protect your smart home with these essential security tips and tricks.",
-      thumbnail: "/images/foxys-lab-logo-round.png",
-      publishedAt: new Date().toISOString(),
-      viewCount: "12000",
-      likeCount: "980",
-      duration: "PT12M45S",
-      url: "https://www.youtube.com/@foxyslab",
-    },
-    {
-      id: "video3",
-      title: "Building Custom Automations",
-      description: "Advanced automation techniques to make your smart home truly intelligent.",
-      thumbnail: "/images/foxys-lab-logo-round.png",
-      publishedAt: new Date().toISOString(),
-      viewCount: "18000",
-      likeCount: "1500",
-      duration: "PT20M15S",
-      url: "https://www.youtube.com/@foxyslab",
-    },
-  ];
+interface YouTubeApiChannelResponse {
+  items?: Array<{
+    id: string;
+    snippet: {
+      title: string;
+      description: string;
+      thumbnails: {
+        default?: { url: string };
+        medium?: { url: string };
+        high?: { url: string };
+      };
+    };
+    statistics: {
+      subscriberCount: string;
+      videoCount: string;
+      viewCount: string;
+    };
+    contentDetails: {
+      relatedPlaylists: {
+        uploads: string;
+      };
+    };
+  }>;
 }
 
-export async function getChannelInfo(): Promise<YouTubeChannel> {
-  // Mock data - replace with real API call
-  return {
-    id: CHANNEL_ID,
-    title: "Foxy's Lab",
-    description: "Smart Home & Tech Education",
-    subscriberCount: "50000",
-    videoCount: "150",
-    viewCount: "2000000",
-    thumbnail: "/images/foxys-lab-logo-round.png",
-  };
+interface YouTubeApiPlaylistResponse {
+  items?: Array<{
+    snippet: {
+      resourceId: {
+        videoId: string;
+      };
+    };
+  }>;
+}
+
+interface YouTubeApiVideoResponse {
+  items?: Array<{
+    id: string;
+    snippet: {
+      title: string;
+      description: string;
+      publishedAt: string;
+      thumbnails: {
+        default?: { url: string };
+        medium?: { url: string };
+        high?: { url: string };
+        maxres?: { url: string };
+      };
+    };
+    statistics: {
+      viewCount: string;
+      likeCount: string;
+    };
+    contentDetails: {
+      duration: string;
+    };
+  }>;
+}
+
+async function getChannelData(): Promise<YouTubeApiChannelResponse["items"]> {
+  const apiKey = getApiKey();
+  if (!apiKey) return undefined;
+
+  const response = await fetch(
+    `${YOUTUBE_API_BASE}/channels?part=snippet,statistics,contentDetails&forHandle=${CHANNEL_HANDLE}&key=${apiKey}`,
+    { next: { revalidate: 3600 } }
+  );
+
+  if (!response.ok) {
+    console.error("Failed to fetch channel data:", response.statusText);
+    return undefined;
+  }
+
+  const data: YouTubeApiChannelResponse = await response.json();
+  return data.items;
+}
+
+export async function getLatestVideos(maxResults: number = 6): Promise<YouTubeVideo[]> {
+  const apiKey = getApiKey();
+
+  if (!apiKey) {
+    console.warn("No YouTube API key provided, returning empty array");
+    return [];
+  }
+
+  try {
+    // Get channel data to find uploads playlist
+    const channelItems = await getChannelData();
+    if (!channelItems || channelItems.length === 0) {
+      console.error("Channel not found");
+      return [];
+    }
+
+    const uploadsPlaylistId = channelItems[0].contentDetails.relatedPlaylists.uploads;
+
+    // Get video IDs from uploads playlist
+    const playlistResponse = await fetch(
+      `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=${maxResults}&key=${apiKey}`,
+      { next: { revalidate: 1800 } }
+    );
+
+    if (!playlistResponse.ok) {
+      console.error("Failed to fetch playlist:", playlistResponse.statusText);
+      return [];
+    }
+
+    const playlistData: YouTubeApiPlaylistResponse = await playlistResponse.json();
+    if (!playlistData.items || playlistData.items.length === 0) {
+      return [];
+    }
+
+    const videoIds = playlistData.items
+      .map((item) => item.snippet.resourceId.videoId)
+      .join(",");
+
+    // Get full video details
+    const videosResponse = await fetch(
+      `${YOUTUBE_API_BASE}/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${apiKey}`,
+      { next: { revalidate: 1800 } }
+    );
+
+    if (!videosResponse.ok) {
+      console.error("Failed to fetch video details:", videosResponse.statusText);
+      return [];
+    }
+
+    const videosData: YouTubeApiVideoResponse = await videosResponse.json();
+    if (!videosData.items) {
+      return [];
+    }
+
+    return videosData.items.map((video) => ({
+      id: video.id,
+      title: video.snippet.title,
+      description: video.snippet.description,
+      thumbnail:
+        video.snippet.thumbnails.maxres?.url ||
+        video.snippet.thumbnails.high?.url ||
+        video.snippet.thumbnails.medium?.url ||
+        video.snippet.thumbnails.default?.url ||
+        "/images/foxys-lab-logo-round.png",
+      publishedAt: video.snippet.publishedAt,
+      viewCount: video.statistics.viewCount || "0",
+      likeCount: video.statistics.likeCount || "0",
+      duration: video.contentDetails.duration,
+      url: `https://www.youtube.com/watch?v=${video.id}`,
+    }));
+  } catch (error) {
+    console.error("Error fetching YouTube videos:", error);
+    return [];
+  }
+}
+
+export async function getChannelInfo(): Promise<YouTubeChannel | null> {
+  const apiKey = getApiKey();
+
+  if (!apiKey) {
+    console.warn("No YouTube API key provided");
+    return null;
+  }
+
+  try {
+    const channelItems = await getChannelData();
+    if (!channelItems || channelItems.length === 0) {
+      return null;
+    }
+
+    const channel = channelItems[0];
+    return {
+      id: channel.id,
+      title: channel.snippet.title,
+      description: channel.snippet.description,
+      subscriberCount: channel.statistics.subscriberCount,
+      videoCount: channel.statistics.videoCount,
+      viewCount: channel.statistics.viewCount,
+      thumbnail:
+        channel.snippet.thumbnails.high?.url ||
+        channel.snippet.thumbnails.medium?.url ||
+        channel.snippet.thumbnails.default?.url ||
+        "/images/foxys-lab-logo-round.png",
+    };
+  } catch (error) {
+    console.error("Error fetching channel info:", error);
+    return null;
+  }
 }
 
 export function formatViewCount(count: string): string {

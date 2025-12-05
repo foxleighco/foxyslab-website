@@ -47,6 +47,7 @@ export const siteConfig = {
   navigation: {
     main: [
       { href: "/", label: "Home" },
+      { href: "/blog", label: "Blog" },
       { href: "/videos", label: "Videos" },
       { href: "/about", label: "About" },
       { href: "/enquiries", label: "Enquiries" },
@@ -78,6 +79,13 @@ export const siteConfig = {
     newsletter: true,
     // Set to true when newsletter service is connected
     newsletterEnabled: false,
+  },
+
+  // Blog Configuration
+  blog: {
+    postsPerPage: 12,
+    excerptLength: 160,
+    defaultAuthor: "Alexander Foxleigh",
   },
 
   // Enquiries / Contact Configuration

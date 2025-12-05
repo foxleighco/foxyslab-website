@@ -53,3 +53,117 @@
     background-clip: text;
   }
 }
+
+/* Blog and Prose Styles */
+@layer components {
+  /* Prose styling for blog content (dark text on light background) */
+  .prose {
+    @apply text-gray-800;
+  }
+
+  .prose h2 {
+    @apply text-2xl font-bold mt-10 mb-4 text-gray-900 scroll-mt-24;
+  }
+
+  .prose h3 {
+    @apply text-xl font-semibold mt-8 mb-3 text-gray-900 scroll-mt-24;
+  }
+
+  .prose h4 {
+    @apply text-lg font-semibold mt-6 mb-2 text-gray-900 scroll-mt-24;
+  }
+
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+
+  .prose a {
+    @apply text-primary hover:underline;
+  }
+
+  .prose strong {
+    @apply font-semibold text-gray-900;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply mb-4 pl-6;
+  }
+
+  .prose ul {
+    @apply list-disc;
+  }
+
+  .prose ol {
+    @apply list-decimal;
+  }
+
+  .prose li {
+    @apply mb-2;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-primary pl-4 my-6 italic text-gray-600 bg-gray-50 py-2 rounded-r;
+  }
+
+  .prose hr {
+    @apply my-8 border-gray-200;
+  }
+
+  .prose img {
+    @apply rounded-xl my-6;
+  }
+
+  .prose table {
+    @apply w-full my-6 text-sm;
+  }
+
+  .prose th {
+    @apply text-left font-semibold p-3 border-b border-gray-300 bg-gray-100 text-gray-900;
+  }
+
+  .prose td {
+    @apply p-3 border-b border-gray-200;
+  }
+
+  /* Inline code */
+  .prose :not(pre) > code {
+    @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-primary;
+  }
+
+  /* Heading anchor links */
+  .heading-anchor {
+    @apply no-underline text-gray-900;
+  }
+
+  .heading-anchor:hover {
+    @apply underline;
+  }
+
+  .prose h2:hover .heading-anchor::after,
+  .prose h3:hover .heading-anchor::after,
+  .prose h4:hover .heading-anchor::after {
+    content: " #";
+    @apply text-primary/50;
+  }
+}
+
+/* Shiki code block styling - outside @layer to prevent purging */
+.code-block {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.code-block pre,
+.code-block pre.shiki {
+  padding: 1.5rem !important;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.625;
+}
+
+.code-block code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}

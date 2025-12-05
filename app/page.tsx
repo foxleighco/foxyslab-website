@@ -5,7 +5,8 @@ import { Newsletter } from "@/components/Newsletter";
 import { getLatestVideos } from "@/lib/youtube";
 
 export default async function Home() {
-  const videos = await getLatestVideos(6);
+  const videosResult = await getLatestVideos(6);
+  const videos = videosResult.success ? videosResult.data : [];
 
   return (
     <>
@@ -95,11 +96,25 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {videos.map((video) => (
-            <VideoCard key={video.id} video={video} />
-          ))}
-        </div>
+        {videos.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {videos.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-white/70 mb-4">Unable to load videos at this time.</p>
+            <a
+              href="https://www.youtube.com/@foxyslab/videos"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-6 py-3 gradient-primary rounded-full font-semibold hover:opacity-90 transition-opacity"
+            >
+              Watch on YouTube
+            </a>
+          </div>
+        )}
       </section>
 
       {/* Features Section */}

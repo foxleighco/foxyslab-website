@@ -1,13 +1,16 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
+import { getChannelInfo, formatViewCount } from "@/lib/youtube";
 
 export const metadata: Metadata = {
   title: "About | Foxy's Lab",
   description: "Learn more about Foxy's Lab and our mission to make smart home technology accessible to everyone.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const channelResult = await getChannelInfo();
+  const channel = channelResult.success ? channelResult.data : null;
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
@@ -84,15 +87,21 @@ export default function AboutPage() {
       <section className="mb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div className="text-4xl font-bold gradient-text mb-2">50K+</div>
+            <div className="text-4xl font-bold gradient-text mb-2">
+              {channel ? formatViewCount(channel.subscriberCount) : "—"}
+            </div>
             <div className="text-white/60">Subscribers</div>
           </div>
           <div>
-            <div className="text-4xl font-bold gradient-text mb-2">150+</div>
+            <div className="text-4xl font-bold gradient-text mb-2">
+              {channel ? channel.videoCount : "—"}
+            </div>
             <div className="text-white/60">Videos</div>
           </div>
           <div>
-            <div className="text-4xl font-bold gradient-text mb-2">2M+</div>
+            <div className="text-4xl font-bold gradient-text mb-2">
+              {channel ? formatViewCount(channel.viewCount) : "—"}
+            </div>
             <div className="text-white/60">Views</div>
           </div>
           <div>

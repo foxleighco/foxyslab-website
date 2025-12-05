@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { VideoCard } from "@/components/VideoCard";
 import { PlaylistFilter } from "@/components/PlaylistFilter";
 import { getLatestVideos, getPlaylists, getPlaylistVideos } from "@/lib/youtube";
+import { siteConfig } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "Videos | Foxy's Lab",
@@ -127,7 +128,7 @@ export default async function VideosPage({ searchParams }: VideosPageProps) {
       {/* View on YouTube */}
       <div className="mt-12 text-center">
         <a
-          href="https://www.youtube.com/@foxyslab/videos"
+          href={siteConfig.social.youtubeVideos}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block px-8 py-4 gradient-primary rounded-full font-bold hover:opacity-90 transition-opacity"

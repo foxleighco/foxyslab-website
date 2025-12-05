@@ -1,18 +1,21 @@
 import { Organization, WebSite, WithContext } from "schema-dts";
+import { siteConfig } from "@/site.config";
 
 export function getOrganizationSchema(): WithContext<Organization> {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Foxy's Lab",
-    url: "https://foxyslab.com",
-    logo: "https://foxyslab.com/images/foxys-lab-logo-round.png",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}${siteConfig.logo}`,
     sameAs: [
-      "https://www.youtube.com/@foxyslab",
-      "https://twitter.com/foxyslab",
-      "https://github.com/foxleigh81",
+      siteConfig.social.youtube,
+      siteConfig.social.twitter,
+      siteConfig.social.github,
+      siteConfig.social.discord,
+      siteConfig.social.patreon,
     ],
-    description: "Smart Home & Tech Education YouTube Channel",
+    description: `${siteConfig.tagline} YouTube Channel`,
   };
 }
 
@@ -20,12 +23,12 @@ export function getWebsiteSchema(): WithContext<WebSite> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Foxy's Lab",
-    url: "https://foxyslab.com",
-    description: "Expert tutorials on smart home technology and tech education",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
     publisher: {
       "@type": "Organization",
-      name: "Foxy's Lab",
+      name: siteConfig.name,
     },
   };
 }

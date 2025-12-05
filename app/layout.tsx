@@ -5,6 +5,7 @@ import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/structured-data";
+import { siteConfig } from "@/site.config";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,35 +13,38 @@ const inter = Inter({
   display: "swap",
 });
 
+const title = `${siteConfig.name} | ${siteConfig.tagline}`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://foxyslab.com"),
-  title: "Foxy's Lab | Smart Home & Tech Education",
-  description: "Join Foxy's Lab for expert tutorials on smart home technology, home automation, and tech education. Learn, build, and automate with confidence.",
-  keywords: ["smart home", "home automation", "tech education", "YouTube", "tutorials", "IoT"],
-  authors: [{ name: "Foxy's Lab" }],
-  creator: "Foxy's Lab",
+  metadataBase: new URL(siteConfig.url),
+  title,
+  description: siteConfig.description,
+  keywords: [...siteConfig.seo.keywords],
+  authors: [{ name: siteConfig.author.name }],
+  creator: siteConfig.name,
   manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://foxyslab.com",
-    siteName: "Foxy's Lab",
-    title: "Foxy's Lab | Smart Home & Tech Education",
-    description: "Expert tutorials on smart home technology and tech education",
+    locale: siteConfig.seo.locale,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title,
+    description: siteConfig.description,
     images: [
       {
-        url: "/images/foxys-lab-logo-round.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: "Foxy's Lab Logo",
+        alt: `${siteConfig.name} Logo`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Foxy's Lab | Smart Home & Tech Education",
-    description: "Expert tutorials on smart home technology and tech education",
-    images: ["/images/foxys-lab-logo-round.png"],
+    title,
+    description: siteConfig.description,
+    creator: siteConfig.author.twitter,
+    images: [siteConfig.ogImage],
   },
   robots: {
     index: true,

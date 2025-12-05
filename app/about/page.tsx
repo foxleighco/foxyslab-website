@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
 import { getChannelInfo, formatViewCount } from "@/lib/youtube";
+import { siteConfig } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "About | Foxy's Lab",
@@ -122,7 +123,7 @@ export default async function AboutPage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href="https://www.youtube.com/@foxyslab"
+              href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 gradient-primary rounded-full font-semibold hover:opacity-90 transition-opacity"
@@ -130,15 +131,23 @@ export default async function AboutPage() {
               Subscribe on YouTube
             </a>
             <a
-              href="https://twitter.com/foxyslab"
+              href={siteConfig.social.discord}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 border border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition-colors"
             >
-              Follow on Twitter
+              Join Discord
             </a>
             <a
-              href="https://github.com/foxleigh81"
+              href={siteConfig.social.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 border border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition-colors"
+            >
+              Follow on X
+            </a>
+            <a
+              href={siteConfig.social.github}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 border border-primary text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition-colors"

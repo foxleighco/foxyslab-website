@@ -2,14 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-interface NavLink {
-  href: string;
-  label: string;
-}
+import { siteConfig, NavLink } from "@/site.config";
 
 interface MobileMenuProps {
-  links: NavLink[];
+  links: readonly NavLink[];
 }
 
 export function MobileMenu({ links }: MobileMenuProps) {
@@ -56,13 +52,13 @@ export function MobileMenu({ links }: MobileMenuProps) {
               </Link>
             ))}
             <a
-              href="https://www.youtube.com/@foxyslab"
+              href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-2 gradient-primary rounded-full text-white font-semibold hover:opacity-90 transition-opacity mx-4 text-center"
-              aria-label="Subscribe on YouTube"
+              aria-label={siteConfig.navigation.cta.ariaLabel}
             >
-              Subscribe
+              {siteConfig.navigation.cta.label}
             </a>
           </div>
         </div>

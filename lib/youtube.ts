@@ -1,12 +1,13 @@
 import { YouTubeVideo, YouTubeChannel, YouTubePlaylist } from "@/types/youtube";
+import { siteConfig } from "@/site.config";
 
-const CHANNEL_HANDLE = "foxyslab";
+const CHANNEL_HANDLE = siteConfig.youtube.channelHandle;
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3";
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
 // Minimum duration in seconds to not be considered a Short
-const MIN_VIDEO_DURATION_SECONDS = 61;
+const MIN_VIDEO_DURATION_SECONDS = siteConfig.youtube.minVideoDuration;
 
 // Status codes that are worth retrying
 const RETRYABLE_STATUS_CODES = [429, 500, 502, 503, 504];

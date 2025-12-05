@@ -3,6 +3,7 @@ import Link from "next/link";
 import { VideoCard } from "@/components/VideoCard";
 import { Newsletter } from "@/components/Newsletter";
 import { getLatestVideos } from "@/lib/youtube";
+import { siteConfig } from "@/site.config";
 
 export default async function Home() {
   const videosResult = await getLatestVideos(6);
@@ -50,7 +51,7 @@ export default async function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://www.youtube.com/@foxyslab"
+              href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="px-8 py-4 gradient-primary rounded-full text-white font-bold text-lg hover:opacity-90 transition-opacity"
@@ -106,7 +107,7 @@ export default async function Home() {
           <div className="text-center py-12">
             <p className="text-white/70 mb-4">Unable to load videos at this time.</p>
             <a
-              href="https://www.youtube.com/@foxyslab/videos"
+              href={siteConfig.social.youtubeVideos}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-6 py-3 gradient-primary rounded-full font-semibold hover:opacity-90 transition-opacity"

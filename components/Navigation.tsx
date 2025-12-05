@@ -1,12 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MobileMenu } from "./MobileMenu";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/videos", label: "Videos" },
-  { href: "/about", label: "About" },
-];
+import { siteConfig } from "@/site.config";
 
 export function Navigation() {
   return (
@@ -32,7 +27,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {siteConfig.navigation.main.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -43,18 +38,18 @@ export function Navigation() {
               </Link>
             ))}
             <a
-              href="https://www.youtube.com/@foxyslab"
+              href={siteConfig.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-2 gradient-primary rounded-full text-white font-semibold hover:opacity-90 transition-opacity"
-              aria-label="Subscribe on YouTube"
+              aria-label={siteConfig.navigation.cta.ariaLabel}
             >
-              Subscribe
+              {siteConfig.navigation.cta.label}
             </a>
           </div>
 
           {/* Mobile menu */}
-          <MobileMenu links={navLinks} />
+          <MobileMenu links={siteConfig.navigation.main} />
         </div>
       </div>
     </nav>

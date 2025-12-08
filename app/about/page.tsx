@@ -159,9 +159,11 @@ export default async function AboutPage() {
       </section>
 
       {/* Newsletter */}
-      <section>
-        <Newsletter />
-      </section>
+      {siteConfig.features.newsletter && (
+        <section>
+          <Newsletter />
+        </section>
+      )}
     </div>
   );
 }

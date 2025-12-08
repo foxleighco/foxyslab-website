@@ -76,9 +76,8 @@ export const siteConfig = {
 
   // Feature Flags
   features: {
-    newsletter: true,
     // Set to true when newsletter service is connected
-    newsletterEnabled: false,
+    newsletter: false,
   },
 
   // Blog Configuration

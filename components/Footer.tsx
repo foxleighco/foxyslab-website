@@ -89,12 +89,14 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <Link
-              href="/#newsletter"
-              className="inline-block px-6 py-2 border border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors"
-            >
-              Subscribe to Newsletter
-            </Link>
+            {siteConfig.features.newsletter && (
+              <Link
+                href="/#newsletter"
+                className="inline-block px-6 py-2 border border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors"
+              >
+                Subscribe to Newsletter
+              </Link>
+            )}
           </div>
         </div>
 

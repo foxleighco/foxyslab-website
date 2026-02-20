@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Foxy's Lab - A modern Next.js 15 website for a YouTube channel focused on smart home technology and tech education. Built with TypeScript, Tailwind CSS, and optimized for performance and accessibility.
+Foxy's Lab - A modern Next.js 15 website for a YouTube channel focused on smart home technology and tech education. Built with TypeScript, CSS Modules, and optimized for performance and accessibility.
 
 ## Technology Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS
+- **Styling**: CSS Modules + global CSS (`app/globals.css`)
 - **Fonts**: Inter (Google Fonts)
 - **Package Manager**: npm
 
@@ -38,10 +38,15 @@ npm run type-check   # Run TypeScript type checking
 - Accent Yellow: `#ffe868`
 - Accent Orange: `#df5a13`
 
-### Tailwind Utilities
-- `gradient-primary`: Primary gradient background (primary → orange)
-- `gradient-text`: Gradient text effect (primary → yellow)
-- Custom focus indicators: `outline-2 outline-offset-2 outline-primary`
+### Global Utilities (in `app/globals.css`)
+- `.gradient-primary`: Primary gradient background (primary → orange)
+- `.gradient-text`: Gradient text effect (primary → yellow)
+- `.container` / `.container-md`: Shared page wrapper with max-width and padding
+- `.btn-primary` / `.btn-outline`: Shared button styles
+- `.sr-only`: Screen-reader-only text
+- `.text-balance`: Balanced text wrapping
+- `.prose`: Markdown content styling system (for blog innerHTML)
+- Custom focus indicators: `outline: 2px solid var(--primary); outline-offset: 2px`
 
 ### Design Principles
 - Dark color scheme
@@ -56,23 +61,39 @@ npm run type-check   # Run TypeScript type checking
 app/
 ├── layout.tsx           # Root layout with navigation, SEO metadata, structured data
 ├── page.tsx            # Homepage with hero, featured videos, features, newsletter
+├── globals.css         # Global styles, design tokens, shared utilities
+├── styles.module.css   # Homepage-specific styles
 ├── loading.tsx         # Global loading state
 ├── error.tsx           # Global error boundary
 ├── not-found.tsx       # 404 page
 ├── videos/
 │   └── page.tsx        # Videos gallery page
-└── about/
-    └── page.tsx        # About page
+├── blog/
+│   ├── page.tsx        # Blog listing page
+│   └── [slug]/
+│       └── page.tsx    # Individual blog post
+├── about/
+│   └── page.tsx        # About page
+└── enquiries/
+    └── page.tsx        # Enquiries/contact page
 ```
 
 ### Components
+Each component lives in its own folder with `index.tsx` + `styles.module.css`:
 ```
 components/
-├── Navigation.tsx      # Main navigation (server component)
-├── MobileMenu.tsx      # Mobile menu (client component)
-├── Footer.tsx          # Site footer with links
-├── VideoCard.tsx       # YouTube video display
-└── Newsletter.tsx      # Email signup form
+├── Navigation/         # Main navigation (server component)
+├── MobileMenu/         # Mobile menu (client component)
+├── Footer/             # Site footer with links
+├── VideoCard/          # YouTube video display
+├── Newsletter/         # Email signup form
+├── PlaylistFilter/     # Playlist pill filter (client component)
+├── EnquiryForm/        # Contact form (client component)
+├── TransparentVideo/   # WebM video player (client component)
+└── blog/
+    ├── FeedItem/       # Blog feed wrapper
+    ├── PostCard/       # Blog post card
+    └── TableOfContents/ # TOC sidebar (client component)
 ```
 
 ### Utilities
@@ -136,10 +157,12 @@ Currently using mock data in `lib/youtube.ts`. To integrate with YouTube Data AP
 - 404 handling in `app/not-found.tsx`
 
 ### Styling
-- Tailwind for utility classes
-- Custom CSS in `app/globals.css` for global styles
-- CSS variables in :root for design tokens
-- Mobile-first responsive breakpoints
+- **CSS Modules** (`styles.module.css`) for component/page-scoped styles
+- **Global CSS** in `app/globals.css` for shared utilities, design tokens, and resets
+- CSS custom properties in `:root` for design tokens (`--primary`, `--secondary`, `--accent-yellow`, `--accent-orange`)
+- Mobile-first responsive breakpoints (640px, 768px, 1024px)
+- Compose global + module classes: `className={`${styles.heading} gradient-text`}`
+- Conditional classes: `className={`${styles.pill} ${isActive ? styles.active : styles.inactive}`}`
 
 ## Future Enhancements
 

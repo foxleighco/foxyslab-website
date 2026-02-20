@@ -4,7 +4,7 @@ A modern, high-performance website for the Foxy's Lab YouTube channel, built wit
 
 ## 🚀 Features
 
-- **Modern Tech Stack**: Built with Next.js 15, React 19, TypeScript, and Tailwind CSS
+- **Modern Tech Stack**: Built with Next.js 15, React 19, TypeScript, and CSS Modules
 - **Performance Optimized**: Server-side rendering, image optimization, and efficient code splitting
 - **Fully Accessible**: WCAG 2.1 AA compliant with semantic HTML and ARIA labels
 - **SEO Ready**: Dynamic metadata, sitemaps, and structured data
@@ -99,12 +99,14 @@ npm start
 
 ## 🔧 Configuration
 
-### Tailwind CSS
+### Styling (CSS Modules)
 
-The design system colors are configured in `tailwind.config.ts`. Custom utilities include:
+Design tokens are defined as CSS custom properties in `app/globals.css`. Each component has a co-located `styles.module.css`. Global utilities include:
 
-- `gradient-primary` - Primary gradient background
-- `gradient-text` - Gradient text effect
+- `.gradient-primary` - Primary gradient background
+- `.gradient-text` - Gradient text effect
+- `.container` / `.container-md` - Page wrappers
+- `.btn-primary` / `.btn-outline` - Shared button styles
 
 ### Next.js
 

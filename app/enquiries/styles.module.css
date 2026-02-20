@@ -1,0 +1,231 @@
+.page {
+  padding: 3rem 0;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .cardGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.cardIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.cardIconSvg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.cardDescription {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.guidelinesCard {
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 0.75rem;
+  padding: 2rem;
+}
+
+.guidelinesText {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.guidelinesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.guidelineItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.guidelineIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4ade80;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.guidelineLabel {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.guidelineBold {
+  color: white;
+  font-weight: 700;
+}
+
+.warningBox {
+  background-color: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.warningItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.warningIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #eab308;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.warningTitle {
+  font-weight: 600;
+  color: #facc15;
+  margin-bottom: 0.25rem;
+}
+
+.warningText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.responseNotice {
+  margin-bottom: 3rem;
+}
+
+.noticeBox {
+  background-color: color-mix(in srgb, var(--secondary) 30%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.noticeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--primary);
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.noticeText {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+}
+
+.noticeBold {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+}
+
+.formWrapper {
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 0.75rem;
+  padding: 2rem;
+}
+
+.altContact {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.altContactText {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.altContactButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.altContactLink {
+  padding: 0.5rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  color: var(--primary);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.altContactLink:hover {
+  background-color: var(--primary);
+  color: white;
+}

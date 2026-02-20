@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { siteConfig } from "@/site.config";
+import styles from "./styles.module.css";
 
 export const metadata: Metadata = {
   title: "Business Enquiries | Foxy's Lab",
@@ -10,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function EnquiriesPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className={`container-md ${styles.page}`}>
       {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <div className={styles.header}>
+        <h1 className={styles.title}>
           Business <span className="gradient-text">Enquiries</span>
         </h1>
-        <p className="text-xl text-white/70 max-w-2xl mx-auto">
+        <p className={styles.subtitle}>
           Interested in working together? I&apos;m always open to discussing
           partnerships, collaborations, and opportunities that benefit the smart
           home community.
@@ -24,13 +25,13 @@ export default function EnquiriesPage() {
       </div>
 
       {/* Partnership Types */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Ways We Can Work Together</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-secondary/50 border border-primary/20 rounded-xl p-6">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center mb-4">
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Ways We Can Work Together</h2>
+        <div className={styles.cardGrid}>
+          <div className={styles.card}>
+            <div className={`${styles.cardIcon} gradient-primary`}>
               <svg
-                className="w-5 h-5"
+                className={styles.cardIconSvg}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -43,20 +44,20 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-bold mb-2 text-primary">
+            <h3 className={styles.cardTitle}>
               Product Reviews
             </h3>
-            <p className="text-white/70 text-sm">
+            <p className={styles.cardDescription}>
               Send me smart home devices, sensors, or automation hardware for
               honest, in-depth reviews. Software and service access is also
               welcome.
             </p>
           </div>
 
-          <div className="bg-secondary/50 border border-primary/20 rounded-xl p-6">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center mb-4">
+          <div className={styles.card}>
+            <div className={`${styles.cardIcon} gradient-primary`}>
               <svg
-                className="w-5 h-5"
+                className={styles.cardIconSvg}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -75,17 +76,17 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-bold mb-2 text-primary">Sponsorships</h3>
-            <p className="text-white/70 text-sm">
+            <h3 className={styles.cardTitle}>Sponsorships</h3>
+            <p className={styles.cardDescription}>
               Sponsor a video or series to reach an engaged audience of smart
               home enthusiasts and tech-savvy viewers.
             </p>
           </div>
 
-          <div className="bg-secondary/50 border border-primary/20 rounded-xl p-6">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center mb-4">
+          <div className={styles.card}>
+            <div className={`${styles.cardIcon} gradient-primary`}>
               <svg
-                className="w-5 h-5"
+                className={styles.cardIconSvg}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -98,19 +99,19 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-bold mb-2 text-primary">
+            <h3 className={styles.cardTitle}>
               Collaborations
             </h3>
-            <p className="text-white/70 text-sm">
+            <p className={styles.cardDescription}>
               Partner on content, cross-promotions, or joint projects that bring
               value to both our audiences.
             </p>
           </div>
 
-          <div className="bg-secondary/50 border border-primary/20 rounded-xl p-6">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center mb-4">
+          <div className={styles.card}>
+            <div className={`${styles.cardIcon} gradient-primary`}>
               <svg
-                className="w-5 h-5"
+                className={styles.cardIconSvg}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -123,10 +124,10 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-bold mb-2 text-primary">
+            <h3 className={styles.cardTitle}>
               Media & Press
             </h3>
-            <p className="text-white/70 text-sm">
+            <p className={styles.cardDescription}>
               Press enquiries, interviews, and media opportunities related to
               smart home technology and content creation.
             </p>
@@ -135,10 +136,10 @@ export default function EnquiriesPage() {
       </section>
 
       {/* Product Review Guidelines */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Product Review Guidelines</h2>
-        <div className="bg-secondary/50 border border-primary/20 rounded-xl p-8">
-          <p className="text-white/80 mb-6">
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Product Review Guidelines</h2>
+        <div className={styles.guidelinesCard}>
+          <p className={styles.guidelinesText}>
             I love testing new smart home and homelab tech. Cameras, sensors,
             servers, dashboards, Home Assistant gear, Zigbee and Matter devices,
             plus the software and services that tie it all together. If
@@ -146,10 +147,10 @@ export default function EnquiriesPage() {
             to try it!
           </p>
 
-          <div className="space-y-4 mb-6">
-            <div className="flex items-start gap-3">
+          <div className={styles.guidelinesList}>
+            <div className={styles.guidelineItem}>
               <svg
-                className="w-5 h-5 text-green-400 mt-0.5 shrink-0"
+                className={styles.guidelineIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -161,17 +162,17 @@ export default function EnquiriesPage() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <p className="text-white/70">
-                <strong className="text-white">Honest Reviews:</strong> Reviews
+              <p className={styles.guidelineLabel}>
+                <strong className={styles.guidelineBold}>Honest Reviews:</strong> Reviews
                 on Foxy&apos;s Lab are always honest. If something impresses me,
                 I&apos;ll show you why. If something annoys me or falls short,
                 I&apos;ll talk about that too. Long term reliability matters
                 more than launch day sparkle.
               </p>
             </div>
-            <div className="flex items-start gap-3">
+            <div className={styles.guidelineItem}>
               <svg
-                className="w-5 h-5 text-green-400 mt-0.5 shrink-0"
+                className={styles.guidelineIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -183,16 +184,16 @@ export default function EnquiriesPage() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <p className="text-white/70">
-                <strong className="text-white">Real-World Testing:</strong>{" "}
+              <p className={styles.guidelineLabel}>
+                <strong className={styles.guidelineBold}>Real-World Testing:</strong>{" "}
                 Everything gets used in my actual home for real world testing.
                 Support for open protocols like MQTT, local control, proper Home
                 Assistant integration and decent longevity are big wins for me.
               </p>
             </div>
-            <div className="flex items-start gap-3">
+            <div className={styles.guidelineItem}>
               <svg
-                className="w-5 h-5 text-green-400 mt-0.5 shrink-0"
+                className={styles.guidelineIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -204,8 +205,8 @@ export default function EnquiriesPage() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <p className="text-white/70">
-                <strong className="text-white">No Guaranteed Coverage:</strong>{" "}
+              <p className={styles.guidelineLabel}>
+                <strong className={styles.guidelineBold}>No Guaranteed Coverage:</strong>{" "}
                 Sending a product or providing a licence does not guarantee
                 coverage. If it doesn&apos;t fit the channel or I cannot
                 recommend it to my audience, it will not appear. Sponsorships
@@ -213,9 +214,9 @@ export default function EnquiriesPage() {
                 they will always be disclosed clearly.
               </p>
             </div>
-            <div className="flex items-start gap-3">
+            <div className={styles.guidelineItem}>
               <svg
-                className="w-5 h-5 text-green-400 mt-0.5 shrink-0"
+                className={styles.guidelineIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -227,8 +228,8 @@ export default function EnquiriesPage() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <p className="text-white/70">
-                <strong className="text-white">Long-Term Testing:</strong>{" "}
+              <p className={styles.guidelineLabel}>
+                <strong className={styles.guidelineBold}>Long-Term Testing:</strong>{" "}
                 Review hardware is normally kept for long term testing so I can
                 follow up on updates and reliability. If a product must be
                 returned, that needs to be agreed up front because limited
@@ -239,10 +240,10 @@ export default function EnquiriesPage() {
           </div>
 
           {/* Cloud-Only Disclaimer */}
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-            <div className="flex items-start gap-3">
+          <div className={styles.warningBox}>
+            <div className={styles.warningItem}>
               <svg
-                className="w-5 h-5 text-yellow-500 mt-0.5 shrink-0"
+                className={styles.warningIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -255,10 +256,10 @@ export default function EnquiriesPage() {
                 />
               </svg>
               <div>
-                <p className="font-semibold text-yellow-400 mb-1">
+                <p className={styles.warningTitle}>
                   A Note on Cloud-Only Products
                 </p>
-                <p className="text-white/70 text-sm">
+                <p className={styles.warningText}>
                   Purely cloud locked devices are treated with caution because
                   companies can flip a switch and ruin a product overnight. I
                   will look at cloud focused tools if the cloud genuinely
@@ -272,10 +273,10 @@ export default function EnquiriesPage() {
       </section>
 
       {/* Response Time Notice */}
-      <section className="mb-12">
-        <div className="bg-secondary/30 border border-white/10 rounded-lg p-4 flex items-start gap-3">
+      <section className={styles.responseNotice}>
+        <div className={styles.noticeBox}>
           <svg
-            className="w-5 h-5 text-primary mt-0.5 shrink-0"
+            className={styles.noticeIcon}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -287,8 +288,8 @@ export default function EnquiriesPage() {
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p className="text-white/60 text-sm">
-            <strong className="text-white/80">Response Time:</strong> I try to
+          <p className={styles.noticeText}>
+            <strong className={styles.noticeBold}>Response Time:</strong> I try to
             respond to all genuine enquiries within 5-7 business days. Due to
             the volume of messages I receive, I may not be able to respond to
             every request, particularly unsolicited pitches that don&apos;t
@@ -299,23 +300,23 @@ export default function EnquiriesPage() {
 
       {/* Contact Form */}
       <section>
-        <h2 className="text-2xl font-bold mb-6">Get In Touch</h2>
-        <div className="bg-secondary/50 border border-primary/20 rounded-xl p-8">
+        <h2 className={styles.sectionTitle}>Get In Touch</h2>
+        <div className={styles.formWrapper}>
           <EnquiryForm />
         </div>
       </section>
 
       {/* Alternative Contact */}
-      <section className="mt-12 text-center">
-        <p className="text-white/60 text-sm mb-4">
+      <section className={styles.altContact}>
+        <p className={styles.altContactText}>
           Prefer to reach out on social media?
         </p>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className={styles.altContactButtons}>
           <a
             href={siteConfig.social.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 border border-primary/30 text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors"
+            className={styles.altContactLink}
           >
             X (Twitter)
           </a>
@@ -323,7 +324,7 @@ export default function EnquiriesPage() {
             href={siteConfig.social.discord}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 border border-primary/30 text-primary rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors"
+            className={styles.altContactLink}
           >
             Discord
           </a>

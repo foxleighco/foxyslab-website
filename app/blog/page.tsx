@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
 import { siteConfig } from "@/site.config";
+import styles from "./styles.module.css";
 
 export const metadata: Metadata = {
   title: "Blog | Foxy's Lab",
@@ -20,10 +21,10 @@ async function BlogGrid() {
 
   if (!result.success) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 mb-4">
+      <div className={styles.errorState}>
+        <div className={styles.errorIcon}>
           <svg
-            className="w-8 h-8 text-red-500"
+            className={styles.errorIconSvg}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -36,11 +37,12 @@ async function BlogGrid() {
             />
           </svg>
         </div>
-        <p className="text-white/70 text-lg mb-2">Unable to load posts</p>
-        <p className="text-white/50 text-sm mb-4">{result.error}</p>
+        <p className={styles.errorTitle}>Unable to load posts</p>
+        <p className={styles.errorSubtitle}>{result.error}</p>
         <Link
           href="/blog"
-          className="inline-block px-6 py-2 bg-primary rounded-full font-semibold hover:bg-primary/80 transition-colors"
+          className="btn-primary"
+          style={{ padding: "0.5rem 1.5rem" }}
         >
           Try Again
         </Link>
@@ -52,10 +54,10 @@ async function BlogGrid() {
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/50 mb-4">
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIcon}>
           <svg
-            className="w-8 h-8 text-white/50"
+            className={styles.emptyIconSvg}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -68,14 +70,14 @@ async function BlogGrid() {
             />
           </svg>
         </div>
-        <p className="text-white/70 text-lg mb-2">No posts yet</p>
-        <p className="text-white/50 text-sm">Check back soon for new content!</p>
+        <p className={styles.emptyTitle}>No posts yet</p>
+        <p className={styles.emptySubtitle}>Check back soon for new content!</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className={styles.blogGrid}>
       {posts.map((post) => (
         <FeedItem key={post.slug} item={post} />
       ))}
@@ -88,14 +90,14 @@ function BlogGridSkeleton() {
   return (
     <div role="status" aria-live="polite" aria-busy="true">
       <span className="sr-only">Loading posts...</span>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className={styles.blogGrid}>
         {[...Array(SKELETON_COUNT)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="bg-secondary/50 rounded-xl aspect-video mb-4" />
-            <div className="h-4 bg-secondary/50 rounded w-1/4 mb-3" />
-            <div className="h-6 bg-secondary/50 rounded w-3/4 mb-2" />
-            <div className="h-4 bg-secondary/50 rounded w-full mb-2" />
-            <div className="h-4 bg-secondary/50 rounded w-2/3" />
+          <div key={i} className={styles.skeleton}>
+            <div className={styles.skeletonThumbnail} />
+            <div className={styles.skeletonCategory} />
+            <div className={styles.skeletonTitle} />
+            <div className={styles.skeletonText} />
+            <div className={styles.skeletonTextShort} />
           </div>
         ))}
       </div>
@@ -111,11 +113,11 @@ async function TagCloud() {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={styles.tagList}>
       {result.data.map((tag) => (
         <span
           key={tag}
-          className="text-sm px-3 py-1 bg-secondary/50 border border-primary/20 rounded-full text-white/70 hover:border-primary/40 hover:text-white transition-colors cursor-pointer"
+          className={styles.tag}
         >
           {tag}
         </span>
@@ -128,20 +130,20 @@ export default async function BlogPage() {
   if (!siteConfig.features.blog) notFound();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className={`container ${styles.page}`}>
       {/* Header */}
-      <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+      <div className={styles.header}>
+        <h1 className={styles.title}>
           <span className="gradient-text">Blog</span>
         </h1>
-        <p className="text-xl text-white/70 max-w-2xl">
+        <p className={styles.subtitle}>
           Articles, tutorials, and updates about smart home technology, home
           automation, and the latest in tech education.
         </p>
       </div>
 
       {/* Tags */}
-      <div className="mb-8">
+      <div className={styles.tagCloud}>
         <Suspense fallback={null}>
           <TagCloud />
         </Suspense>
@@ -153,13 +155,14 @@ export default async function BlogPage() {
       </Suspense>
 
       {/* View on YouTube */}
-      <div className="mt-12 text-center">
-        <p className="text-white/50 mb-4">Want more content?</p>
+      <div className={styles.ctaWrapper}>
+        <p className={styles.ctaText}>Want more content?</p>
         <a
           href={siteConfig.social.youtube}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block px-8 py-4 gradient-primary rounded-full font-bold hover:opacity-90 transition-opacity"
+          className="btn-primary"
+          style={{ padding: "1rem 2rem", fontWeight: 700 }}
         >
           Subscribe on YouTube
         </a>

@@ -69,35 +69,37 @@ export const metadata: Metadata = {
   },
 };
 
+// Note: JSON-LD schemas use dangerouslySetInnerHTML by design for structured
+// data. The content is generated server-side from trusted config, not user input.
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgSchema = JSON.stringify(getOrganizationSchema());
+  const webSchema = JSON.stringify(getWebsiteSchema());
+
   return (
     <html lang="en" className={inter.variable}>
       <head>
         <Script
           id="organization-schema"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getOrganizationSchema()),
-          }}
+          dangerouslySetInnerHTML={{ __html: orgSchema }}
         />
         <Script
           id="website-schema"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getWebsiteSchema()),
-          }}
+          dangerouslySetInnerHTML={{ __html: webSchema }}
         />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body>
         <a href="#main-content" className="skip-to-main">
           Skip to main content
         </a>
         <Navigation />
-        <main id="main-content" className="flex-grow">
+        <main id="main-content">
           {children}
         </main>
         <Footer />

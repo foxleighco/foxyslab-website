@@ -1,0 +1,63 @@
+.wrapper {
+  margin-bottom: 2rem;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pill {
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.pill:disabled {
+  opacity: 0.5;
+}
+
+.pillActive {
+  background-color: var(--primary);
+  color: white;
+}
+
+.pillInactive {
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pillInactive:hover {
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+}
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  height: 1rem;
+  width: 1rem;
+}
+
+.spinnerBg {
+  opacity: 0.25;
+}
+
+.spinnerFg {
+  opacity: 0.75;
+}
+
+.count {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.7;
+}

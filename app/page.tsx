@@ -4,6 +4,7 @@ import { VideoCard } from "@/components/VideoCard";
 import { Newsletter } from "@/components/Newsletter";
 import { TransparentVideo } from "@/components/TransparentVideo";
 import { getLatestVideos } from "@/lib/youtube";
+import { newsletterFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -12,7 +13,10 @@ const labCoatClips = Array.from({ length: 7 }, (_, i) => `/lab-coat-clips/lab-co
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const videosResult = await getLatestVideos(6);
+  const [videosResult, showNewsletter] = await Promise.all([
+    getLatestVideos(6),
+    newsletterFlag(),
+  ]);
   const videos = videosResult.success ? videosResult.data : [];
 
   return (
@@ -73,20 +77,6 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className={styles.scrollIndicator}>
-          <svg
-            className={styles.scrollIcon}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
       </section>
 
       {/* Latest Videos Section */}
@@ -170,7 +160,7 @@ export default async function Home() {
       </section>
 
       {/* Newsletter Section */}
-      {siteConfig.features.newsletter && (
+      {showNewsletter && (
         <section className={styles.section}>
           <Newsletter />
         </section>

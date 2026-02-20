@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
+import { blogFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -127,7 +128,7 @@ async function TagCloud() {
 }
 
 export default async function BlogPage() {
-  if (!siteConfig.features.blog) notFound();
+  if (!(await blogFlag())) notFound();
 
   return (
     <div className={`container ${styles.page}`}>

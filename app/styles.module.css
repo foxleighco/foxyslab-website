@@ -1,7 +1,7 @@
 /* === Hero === */
 .hero {
   position: relative;
-  height: 80vh;
+  min-height: 0;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -12,6 +12,9 @@
       var(--secondary)
     ),
     url("/images/backdrop.jpg") center / cover no-repeat;
+  border-bottom: 2px solid var(--primary);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary) 40%, transparent),
+    0 1px 8px color-mix(in srgb, var(--primary) 60%, transparent);
 }
 
 .heroContent {
@@ -25,7 +28,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  align-items: center;
+  align-items: stretch;
   gap: 2rem;
 }
 
@@ -52,6 +55,7 @@
 .heroVideoCol {
   display: none;
   justify-content: center;
+  align-items: flex-end;
 }
 
 @media (min-width: 768px) {
@@ -61,14 +65,15 @@
 }
 
 .heroVideo {
-  height: 70vh;
-  width: auto;
-  max-width: 100%;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   object-fit: contain;
 }
 
 .heroTextCol {
   text-align: center;
+  padding-top: 6rem;
+  padding-bottom: 2rem;
 }
 
 @media (min-width: 768px) {
@@ -170,20 +175,6 @@
   border-width: 2px;
   font-size: 1.125rem;
   font-weight: 700;
-}
-
-.scrollIndicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: bounce 1s infinite;
-}
-
-.scrollIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--primary);
 }
 
 /* === Sections === */

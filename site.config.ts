@@ -74,14 +74,6 @@ export const siteConfig = {
     ],
   },
 
-  // Feature Flags
-  features: {
-    // Set to true when newsletter service is connected
-    newsletter: false,
-    // Set to true when blog content is ready
-    blog: false,
-  },
-
   // Blog Configuration
   blog: {
     postsPerPage: 12,

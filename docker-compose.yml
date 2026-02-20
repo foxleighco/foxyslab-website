@@ -1,6 +1,11 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        FLAGS_SECRET: ${FLAGS_SECRET}
+        FLAG_BLOG: ${FLAG_BLOG:-false}
+        FLAG_NEWSLETTER: ${FLAG_NEWSLETTER:-false}
     ports:
       - "4983:3000"
     env_file:

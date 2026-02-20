@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "flags": "^4.0.3",
     "gray-matter": "^4.0.3",
     "next": "^15.0.2",
     "react": "^19.0.0",

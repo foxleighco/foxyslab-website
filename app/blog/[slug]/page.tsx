@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlogPostBySlug, getAllPostSlugs, getAdjacentPosts } from "@/lib/blog";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import { blogFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -91,7 +92,7 @@ function formatDate(date: Date): string {
  */
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  if (!siteConfig.features.blog) notFound();
+  if (!(await blogFlag())) notFound();
 
   const { slug } = await params;
   const result = await getBlogPostBySlug(slug);

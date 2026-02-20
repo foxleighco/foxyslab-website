@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { MobileMenu } from "../MobileMenu";
+import { blogFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export function Navigation() {
+export async function Navigation() {
+  const showBlog = await blogFlag();
   const navLinks = siteConfig.navigation.main.filter(
-    (link) => link.href !== "/blog" || siteConfig.features.blog
+    (link) => link.href !== "/blog" || showBlog
   );
 
   return (

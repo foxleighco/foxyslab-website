@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { FlagDefinitions } from "flags/react";
+import { encryptFlagDefinitions } from "flags";
+import { getProviderData } from "flags/next";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { getOrganizationSchema, getWebsiteSchema } from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
+import * as flags from "./flags";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,13 +76,16 @@ export const metadata: Metadata = {
 // Note: JSON-LD schemas use dangerouslySetInnerHTML by design for structured
 // data. The content is generated server-side from trusted config, not user input.
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const orgSchema = JSON.stringify(getOrganizationSchema());
   const webSchema = JSON.stringify(getWebsiteSchema());
+  const definitions = await encryptFlagDefinitions(
+    getProviderData(flags).definitions
+  );
 
   return (
     <html lang="en" className={inter.variable}>
@@ -103,6 +110,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <FlagDefinitions definitions={definitions} />
       </body>
     </html>
   );

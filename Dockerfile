@@ -13,6 +13,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ARG YOUTUBE_API_KEY=build-placeholder
+ARG FLAGS_SECRET
+ARG FLAG_BLOG=false
+ARG FLAG_NEWSLETTER=false
+ENV FLAGS_SECRET=$FLAGS_SECRET
+ENV FLAG_BLOG=$FLAG_BLOG
+ENV FLAG_NEWSLETTER=$FLAG_NEWSLETTER
 RUN npm run build
 
 # Stage 3: Production runner

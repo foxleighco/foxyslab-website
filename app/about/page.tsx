@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
 import { getChannelInfo, formatViewCount } from "@/lib/youtube";
+import { newsletterFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const channelResult = await getChannelInfo();
+  const [channelResult, showNewsletter] = await Promise.all([
+    getChannelInfo(),
+    newsletterFlag(),
+  ]);
   const channel = channelResult.success ? channelResult.data : null;
   return (
     <div className={`container-md ${styles.page}`}>
@@ -160,7 +164,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Newsletter */}
-      {siteConfig.features.newsletter && (
+      {showNewsletter && (
         <section>
           <Newsletter />
         </section>

@@ -115,7 +115,6 @@
 
 .heroTitle {
   font-size: 2.25rem;
-  font-weight: 700;
   margin-bottom: 1.5rem;
 }
 
@@ -208,7 +207,6 @@
 
 .sectionTitle {
   font-size: 1.875rem;
-  font-weight: 700;
 }
 
 @media (min-width: 768px) {
@@ -259,7 +257,6 @@
 /* === Features === */
 .featuresTitle {
   font-size: 1.875rem;
-  font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
 }
@@ -311,7 +308,6 @@
 
 .featureTitle {
   font-size: 1.25rem;
-  font-weight: 700;
   margin-bottom: 0.75rem;
 }
 

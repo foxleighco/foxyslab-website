@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { FlagDefinitions } from "flags/react";
 import { encryptFlagDefinitions } from "flags";
@@ -11,10 +11,17 @@ import { getOrganizationSchema, getWebsiteSchema } from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
 import * as flags from "./flags";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const sink = localFont({
+  src: "../public/fonts/sink.woff2",
+  variable: "--font-sink",
   display: "swap",
+});
+
+const futuru = localFont({
+  src: "../public/fonts/futuru.woff2",
+  variable: "--font-futuru",
+  display: "swap",
+  weight: "100 900",
 });
 
 const title = `${siteConfig.name} | ${siteConfig.tagline}`;
@@ -88,7 +95,7 @@ export default async function RootLayout({
   );
 
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${sink.variable} ${futuru.variable}`}>
       <head>
         <Script
           id="organization-schema"

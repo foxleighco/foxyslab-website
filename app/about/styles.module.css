@@ -27,7 +27,6 @@
 
 .title {
   font-size: 2.25rem;
-  font-weight: 700;
   margin-bottom: 1rem;
 }
 
@@ -48,7 +47,6 @@
 
 .sectionTitle {
   font-size: 1.875rem;
-  font-weight: 700;
   margin-bottom: 1.5rem;
 }
 
@@ -80,7 +78,6 @@
 
 .topicTitle {
   font-size: 1.25rem;
-  font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--primary);
 }
@@ -104,7 +101,6 @@
 
 .statValue {
   font-size: 2.25rem;
-  font-weight: 700;
   margin-bottom: 0.5rem;
 }
 

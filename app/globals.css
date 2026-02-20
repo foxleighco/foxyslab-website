@@ -23,12 +23,19 @@ html {
 body {
   background-color: var(--secondary);
   color: white;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-futuru), system-ui, sans-serif;
+  letter-spacing: 0.025em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sink), system-ui, sans-serif;
+  font-weight: normal;
+  letter-spacing: normal;
 }
 
 main {
@@ -210,7 +217,6 @@ main {
 
 .prose h2 {
   font-size: 1.5rem;
-  font-weight: 700;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   color: #111827;

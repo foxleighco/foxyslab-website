@@ -49,7 +49,7 @@ export default async function Home() {
             </div>
 
             <h1 className={styles.heroTitle}>
-              Welcome to{" "}
+              Welcome to<br />
               <span className="gradient-text">Foxy&apos;s Lab</span>
             </h1>
 

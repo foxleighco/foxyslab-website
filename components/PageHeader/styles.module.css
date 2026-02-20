@@ -1,0 +1,46 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.logo {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .logo {
+    width: 6rem;
+    height: 6rem;
+  }
+}
+
+.logoImage {
+  border-radius: 9999px;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 50%, transparent);
+}
+
+.text {
+  min-width: 0;
+}
+
+.title {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+}

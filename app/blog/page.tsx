@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
 import { blogFlag } from "@/app/flags";
+import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -132,16 +133,10 @@ export default async function BlogPage() {
 
   return (
     <div className={`container ${styles.page}`}>
-      {/* Header */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          <span className="gradient-text">Blog</span>
-        </h1>
-        <p className={styles.subtitle}>
-          Articles, tutorials, and updates about smart home technology, home
-          automation, and the latest in tech education.
-        </p>
-      </div>
+      <PageHeader
+        title={<span className="gradient-text">Blog</span>}
+        subtitle="Articles, tutorials, and updates about smart home technology, home automation, and the latest in tech education."
+      />
 
       {/* Tags */}
       <div className={styles.tagCloud}>

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
+import { PageHeader } from "@/components/PageHeader";
 import { getChannelInfo, formatViewCount } from "@/lib/youtube";
 import { newsletterFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
@@ -19,25 +19,10 @@ export default async function AboutPage() {
   const channel = channelResult.success ? channelResult.data : null;
   return (
     <div className={`container-md ${styles.page}`}>
-      {/* Header */}
-      <div className={styles.header}>
-        <div className={styles.logoWrap}>
-          <div className={styles.logoContainer}>
-            <Image
-              src="/images/foxys-lab-logo-round.png"
-              alt="Foxy's Lab"
-              fill
-              className={styles.logo}
-            />
-          </div>
-        </div>
-        <h1 className={styles.title}>
-          About <span className="gradient-text">Foxy&apos;s Lab</span>
-        </h1>
-        <p className={styles.subtitle}>
-          Making smart home technology accessible to everyone
-        </p>
-      </div>
+      <PageHeader
+        title={<>About <span className="gradient-text">Foxy&apos;s Lab</span></>}
+        subtitle="Making smart home technology accessible to everyone"
+      />
 
       {/* Mission */}
       <section className={styles.section}>

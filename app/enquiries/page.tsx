@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { EnquiryForm } from "@/components/EnquiryForm";
+import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -12,17 +13,10 @@ export const metadata: Metadata = {
 export default function EnquiriesPage() {
   return (
     <div className={`container-md ${styles.page}`}>
-      {/* Header */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          Business <span className="gradient-text">Enquiries</span>
-        </h1>
-        <p className={styles.subtitle}>
-          Interested in working together? I&apos;m always open to discussing
-          partnerships, collaborations, and opportunities that benefit the smart
-          home community.
-        </p>
-      </div>
+      <PageHeader
+        title={<>Business <span className="gradient-text">Enquiries</span></>}
+        subtitle="Interested in working together? I'm always open to discussing partnerships, collaborations, and opportunities that benefit the smart home community."
+      />
 
       {/* Partnership Types */}
       <section className={styles.section}>

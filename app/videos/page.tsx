@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { VideoCard } from "@/components/VideoCard";
 import { PlaylistFilter } from "@/components/PlaylistFilter";
 import { getLatestVideos, getPlaylists, getPlaylistVideos } from "@/lib/youtube";
+import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -96,17 +97,12 @@ export default async function VideosPage({ searchParams }: VideosPageProps) {
 
   return (
     <div className={`container ${styles.page}`}>
-      {/* Header */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>
-          {currentPlaylist ? currentPlaylist.title : "All Videos"}
-        </h1>
-        <p className={styles.subtitle}>
-          {currentPlaylist
-            ? currentPlaylist.description || `${currentPlaylist.itemCount} videos in this playlist`
-            : "Browse through our complete collection of tutorials and guides"}
-        </p>
-      </div>
+      <PageHeader
+        title={currentPlaylist ? currentPlaylist.title : "All Videos"}
+        subtitle={currentPlaylist
+          ? currentPlaylist.description || `${currentPlaylist.itemCount} videos in this playlist`
+          : "Browse through our complete collection of tutorials and guides"}
+      />
 
       {/* Playlist Filter - No Suspense needed as playlists are already awaited */}
       {playlists.length > 0 && (

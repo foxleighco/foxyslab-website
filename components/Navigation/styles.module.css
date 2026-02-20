@@ -1,10 +1,9 @@
 .nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  right: 0;
+  left: 0;
   z-index: 50;
-  background-color: color-mix(in srgb, var(--secondary) 95%, transparent);
-  backdrop-filter: blur(4px);
-  border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .container {
@@ -31,51 +30,20 @@
 
 .inner {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   height: 4rem;
-}
-
-.logoLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-decoration: none;
-  color: inherit;
-}
-
-.logoWrap {
-  position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
-  transition: transform 0.2s;
-}
-
-.logoLink:hover .logoWrap {
-  transform: scale(1.1);
-}
-
-.logoImage {
-  border-radius: 9999px;
-  object-fit: cover;
-}
-
-.logoText {
-  font-size: 1.25rem;
-  font-weight: 700;
-  display: none;
-}
-
-@media (min-width: 640px) {
-  .logoText {
-    display: block;
-  }
 }
 
 .desktopNav {
   display: none;
   align-items: center;
   gap: 2rem;
+  background-color: color-mix(in srgb, var(--secondary) 95%, transparent);
+  backdrop-filter: blur(4px);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 9999px;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
 }
 
 @media (min-width: 768px) {

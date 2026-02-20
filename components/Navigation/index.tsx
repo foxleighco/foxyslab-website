@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { MobileMenu } from "../MobileMenu";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
@@ -13,23 +12,6 @@ export function Navigation() {
     <nav className={styles.nav}>
       <div className={styles.container}>
         <div className={styles.inner}>
-          {/* Logo */}
-          <Link href="/" className={styles.logoLink}>
-            <div className={styles.logoWrap}>
-              <Image
-                src="/images/foxys-lab-logo-round.png"
-                alt="Foxy's Lab Logo"
-                width={40}
-                height={40}
-                className={styles.logoImage}
-                priority
-              />
-            </div>
-            <span className={`${styles.logoText} gradient-text`}>
-              Foxy&apos;s Lab
-            </span>
-          </Link>
-
           {/* Desktop Navigation */}
           <div className={styles.desktopNav}>
             {navLinks.map((link) => (

@@ -1,32 +1,17 @@
 /* === Hero === */
 .hero {
   position: relative;
-  min-height: 80vh;
+  height: 80vh;
   display: flex;
   align-items: center;
   overflow: hidden;
-}
-
-.heroBg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.heroBgImage {
-  object-fit: cover;
-  opacity: 0.8;
-}
-
-.heroBgOverlay {
-  position: absolute;
-  inset: 0;
   background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--secondary) 50%, transparent),
-    color-mix(in srgb, var(--secondary) 80%, transparent),
-    var(--secondary)
-  );
+      to bottom,
+      color-mix(in srgb, var(--secondary) 50%, transparent),
+      color-mix(in srgb, var(--secondary) 80%, transparent),
+      var(--secondary)
+    ),
+    url("/images/backdrop.jpg") center / cover no-repeat;
 }
 
 .heroContent {

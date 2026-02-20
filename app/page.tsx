@@ -7,7 +7,7 @@ import { getLatestVideos } from "@/lib/youtube";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-const labCoatClips = Array.from({ length: 9 }, (_, i) => `/lab-coat-clips/lab-coat-clip-${i + 1}`);
+const labCoatClips = Array.from({ length: 8 }, (_, i) => `/lab-coat-clips/lab-coat-clip-${i + 1}`);
 
 export const dynamic = "force-dynamic";
 
@@ -19,18 +19,6 @@ export default async function Home() {
     <>
       {/* Hero Section */}
       <section className={styles.hero}>
-        {/* Background Image */}
-        <div className={styles.heroBg}>
-          <Image
-            src="/images/backdrop.jpg"
-            alt=""
-            fill
-            className={styles.heroBgImage}
-            priority
-          />
-          <div className={styles.heroBgOverlay} />
-        </div>
-
         {/* Two-column Content */}
         <div className={styles.heroContent}>
           {/* Left column - Video (hidden on mobile) */}

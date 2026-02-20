@@ -58,7 +58,7 @@
 }
 
 .cardDescription {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.875rem;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .guidelineLabel {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .guidelineBold {
@@ -132,7 +132,7 @@
 }
 
 .warningText {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.875rem;
 }
 
@@ -159,7 +159,7 @@
 }
 
 .noticeText {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.875rem;
 }
 
@@ -181,7 +181,7 @@
 }
 
 .altContactText {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }

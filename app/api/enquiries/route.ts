@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import * as postmark from "postmark";
 import { z } from "zod";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { siteConfig } from "@/site.config";
 
-// Validate environment variables
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const ENQUIRIES_EMAIL = process.env.ENQUIRIES_EMAIL;
+const POSTMARK_API_KEY = process.env.POSTMARK_API_KEY;
+const POSTMARK_FROM = process.env.POSTMARK_FROM;
+const POSTMARK_TO = process.env.POSTMARK_TO;
 
 // Valid enquiry types from config
 const validEnquiryTypes = siteConfig.enquiries.types.map((t) => t.value) as string[];
@@ -47,7 +47,6 @@ const enquirySchema = z.object({
 type EnquiryData = z.infer<typeof enquirySchema>;
 
 function getClientIP(request: NextRequest): string {
-  // Vercel/Cloudflare headers
   const forwardedFor = request.headers.get("x-forwarded-for");
   if (forwardedFor) {
     return forwardedFor.split(",")[0].trim();
@@ -84,6 +83,7 @@ This email was sent from the enquiry form at ${siteConfig.url}/enquiries
 }
 
 function formatEmailHtml(data: EnquiryData): string {
+  // Security: all user input is escaped via escapeHtml before insertion
   return `
 <!DOCTYPE html>
 <html>
@@ -145,9 +145,8 @@ function escapeHtml(str: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if email service is configured
-    if (!RESEND_API_KEY || !ENQUIRIES_EMAIL) {
-      console.error("Missing RESEND_API_KEY or ENQUIRIES_EMAIL environment variables");
+    if (!POSTMARK_API_KEY || !POSTMARK_FROM || !POSTMARK_TO) {
+      console.error("Missing Postmark environment variables (POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_TO)");
       return NextResponse.json(
         { error: "Contact form is not configured. Please try again later." },
         { status: 503 }
@@ -159,7 +158,7 @@ export async function POST(request: NextRequest) {
     const rateLimit = checkRateLimit(
       `enquiry:${clientIP}`,
       siteConfig.enquiries.rateLimitPerHour,
-      60 * 60 * 1000 // 1 hour
+      60 * 60 * 1000
     );
 
     if (!rateLimit.success) {
@@ -205,25 +204,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    // Send email via Resend
-    const resend = new Resend(RESEND_API_KEY);
+    // Send email via Postmark
+    const client = new postmark.ServerClient(POSTMARK_API_KEY);
 
-    const { error: sendError } = await resend.emails.send({
-      from: `${siteConfig.name} <onboarding@resend.dev>`,
-      to: ENQUIRIES_EMAIL,
-      replyTo: data.email,
-      subject: `[${getEnquiryTypeLabel(data.enquiryType)}] New enquiry from ${data.name}`,
-      text: formatEmailBody(data),
-      html: formatEmailHtml(data),
+    await client.sendEmail({
+      From: POSTMARK_FROM,
+      To: POSTMARK_TO,
+      ReplyTo: data.email,
+      Subject: `[${getEnquiryTypeLabel(data.enquiryType)}] New enquiry from ${data.name}`,
+      TextBody: formatEmailBody(data),
+      HtmlBody: formatEmailHtml(data),
+      MessageStream: "outbound",
     });
-
-    if (sendError) {
-      console.error("Failed to send email:", sendError);
-      return NextResponse.json(
-        { error: "Failed to send your message. Please try again later." },
-        { status: 500 }
-      );
-    }
 
     return NextResponse.json({
       success: true,

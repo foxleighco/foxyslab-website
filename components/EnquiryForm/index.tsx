@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -32,6 +32,7 @@ export function EnquiryForm() {
   const [isPending, startTransition] = useTransition();
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -63,7 +64,6 @@ export function EnquiryForm() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -73,6 +73,7 @@ export function EnquiryForm() {
     e.preventDefault();
 
     if (!validateForm()) {
+      errorSummaryRef.current?.focus();
       return;
     }
 
@@ -105,9 +106,9 @@ export function EnquiryForm() {
 
   if (submitStatus === "success") {
     return (
-      <div className={styles.successCard}>
+      <div className={styles.successCard} role="status">
         <div className={styles.successIcon}>
-          <svg className={styles.successIconSvg} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={styles.successIconSvg} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -123,11 +124,19 @@ export function EnquiryForm() {
     );
   }
 
+  const hasErrors = Object.values(errors).some(Boolean);
+
   return (
     <form onSubmit={handleSubmit} className={styles.form} noValidate>
       {submitStatus === "error" && (
         <div className={styles.errorAlert} role="alert">
           <p className={styles.errorAlertText}>{submitMessage}</p>
+        </div>
+      )}
+
+      {hasErrors && (
+        <div ref={errorSummaryRef} tabIndex={-1} className="sr-only" role="alert">
+          Please correct the errors in the form below.
         </div>
       )}
 
@@ -151,7 +160,7 @@ export function EnquiryForm() {
         {/* Name */}
         <div>
           <label htmlFor="name" className={styles.label}>
-            Name <span className={styles.required}>*</span>
+            Name <span className={styles.required} aria-hidden="true">*</span>
           </label>
           <input
             type="text"
@@ -162,7 +171,8 @@ export function EnquiryForm() {
             className={`${styles.input} ${errors.name ? styles.inputError : ""}`}
             placeholder="Your name"
             required
-            aria-invalid={errors.name ? "true" : "false"}
+            aria-required="true"
+            aria-invalid={errors.name ? "true" : undefined}
             aria-describedby={errors.name ? "name-error" : undefined}
           />
           {errors.name && (
@@ -175,7 +185,7 @@ export function EnquiryForm() {
         {/* Email */}
         <div>
           <label htmlFor="email" className={styles.label}>
-            Email <span className={styles.required}>*</span>
+            Email <span className={styles.required} aria-hidden="true">*</span>
           </label>
           <input
             type="email"
@@ -186,7 +196,8 @@ export function EnquiryForm() {
             className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
             placeholder="your@email.com"
             required
-            aria-invalid={errors.email ? "true" : "false"}
+            aria-required="true"
+            aria-invalid={errors.email ? "true" : undefined}
             aria-describedby={errors.email ? "email-error" : undefined}
           />
           {errors.email && (
@@ -217,7 +228,7 @@ export function EnquiryForm() {
         {/* Enquiry Type */}
         <div>
           <label htmlFor="enquiryType" className={styles.label}>
-            Enquiry Type <span className={styles.required}>*</span>
+            Enquiry Type <span className={styles.required} aria-hidden="true">*</span>
           </label>
           <select
             id="enquiryType"
@@ -226,7 +237,8 @@ export function EnquiryForm() {
             onChange={handleChange}
             className={`${styles.select} ${errors.enquiryType ? styles.selectError : ""} ${!formData.enquiryType ? styles.selectPlaceholder : ""}`}
             required
-            aria-invalid={errors.enquiryType ? "true" : "false"}
+            aria-required="true"
+            aria-invalid={errors.enquiryType ? "true" : undefined}
             aria-describedby={errors.enquiryType ? "type-error" : undefined}
           >
             <option value="" disabled>
@@ -249,7 +261,7 @@ export function EnquiryForm() {
       {/* Message */}
       <div>
         <label htmlFor="message" className={styles.label}>
-          Message <span className={styles.required}>*</span>
+          Message <span className={styles.required} aria-hidden="true">*</span>
         </label>
         <textarea
           id="message"
@@ -260,15 +272,16 @@ export function EnquiryForm() {
           className={`${styles.textarea} ${errors.message ? styles.textareaError : ""}`}
           placeholder="Tell us about your enquiry..."
           required
-          aria-invalid={errors.message ? "true" : "false"}
-          aria-describedby={errors.message ? "message-error" : undefined}
+          aria-required="true"
+          aria-invalid={errors.message ? "true" : undefined}
+          aria-describedby={`message-hint${errors.message ? " message-error" : ""}`}
         />
         {errors.message && (
           <p id="message-error" className={styles.fieldError} role="alert">
             {errors.message}
           </p>
         )}
-        <p className={styles.hint}>Minimum 20 characters</p>
+        <p id="message-hint" className={styles.hint}>Minimum 20 characters</p>
       </div>
 
       {/* Submit Button */}
@@ -280,7 +293,7 @@ export function EnquiryForm() {
         >
           {isPending ? (
             <>
-              <svg className={styles.spinner} viewBox="0 0 24 24">
+              <svg className={styles.spinner} viewBox="0 0 24 24" aria-hidden="true">
                 <circle className={styles.spinnerBg} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className={styles.spinnerFg} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>

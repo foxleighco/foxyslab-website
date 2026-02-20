@@ -6,6 +6,7 @@ services:
         FLAGS_SECRET: ${FLAGS_SECRET}
         FLAG_BLOG: ${FLAG_BLOG:-false}
         FLAG_NEWSLETTER: ${FLAG_NEWSLETTER:-false}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
     ports:
       - "4983:3000"
     env_file:

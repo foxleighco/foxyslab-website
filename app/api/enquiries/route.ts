@@ -1,8 +1,11 @@
+import * as Sentry from "@sentry/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import * as postmark from "postmark";
 import { z } from "zod";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { siteConfig } from "@/site.config";
+
+const { logger } = Sentry;
 
 const POSTMARK_API_KEY = process.env.POSTMARK_API_KEY;
 const POSTMARK_FROM = process.env.POSTMARK_FROM;
@@ -146,7 +149,7 @@ function escapeHtml(str: string): string {
 export async function POST(request: NextRequest) {
   try {
     if (!POSTMARK_API_KEY || !POSTMARK_FROM || !POSTMARK_TO) {
-      console.error("Missing Postmark environment variables (POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_TO)");
+      logger.error("Missing Postmark environment variables (POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_TO)");
       return NextResponse.json(
         { error: "Contact form is not configured. Please try again later." },
         { status: 503 }
@@ -162,6 +165,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!rateLimit.success) {
+      logger.warn("Enquiry rate limit reached", { clientIP });
       return NextResponse.json(
         {
           error: `Too many requests. Please try again in ${Math.ceil(rateLimit.resetIn / 60)} minutes.`,
@@ -200,29 +204,43 @@ export async function POST(request: NextRequest) {
 
     // Honeypot check - if website field has content, it's likely a bot
     if (data.website) {
+      logger.info("Honeypot triggered on enquiry form", { clientIP });
       // Silently accept but don't send email (don't reveal bot detection)
       return NextResponse.json({ success: true });
     }
 
     // Send email via Postmark
-    const client = new postmark.ServerClient(POSTMARK_API_KEY);
+    await Sentry.startSpan(
+      {
+        op: "http.client",
+        name: "POST Postmark send email",
+      },
+      async (span) => {
+        const client = new postmark.ServerClient(POSTMARK_API_KEY);
 
-    await client.sendEmail({
-      From: POSTMARK_FROM,
-      To: POSTMARK_TO,
-      ReplyTo: data.email,
-      Subject: `[${getEnquiryTypeLabel(data.enquiryType)}] New enquiry from ${data.name}`,
-      TextBody: formatEmailBody(data),
-      HtmlBody: formatEmailHtml(data),
-      MessageStream: "outbound",
-    });
+        span.setAttribute("enquiry.type", data.enquiryType);
+
+        await client.sendEmail({
+          From: POSTMARK_FROM,
+          To: POSTMARK_TO,
+          ReplyTo: data.email,
+          Subject: `[${getEnquiryTypeLabel(data.enquiryType)}] New enquiry from ${data.name}`,
+          TextBody: formatEmailBody(data),
+          HtmlBody: formatEmailHtml(data),
+          MessageStream: "outbound",
+        });
+      }
+    );
+
+    logger.info("Enquiry sent successfully", { enquiryType: data.enquiryType });
 
     return NextResponse.json({
       success: true,
       message: "Thank you for your enquiry. We'll get back to you soon!",
     });
   } catch (error) {
-    console.error("Enquiry form error:", error);
+    Sentry.captureException(error);
+    logger.error(logger.fmt`Enquiry form error: ${error}`);
     return NextResponse.json(
       { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }

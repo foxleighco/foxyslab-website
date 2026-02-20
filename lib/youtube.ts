@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { YouTubeVideo, YouTubeChannel, YouTubePlaylist } from "@/types/youtube";
 import { siteConfig } from "@/site.config";
 
@@ -226,6 +227,7 @@ async function getChannelData(): Promise<ApiResult<YouTubeApiChannelResponse["it
 
     return { success: true, data: data.items };
   } catch (error) {
+    Sentry.captureException(error);
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Error fetching channel data:", message);
     return { success: false, error: message };
@@ -289,6 +291,7 @@ async function fetchVideoDetails(
 
     return { success: true, data: videos };
   } catch (error) {
+    Sentry.captureException(error);
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error("Error fetching video details:", message);
     return { success: false, error: message };
@@ -296,151 +299,181 @@ async function fetchVideoDetails(
 }
 
 export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult<YouTubeVideo[]>> {
-  const apiKey = getApiKey();
+  return Sentry.startSpan(
+    {
+      op: "youtube.api",
+      name: "getLatestVideos",
+    },
+    async (span) => {
+      const apiKey = getApiKey();
 
-  if (!apiKey) {
-    return { success: false, error: "No YouTube API key configured" };
-  }
+      if (!apiKey) {
+        return { success: false, error: "No YouTube API key configured" };
+      }
 
-  const channelResult = await getChannelData();
-  if (!channelResult.success) {
-    return { success: false, error: channelResult.error };
-  }
+      const channelResult = await getChannelData();
+      if (!channelResult.success) {
+        return { success: false, error: channelResult.error };
+      }
 
-  const uploadsPlaylistId = channelResult.data![0].contentDetails.relatedPlaylists.uploads;
+      const uploadsPlaylistId = channelResult.data![0].contentDetails.relatedPlaylists.uploads;
 
-  // Fetch more videos than needed to account for filtered Shorts
-  const fetchCount = Math.min(maxResults * 2, 50);
+      // Fetch more videos than needed to account for filtered Shorts
+      const fetchCount = Math.min(maxResults * 2, 50);
 
-  try {
-    const playlistResponse = await fetchWithRetry(
-      `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=${fetchCount}&key=${apiKey}`,
-      { next: { revalidate: 1800 } }
-    );
+      try {
+        const playlistResponse = await fetchWithRetry(
+          `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=${fetchCount}&key=${apiKey}`,
+          { next: { revalidate: 1800 } }
+        );
 
-    if (!playlistResponse.ok) {
-      console.error(`[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
-      return {
-        success: false,
-        error: `Failed to fetch uploads: ${playlistResponse.status}`,
-      };
+        if (!playlistResponse.ok) {
+          console.error(`[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
+          span.setAttribute("http.status_code", playlistResponse.status);
+          return {
+            success: false,
+            error: `Failed to fetch uploads: ${playlistResponse.status}`,
+          };
+        }
+
+        const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
+
+        if (playlistData.error) {
+          console.error("[YouTube] Uploads API returned error:", playlistData.error.message);
+          return { success: false, error: playlistData.error.message };
+        }
+
+        if (!playlistData.items || playlistData.items.length === 0) {
+          return { success: true, data: [] };
+        }
+
+        const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
+        const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
+
+        if (!videosResult.success) {
+          return videosResult;
+        }
+
+        const videos = videosResult.data.slice(0, maxResults);
+        span.setAttribute("video.count", videos.length);
+        return { success: true, data: videos };
+      } catch (error) {
+        Sentry.captureException(error);
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("[YouTube] Error fetching latest videos:", message);
+        return { success: false, error: message };
+      }
     }
-
-    const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
-
-    if (playlistData.error) {
-      console.error("[YouTube] Uploads API returned error:", playlistData.error.message);
-      return { success: false, error: playlistData.error.message };
-    }
-
-    if (!playlistData.items || playlistData.items.length === 0) {
-      return { success: true, data: [] };
-    }
-
-    const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
-    const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
-
-    if (!videosResult.success) {
-      return videosResult;
-    }
-
-    // Return only the requested number of videos
-    return { success: true, data: videosResult.data.slice(0, maxResults) };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("[YouTube] Error fetching latest videos:", message);
-    return { success: false, error: message };
-  }
+  );
 }
 
 export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    return { success: false, error: "No YouTube API key configured" };
-  }
-
-  const channelResult = await getChannelData();
-  if (!channelResult.success) {
-    return { success: false, error: channelResult.error };
-  }
-
-  const channel = channelResult.data![0];
-  return {
-    success: true,
-    data: {
-      id: channel.id,
-      title: channel.snippet.title,
-      description: channel.snippet.description,
-      subscriberCount: channel.statistics.subscriberCount,
-      videoCount: channel.statistics.videoCount,
-      viewCount: channel.statistics.viewCount,
-      thumbnail:
-        channel.snippet.thumbnails.high?.url ||
-        channel.snippet.thumbnails.medium?.url ||
-        channel.snippet.thumbnails.default?.url ||
-        "/images/foxys-lab-logo-round.png",
+  return Sentry.startSpan(
+    {
+      op: "youtube.api",
+      name: "getChannelInfo",
     },
-  };
+    async () => {
+      const apiKey = getApiKey();
+
+      if (!apiKey) {
+        return { success: false, error: "No YouTube API key configured" };
+      }
+
+      const channelResult = await getChannelData();
+      if (!channelResult.success) {
+        return { success: false, error: channelResult.error };
+      }
+
+      const channel = channelResult.data![0];
+      return {
+        success: true,
+        data: {
+          id: channel.id,
+          title: channel.snippet.title,
+          description: channel.snippet.description,
+          subscriberCount: channel.statistics.subscriberCount,
+          videoCount: channel.statistics.videoCount,
+          viewCount: channel.statistics.viewCount,
+          thumbnail:
+            channel.snippet.thumbnails.high?.url ||
+            channel.snippet.thumbnails.medium?.url ||
+            channel.snippet.thumbnails.default?.url ||
+            "/images/foxys-lab-logo-round.png",
+        },
+      };
+    }
+  );
 }
 
 export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
-  const apiKey = getApiKey();
+  return Sentry.startSpan(
+    {
+      op: "youtube.api",
+      name: "getPlaylists",
+    },
+    async (span) => {
+      const apiKey = getApiKey();
 
-  if (!apiKey) {
-    return { success: false, error: "No YouTube API key configured" };
-  }
+      if (!apiKey) {
+        return { success: false, error: "No YouTube API key configured" };
+      }
 
-  const channelResult = await getChannelData();
-  if (!channelResult.success) {
-    return { success: false, error: channelResult.error };
-  }
+      const channelResult = await getChannelData();
+      if (!channelResult.success) {
+        return { success: false, error: channelResult.error };
+      }
 
-  const channelId = channelResult.data![0].id;
+      const channelId = channelResult.data![0].id;
 
-  try {
-    const response = await fetchWithRetry(
-      `${YOUTUBE_API_BASE}/playlists?part=snippet,contentDetails&channelId=${channelId}&maxResults=25&key=${apiKey}`,
-      { next: { revalidate: 3600 } }
-    );
+      try {
+        const response = await fetchWithRetry(
+          `${YOUTUBE_API_BASE}/playlists?part=snippet,contentDetails&channelId=${channelId}&maxResults=25&key=${apiKey}`,
+          { next: { revalidate: 3600 } }
+        );
 
-    if (!response.ok) {
-      console.error(`[YouTube] Playlists API error: ${response.status} ${response.statusText}`);
-      return {
-        success: false,
-        error: `Failed to fetch playlists: ${response.status}`,
-      };
+        if (!response.ok) {
+          console.error(`[YouTube] Playlists API error: ${response.status} ${response.statusText}`);
+          span.setAttribute("http.status_code", response.status);
+          return {
+            success: false,
+            error: `Failed to fetch playlists: ${response.status}`,
+          };
+        }
+
+        const data: YouTubeApiPlaylistsResponse = await response.json();
+
+        if (data.error) {
+          console.error("[YouTube] Playlists API returned error:", data.error.message);
+          return { success: false, error: data.error.message };
+        }
+
+        if (!data.items) {
+          return { success: true, data: [] };
+        }
+
+        const playlists = data.items.map((playlist) => ({
+          id: playlist.id,
+          title: playlist.snippet.title,
+          description: playlist.snippet.description,
+          thumbnail:
+            playlist.snippet.thumbnails.high?.url ||
+            playlist.snippet.thumbnails.medium?.url ||
+            playlist.snippet.thumbnails.default?.url ||
+            "/images/foxys-lab-logo-round.png",
+          itemCount: playlist.contentDetails.itemCount,
+        }));
+
+        span.setAttribute("playlist.count", playlists.length);
+        return { success: true, data: playlists };
+      } catch (error) {
+        Sentry.captureException(error);
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("Error fetching playlists:", message);
+        return { success: false, error: message };
+      }
     }
-
-    const data: YouTubeApiPlaylistsResponse = await response.json();
-
-    if (data.error) {
-      console.error("[YouTube] Playlists API returned error:", data.error.message);
-      return { success: false, error: data.error.message };
-    }
-
-    if (!data.items) {
-      return { success: true, data: [] };
-    }
-
-    const playlists = data.items.map((playlist) => ({
-      id: playlist.id,
-      title: playlist.snippet.title,
-      description: playlist.snippet.description,
-      thumbnail:
-        playlist.snippet.thumbnails.high?.url ||
-        playlist.snippet.thumbnails.medium?.url ||
-        playlist.snippet.thumbnails.default?.url ||
-        "/images/foxys-lab-logo-round.png",
-      itemCount: playlist.contentDetails.itemCount,
-    }));
-
-    return { success: true, data: playlists };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error fetching playlists:", message);
-    return { success: false, error: message };
-  }
+  );
 }
 
 // Validate YouTube playlist ID format
@@ -450,48 +483,60 @@ export async function getPlaylistVideos(
   playlistId: string,
   maxResults: number = 50
 ): Promise<ApiResult<YouTubeVideo[]>> {
-  const apiKey = getApiKey();
+  return Sentry.startSpan(
+    {
+      op: "youtube.api",
+      name: "getPlaylistVideos",
+    },
+    async (span) => {
+      const apiKey = getApiKey();
 
-  if (!apiKey) {
-    return { success: false, error: "No YouTube API key configured" };
-  }
+      if (!apiKey) {
+        return { success: false, error: "No YouTube API key configured" };
+      }
 
-  if (!playlistId || !YOUTUBE_ID_REGEX.test(playlistId)) {
-    return { success: false, error: "Invalid playlist ID format" };
-  }
+      if (!playlistId || !YOUTUBE_ID_REGEX.test(playlistId)) {
+        return { success: false, error: "Invalid playlist ID format" };
+      }
 
-  try {
-    const playlistResponse = await fetchWithRetry(
-      `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=${maxResults}&key=${apiKey}`,
-      { next: { revalidate: 1800 } }
-    );
+      span.setAttribute("playlist.id", playlistId);
 
-    if (!playlistResponse.ok) {
-      console.error(`[YouTube] Playlist videos API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
-      return {
-        success: false,
-        error: `Failed to fetch playlist: ${playlistResponse.status}`,
-      };
+      try {
+        const playlistResponse = await fetchWithRetry(
+          `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=${maxResults}&key=${apiKey}`,
+          { next: { revalidate: 1800 } }
+        );
+
+        if (!playlistResponse.ok) {
+          console.error(`[YouTube] Playlist videos API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
+          span.setAttribute("http.status_code", playlistResponse.status);
+          return {
+            success: false,
+            error: `Failed to fetch playlist: ${playlistResponse.status}`,
+          };
+        }
+
+        const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
+
+        if (playlistData.error) {
+          console.error("[YouTube] Playlist videos API returned error:", playlistData.error.message);
+          return { success: false, error: playlistData.error.message };
+        }
+
+        if (!playlistData.items || playlistData.items.length === 0) {
+          return { success: true, data: [] };
+        }
+
+        const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
+        return await fetchVideoDetails(videoIds, apiKey, true);
+      } catch (error) {
+        Sentry.captureException(error);
+        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("Error fetching playlist videos:", message);
+        return { success: false, error: message };
+      }
     }
-
-    const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
-
-    if (playlistData.error) {
-      console.error("[YouTube] Playlist videos API returned error:", playlistData.error.message);
-      return { success: false, error: playlistData.error.message };
-    }
-
-    if (!playlistData.items || playlistData.items.length === 0) {
-      return { success: true, data: [] };
-    }
-
-    const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
-    return await fetchVideoDetails(videoIds, apiKey, true);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error fetching playlist videos:", message);
-    return { success: false, error: message };
-  }
+  );
 }
 
 export function formatViewCount(count: string): string {

@@ -5,6 +5,7 @@
  * Follows the same patterns as lib/youtube.ts
  */
 
+import * as Sentry from "@sentry/nextjs";
 import fs from "fs/promises";
 import path from "path";
 import {
@@ -80,83 +81,93 @@ function filePathToSlug(filePath: string, baseDir: string): string {
 export async function getAllBlogPosts(
   options?: BlogQueryOptions
 ): Promise<ApiResult<BlogPostMeta[]>> {
-  try {
-    const posts: BlogPostMeta[] = [];
+  return Sentry.startSpan(
+    {
+      op: "blog.query",
+      name: "getAllBlogPosts",
+    },
+    async (span) => {
+      try {
+        const posts: BlogPostMeta[] = [];
 
-    // Get markdown posts from blog directory
-    const blogFiles = await findMarkdownFiles(BLOG_DIR);
+        // Get markdown posts from blog directory
+        const blogFiles = await findMarkdownFiles(BLOG_DIR);
 
-    for (const filePath of blogFiles) {
-      const content = await fs.readFile(filePath, "utf-8");
-      const result = parseMarkdownMeta(content);
+        for (const filePath of blogFiles) {
+          const content = await fs.readFile(filePath, "utf-8");
+          const result = parseMarkdownMeta(content);
 
-      if (!result.success) {
-        console.warn(`Skipping ${filePath}: ${result.error}`);
-        continue;
+          if (!result.success) {
+            console.warn(`Skipping ${filePath}: ${result.error}`);
+            continue;
+          }
+
+          const slug = filePathToSlug(filePath, BLOG_DIR);
+          posts.push(toBlogPostMeta(slug, result.data));
+        }
+
+        // Apply filters
+        let filtered = posts;
+
+        // Filter by status (default: published only in production)
+        if (options?.status === "all") {
+          // Include all
+        } else if (options?.status === "draft") {
+          filtered = filtered.filter((p) => p.frontmatter.status === "draft");
+        } else {
+          // Default: published only (or drafts in development)
+          const includeDrafts = process.env.NODE_ENV !== "production";
+          filtered = filtered.filter(
+            (p) => p.frontmatter.status === "published" || includeDrafts
+          );
+        }
+
+        // Filter by tag
+        if (options?.tag) {
+          const tag = options.tag.toLowerCase();
+          filtered = filtered.filter((p) =>
+            p.frontmatter.tags.some((t) => t.toLowerCase() === tag)
+          );
+        }
+
+        // Filter by category
+        if (options?.category) {
+          const category = options.category.toLowerCase();
+          filtered = filtered.filter(
+            (p) => p.frontmatter.category?.toLowerCase() === category
+          );
+        }
+
+        // Filter by featured
+        if (options?.featured !== undefined) {
+          filtered = filtered.filter(
+            (p) => p.frontmatter.featured === options.featured
+          );
+        }
+
+        // Sort by date (newest first)
+        filtered.sort(
+          (a, b) =>
+            new Date(b.frontmatter.publishedAt).getTime() -
+            new Date(a.frontmatter.publishedAt).getTime()
+        );
+
+        // Apply pagination
+        const offset = options?.offset ?? 0;
+        const limit = options?.limit ?? filtered.length;
+        const paginated = filtered.slice(offset, offset + limit);
+
+        span.setAttribute("blog.post_count", paginated.length);
+        return { success: true, data: paginated };
+      } catch (error) {
+        Sentry.captureException(error);
+        const message =
+          error instanceof Error ? error.message : "Unknown error loading posts";
+        console.error("Error loading blog posts:", error);
+        return { success: false, error: message };
       }
-
-      const slug = filePathToSlug(filePath, BLOG_DIR);
-      posts.push(toBlogPostMeta(slug, result.data));
     }
-
-    // Apply filters
-    let filtered = posts;
-
-    // Filter by status (default: published only in production)
-    if (options?.status === "all") {
-      // Include all
-    } else if (options?.status === "draft") {
-      filtered = filtered.filter((p) => p.frontmatter.status === "draft");
-    } else {
-      // Default: published only (or drafts in development)
-      const includeDrafts = process.env.NODE_ENV !== "production";
-      filtered = filtered.filter(
-        (p) => p.frontmatter.status === "published" || includeDrafts
-      );
-    }
-
-    // Filter by tag
-    if (options?.tag) {
-      const tag = options.tag.toLowerCase();
-      filtered = filtered.filter((p) =>
-        p.frontmatter.tags.some((t) => t.toLowerCase() === tag)
-      );
-    }
-
-    // Filter by category
-    if (options?.category) {
-      const category = options.category.toLowerCase();
-      filtered = filtered.filter(
-        (p) => p.frontmatter.category?.toLowerCase() === category
-      );
-    }
-
-    // Filter by featured
-    if (options?.featured !== undefined) {
-      filtered = filtered.filter(
-        (p) => p.frontmatter.featured === options.featured
-      );
-    }
-
-    // Sort by date (newest first)
-    filtered.sort(
-      (a, b) =>
-        new Date(b.frontmatter.publishedAt).getTime() -
-        new Date(a.frontmatter.publishedAt).getTime()
-    );
-
-    // Apply pagination
-    const offset = options?.offset ?? 0;
-    const limit = options?.limit ?? filtered.length;
-    const paginated = filtered.slice(offset, offset + limit);
-
-    return { success: true, data: paginated };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error loading posts";
-    console.error("Error loading blog posts:", error);
-    return { success: false, error: message };
-  }
+  );
 }
 
 /**
@@ -165,50 +176,61 @@ export async function getAllBlogPosts(
 export async function getBlogPostBySlug(
   slug: string
 ): Promise<ApiResult<BlogPost>> {
-  try {
-    // Try both .md and .mdx extensions
-    const possiblePaths = [
-      path.join(BLOG_DIR, `${slug}.md`),
-      path.join(BLOG_DIR, `${slug}.mdx`),
-    ];
+  return Sentry.startSpan(
+    {
+      op: "blog.query",
+      name: "getBlogPostBySlug",
+    },
+    async (span) => {
+      span.setAttribute("blog.slug", slug);
 
-    let filePath: string | null = null;
-    for (const p of possiblePaths) {
       try {
-        await fs.access(p);
-        filePath = p;
-        break;
-      } catch {
-        // File doesn't exist, try next
+        // Try both .md and .mdx extensions
+        const possiblePaths = [
+          path.join(BLOG_DIR, `${slug}.md`),
+          path.join(BLOG_DIR, `${slug}.mdx`),
+        ];
+
+        let filePath: string | null = null;
+        for (const p of possiblePaths) {
+          try {
+            await fs.access(p);
+            filePath = p;
+            break;
+          } catch {
+            // File doesn't exist, try next
+          }
+        }
+
+        if (!filePath) {
+          return { success: false, error: `Post not found: ${slug}` };
+        }
+
+        const content = await fs.readFile(filePath, "utf-8");
+        const result = await processMarkdown(content);
+
+        if (!result.success) {
+          return { success: false, error: result.error };
+        }
+
+        // Check draft status in production
+        if (
+          process.env.NODE_ENV === "production" &&
+          result.data.frontmatter.status === "draft"
+        ) {
+          return { success: false, error: `Post not found: ${slug}` };
+        }
+
+        return { success: true, data: toBlogPost(slug, result.data) };
+      } catch (error) {
+        Sentry.captureException(error);
+        const message =
+          error instanceof Error ? error.message : "Unknown error loading post";
+        console.error(`Error loading post ${slug}:`, error);
+        return { success: false, error: message };
       }
     }
-
-    if (!filePath) {
-      return { success: false, error: `Post not found: ${slug}` };
-    }
-
-    const content = await fs.readFile(filePath, "utf-8");
-    const result = await processMarkdown(content);
-
-    if (!result.success) {
-      return { success: false, error: result.error };
-    }
-
-    // Check draft status in production
-    if (
-      process.env.NODE_ENV === "production" &&
-      result.data.frontmatter.status === "draft"
-    ) {
-      return { success: false, error: `Post not found: ${slug}` };
-    }
-
-    return { success: true, data: toBlogPost(slug, result.data) };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error loading post";
-    console.error(`Error loading post ${slug}:`, error);
-    return { success: false, error: message };
-  }
+  );
 }
 
 /**

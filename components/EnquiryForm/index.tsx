@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useState, useTransition, useRef } from "react";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
@@ -78,29 +79,42 @@ export function EnquiryForm() {
     }
 
     startTransition(async () => {
-      try {
-        const response = await fetch("/api/enquiries", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+      await Sentry.startSpan(
+        {
+          op: "ui.submit",
+          name: "Enquiry Form Submit",
+        },
+        async (span) => {
+          try {
+            span.setAttribute("enquiry.type", formData.enquiryType);
 
-        const data = await response.json();
+            const response = await fetch("/api/enquiries", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
 
-        if (response.ok) {
-          setSubmitStatus("success");
-          setSubmitMessage(data.message || "Thank you for your enquiry!");
-          setFormData(initialFormData);
-        } else {
-          setSubmitStatus("error");
-          setSubmitMessage(data.error || "Something went wrong. Please try again.");
+            const data = await response.json();
+
+            span.setAttribute("http.status_code", response.status);
+
+            if (response.ok) {
+              setSubmitStatus("success");
+              setSubmitMessage(data.message || "Thank you for your enquiry!");
+              setFormData(initialFormData);
+            } else {
+              setSubmitStatus("error");
+              setSubmitMessage(data.error || "Something went wrong. Please try again.");
+            }
+          } catch (error) {
+            Sentry.captureException(error);
+            setSubmitStatus("error");
+            setSubmitMessage("Unable to send your message. Please try again later.");
+          }
         }
-      } catch {
-        setSubmitStatus("error");
-        setSubmitMessage("Unable to send your message. Please try again later.");
-      }
+      );
     });
   };
 

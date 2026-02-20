@@ -4,6 +4,10 @@ import { MobileMenu } from "./MobileMenu";
 import { siteConfig } from "@/site.config";
 
 export function Navigation() {
+  const navLinks = siteConfig.navigation.main.filter(
+    (link) => link.href !== "/blog" || siteConfig.features.blog
+  );
+
   return (
     <nav className="sticky top-0 z-50 bg-secondary/95 backdrop-blur-sm border-b border-primary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,7 +31,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {siteConfig.navigation.main.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -49,7 +53,7 @@ export function Navigation() {
           </div>
 
           {/* Mobile menu */}
-          <MobileMenu links={siteConfig.navigation.main} />
+          <MobileMenu links={navLinks} />
         </div>
       </div>
     </nav>

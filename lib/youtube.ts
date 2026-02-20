@@ -207,6 +207,7 @@ async function getChannelData(): Promise<ApiResult<YouTubeApiChannelResponse["it
     );
 
     if (!response.ok) {
+      console.error(`[YouTube] Channel API error: ${response.status} ${response.statusText}`);
       return {
         success: false,
         error: `YouTube API error: ${response.status} ${response.statusText}`,
@@ -250,6 +251,7 @@ async function fetchVideoDetails(
     );
 
     if (!response.ok) {
+      console.error(`[YouTube] Video details API error: ${response.status} ${response.statusText}`);
       return {
         success: false,
         error: `Failed to fetch video details: ${response.status}`,
@@ -317,6 +319,7 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
     );
 
     if (!playlistResponse.ok) {
+      console.error(`[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
       return {
         success: false,
         error: `Failed to fetch uploads: ${playlistResponse.status}`,
@@ -326,6 +329,7 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
     const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
 
     if (playlistData.error) {
+      console.error("[YouTube] Uploads API returned error:", playlistData.error.message);
       return { success: false, error: playlistData.error.message };
     }
 
@@ -344,7 +348,7 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
     return { success: true, data: videosResult.data.slice(0, maxResults) };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error fetching latest videos:", message);
+    console.error("[YouTube] Error fetching latest videos:", message);
     return { success: false, error: message };
   }
 }
@@ -401,6 +405,7 @@ export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
     );
 
     if (!response.ok) {
+      console.error(`[YouTube] Playlists API error: ${response.status} ${response.statusText}`);
       return {
         success: false,
         error: `Failed to fetch playlists: ${response.status}`,
@@ -410,6 +415,7 @@ export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
     const data: YouTubeApiPlaylistsResponse = await response.json();
 
     if (data.error) {
+      console.error("[YouTube] Playlists API returned error:", data.error.message);
       return { success: false, error: data.error.message };
     }
 
@@ -461,6 +467,7 @@ export async function getPlaylistVideos(
     );
 
     if (!playlistResponse.ok) {
+      console.error(`[YouTube] Playlist videos API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
       return {
         success: false,
         error: `Failed to fetch playlist: ${playlistResponse.status}`,
@@ -470,6 +477,7 @@ export async function getPlaylistVideos(
     const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
 
     if (playlistData.error) {
+      console.error("[YouTube] Playlist videos API returned error:", playlistData.error.message);
       return { success: false, error: playlistData.error.message };
     }
 

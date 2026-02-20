@@ -20,6 +20,7 @@ async function VideoGrid({ playlistId }: { playlistId?: string }) {
     : await getLatestVideos(50);
 
   if (!result.success) {
+    console.error("[VideoGrid] Failed to load videos:", result.error);
     return (
       <div className="text-center py-12">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-500/10 mb-4">
@@ -27,8 +28,8 @@ async function VideoGrid({ playlistId }: { playlistId?: string }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <p className="text-white/70 text-lg mb-2">Unable to load videos</p>
-        <p className="text-white/50 text-sm mb-4">{result.error}</p>
+        <p className="text-white/70 text-lg mb-2">Unable to load videos right now</p>
+        <p className="text-white/50 text-sm mb-4">Please try again later or visit our YouTube channel directly.</p>
         <a
           href="/videos"
           className="inline-block px-6 py-2 bg-primary rounded-full font-semibold hover:bg-primary/80 transition-colors"
@@ -113,11 +114,14 @@ export default async function VideosPage({ searchParams }: VideosPageProps) {
 
       {/* Show error if playlists failed but we still want to show videos */}
       {!playlistsResult.success && (
-        <div className="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-          <p className="text-yellow-500 text-sm">
-            Unable to load playlist filters. Showing all videos.
-          </p>
-        </div>
+        <>
+          {console.error("[VideosPage] Failed to load playlists:", playlistsResult.error)}
+          <div className="mb-8 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+            <p className="text-yellow-500 text-sm">
+              Unable to load playlist filters. Showing all videos.
+            </p>
+          </div>
+        </>
       )}
 
       {/* Video Grid - Key prop forces re-render when playlist changes */}

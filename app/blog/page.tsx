@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
 import { siteConfig } from "@/site.config";
@@ -124,6 +125,8 @@ async function TagCloud() {
 }
 
 export default async function BlogPage() {
+  if (!siteConfig.features.blog) notFound();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}

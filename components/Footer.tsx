@@ -59,7 +59,9 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {siteConfig.navigation.main.map((link) => (
+              {siteConfig.navigation.main.filter(
+                (link) => link.href !== "/blog" || siteConfig.features.blog
+              ).map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

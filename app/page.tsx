@@ -5,6 +5,8 @@ import { Newsletter } from "@/components/Newsletter";
 import { getLatestVideos } from "@/lib/youtube";
 import { siteConfig } from "@/site.config";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const videosResult = await getLatestVideos(6);
   const videos = videosResult.success ? videosResult.data : [];

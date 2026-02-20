@@ -84,6 +84,8 @@ function formatDate(date: Date): string {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  if (!siteConfig.features.blog) notFound();
+
   const { slug } = await params;
   const result = await getBlogPostBySlug(slug);
 

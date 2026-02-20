@@ -1,5 +1,11 @@
 .page {
-  padding: 3rem 0;
+  padding: 5rem 1rem 3rem;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 3rem 0;
+  }
 }
 
 .section {
@@ -12,10 +18,16 @@
 }
 
 .missionText {
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.75;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .missionText {
+    font-size: 1.125rem;
+  }
 }
 
 .topicGrid {

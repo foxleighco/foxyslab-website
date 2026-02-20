@@ -1,14 +1,21 @@
 .header {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
 }
 
 .logo {
   position: relative;
-  width: 5rem;
-  height: 5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   flex-shrink: 0;
 }
 
@@ -30,17 +37,24 @@
 }
 
 .title {
-  font-size: 2.25rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
 }
 
 @media (min-width: 768px) {
   .title {
     font-size: 3rem;
+    margin-bottom: 0.5rem;
   }
 }
 
 .subtitle {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 768px) {
+  .subtitle {
+    font-size: 1.25rem;
+  }
 }

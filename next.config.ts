@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; img-src 'self' https://i.ytimg.com https://img.youtube.com data:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://www.youtube.com https://www.googleapis.com;",
+            value: "default-src 'self'; img-src 'self' https://i.ytimg.com https://img.youtube.com data:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://www.youtube.com https://www.googleapis.com; media-src 'self';",
           },
           {
             key: "X-Frame-Options",

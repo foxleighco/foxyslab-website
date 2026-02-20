@@ -7,7 +7,7 @@ import { getLatestVideos } from "@/lib/youtube";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-const labCoatClips = Array.from({ length: 8 }, (_, i) => `/lab-coat-clips/lab-coat-clip-${i + 1}`);
+const labCoatClips = Array.from({ length: 7 }, (_, i) => `/lab-coat-clips/lab-coat-clip-${i + 1}`);
 
 export const dynamic = "force-dynamic";
 

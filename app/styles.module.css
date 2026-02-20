@@ -61,9 +61,10 @@
 }
 
 .heroVideo {
-  width: 100%;
-  max-width: 28rem;
-  height: auto;
+  height: 70vh;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .heroTextCol {

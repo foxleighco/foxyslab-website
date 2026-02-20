@@ -17,7 +17,6 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
-  // Enable sending user PII (Personally Identifiable Information)
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-  sendDefaultPii: true,
+  // Disable automatic PII collection (IPs, usernames, etc.) for privacy
+  sendDefaultPii: false,
 });

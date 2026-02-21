@@ -136,7 +136,7 @@ lib/
 - Metadata in layout.tsx with metadataBase
 - Open Graph and Twitter cards
 - JSON-LD structured data (Organization, WebSite)
-- Sitemap (public/sitemap.xml)
+- **Sitemap** (`public/sitemap.xml`) — **must be updated whenever a page is added, amended, or removed**
 - Robots.txt (public/robots.txt)
 - Web manifest (public/manifest.webmanifest)
 
@@ -313,6 +313,4 @@ logger.fatal("Database connection pool exhausted", {
 
 - Add newsletter service integration (Mailchimp, ConvertKit)
 - Implement video filtering and pagination
-- Set up testing (Vitest, Playwright)
-- Add CI/CD pipeline
 - Implement rate limiting for forms

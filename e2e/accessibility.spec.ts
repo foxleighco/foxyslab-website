@@ -30,7 +30,9 @@ test("skip-to-content link works", async ({ page }) => {
 
   // The skip link should be focusable (it may only appear on focus)
   if (await skipLink.isVisible()) {
-    await skipLink.click();
+    // Use Enter key since the skip link is designed for keyboard navigation
+    // and may be overlapped by the fixed nav bar
+    await page.keyboard.press("Enter");
 
     // Main content should receive focus or be scrolled to
     const main = page.getByRole("main");

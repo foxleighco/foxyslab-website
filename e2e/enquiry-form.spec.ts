@@ -11,7 +11,7 @@ test.describe("Enquiry Form", () => {
     await expect(
       page.getByText("Name must be at least 2 characters")
     ).toBeVisible();
-    await expect(page.getByText(/email/i)).toBeVisible();
+    await expect(page.getByText("Email is required")).toBeVisible();
   });
 
   test("shows error for invalid email", async ({ page }) => {

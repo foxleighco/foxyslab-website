@@ -115,6 +115,7 @@ interface YouTubeApiChannelResponse {
       subscriberCount: string;
       videoCount: string;
       viewCount: string;
+      commentCount: string;
     };
     contentDetails: {
       relatedPlaylists: {
@@ -159,6 +160,7 @@ interface YouTubeApiVideoResponse {
     statistics: {
       viewCount: string;
       likeCount: string;
+      commentCount: string;
     };
     contentDetails: {
       duration: string;
@@ -293,6 +295,7 @@ async function fetchVideoDetails(
         publishedAt: video.snippet.publishedAt,
         viewCount: video.statistics.viewCount || "0",
         likeCount: video.statistics.likeCount || "0",
+        commentCount: video.statistics.commentCount || "0",
         duration: video.contentDetails.duration,
         url: `https://www.youtube.com/watch?v=${video.id}`,
       }));
@@ -415,6 +418,7 @@ export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
           subscriberCount: channel.statistics.subscriberCount,
           videoCount: channel.statistics.videoCount,
           viewCount: channel.statistics.viewCount,
+          commentCount: channel.statistics.commentCount || "0",
           thumbnail:
             channel.snippet.thumbnails.high?.url ||
             channel.snippet.thumbnails.medium?.url ||

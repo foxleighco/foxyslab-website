@@ -6,6 +6,7 @@ export interface YouTubeVideo {
   publishedAt: string;
   viewCount: string;
   likeCount: string;
+  commentCount: string;
   duration: string;
   url: string;
 }
@@ -17,6 +18,7 @@ export interface YouTubeChannel {
   subscriberCount: string;
   videoCount: string;
   viewCount: string;
+  commentCount: string;
   thumbnail: string;
 }
 

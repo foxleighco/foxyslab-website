@@ -8,11 +8,11 @@
 export const siteConfig = {
   // Site Identity
   name: "Foxy's Lab",
-  tagline: "Smart Home & Tech Education",
+  tagline: "Smart Home, Homelab & Tech",
   description:
-    "Join Foxy's Lab for expert tutorials on smart home technology, home automation, and tech education. Learn, build, and automate with confidence.",
+    "Foxy's Lab — honest smart home and homelab reviews, local control advocacy, and beginner-friendly tech tutorials from a bloke who tests everything in his actual house.",
   shortDescription:
-    "Your guide to smart home technology, automation, and tech education.",
+    "Smart home and homelab tech, honest opinions, and a healthy distrust of cloud-only devices.",
 
   // URLs
   url: "https://www.foxyslab.com",

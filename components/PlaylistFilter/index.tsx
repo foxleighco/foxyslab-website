@@ -1,14 +1,10 @@
 "use client";
 
+import { PlaylistInfo } from "@/types/youtube";
 import styles from "./styles.module.css";
 
 interface PlaylistFilterProps {
-  playlists: Array<{
-    id: string;
-    title: string;
-    slug: string;
-    itemCount: number;
-  }>;
+  playlists: PlaylistInfo[];
   activeSlug: string | null;
   onSelect: (slug: string | null) => void;
 }

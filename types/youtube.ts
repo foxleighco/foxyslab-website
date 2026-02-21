@@ -18,7 +18,7 @@ export interface YouTubeChannel {
   subscriberCount: string;
   videoCount: string;
   viewCount: string;
-  commentCount: string;
+  commentCount?: string;
   thumbnail: string;
 }
 
@@ -27,5 +27,12 @@ export interface YouTubePlaylist {
   title: string;
   description: string;
   thumbnail: string;
+  itemCount: number;
+}
+
+export interface PlaylistInfo {
+  id: string;
+  title: string;
+  slug: string;
   itemCount: number;
 }

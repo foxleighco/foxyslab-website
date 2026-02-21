@@ -64,8 +64,18 @@ export default async function VideosPage() {
   // Build lookup maps
   const playlistVideoMap: Record<string, string[]> = {};
   const playlistSlugMap: Record<string, string> = {};
+  const videoIdSet = new Set(videos.map((v) => v.id));
+  const usedSlugs = new Set<string>();
+
   const playlistInfos = playlists.map((p, i) => {
-    const slug = toPlaylistSlug(p.title);
+    let slug = toPlaylistSlug(p.title, p.id);
+
+    // Disambiguate collisions by appending a suffix from the playlist ID
+    if (usedSlugs.has(slug)) {
+      slug = `${slug}-${p.id.slice(-6).toLowerCase()}`;
+    }
+    usedSlugs.add(slug);
+
     const videoIds = playlistIdResults[i].success
       ? playlistIdResults[i].data
       : [];
@@ -73,8 +83,6 @@ export default async function VideosPage() {
     playlistVideoMap[p.id] = videoIds;
     playlistSlugMap[slug] = p.id;
 
-    // Count how many of these videos are in our fetched set (after Shorts filtering)
-    const videoIdSet = new Set(videos.map((v) => v.id));
     const filteredCount = videoIds.filter((id) => videoIdSet.has(id)).length;
 
     return {

@@ -2,20 +2,13 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { YouTubeVideo } from "@/types/youtube";
+import { YouTubeVideo, PlaylistInfo } from "@/types/youtube";
 import { VideoCard } from "@/components/VideoCard";
 import { PlaylistFilter } from "@/components/PlaylistFilter";
 import { PageHeader } from "@/components/PageHeader";
 import styles from "./styles.module.css";
 
 const VIDEOS_PER_PAGE = 12;
-
-interface PlaylistInfo {
-  id: string;
-  title: string;
-  slug: string;
-  itemCount: number;
-}
 
 interface VideoGalleryProps {
   videos: YouTubeVideo[];

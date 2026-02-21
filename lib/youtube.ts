@@ -115,7 +115,7 @@ interface YouTubeApiChannelResponse {
       subscriberCount: string;
       videoCount: string;
       viewCount: string;
-      commentCount: string;
+      commentCount?: string;
     };
     contentDetails: {
       relatedPlaylists: {
@@ -333,12 +333,11 @@ export async function getLatestVideos(
       const uploadsPlaylistId =
         channelResult.data![0].contentDetails.relatedPlaylists.uploads;
 
-      // For small requests, fetch double to account for filtered Shorts
-      // For large requests, paginate through all uploads
-      const needsPagination = maxResults > 25;
+      // Only paginate beyond a single API page (50) when needed
+      const needsPagination = maxResults > 50;
 
       try {
-        const allVideoIds: string[] = [];
+        const allVideos: YouTubeVideo[] = [];
         let pageToken: string | undefined;
         const perPage = 50; // YouTube API max per request
 
@@ -379,30 +378,24 @@ export async function getLatestVideos(
             break;
           }
 
-          const ids = playlistData.items.map(
+          const videoIds = playlistData.items.map(
             (item) => item.snippet.resourceId.videoId
           );
-          allVideoIds.push(...ids);
 
-          pageToken = needsPagination ? playlistData.nextPageToken : undefined;
-        } while (pageToken);
-
-        if (allVideoIds.length === 0) {
-          return { success: true, data: [] };
-        }
-
-        // Fetch video details in batches of 50 (API limit)
-        const allVideos: YouTubeVideo[] = [];
-        for (let i = 0; i < allVideoIds.length; i += 50) {
-          const batch = allVideoIds.slice(i, i + 50);
-          const videosResult = await fetchVideoDetails(batch, apiKey, true);
-
+          // Fetch video details for this batch (also filters Shorts)
+          const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
           if (!videosResult.success) {
             return videosResult;
           }
-
           allVideos.push(...videosResult.data);
-        }
+
+          // Stop early once we have enough non-Shorts videos
+          if (allVideos.length >= maxResults) {
+            break;
+          }
+
+          pageToken = needsPagination ? playlistData.nextPageToken : undefined;
+        } while (pageToken);
 
         const videos = allVideos.slice(0, maxResults);
         span.setAttribute("video.count", videos.length);
@@ -446,7 +439,6 @@ export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
           subscriberCount: channel.statistics.subscriberCount,
           videoCount: channel.statistics.videoCount,
           viewCount: channel.statistics.viewCount,
-          commentCount: channel.statistics.commentCount || "0",
           thumbnail:
             channel.snippet.thumbnails.high?.url ||
             channel.snippet.thumbnails.medium?.url ||
@@ -609,11 +601,17 @@ export async function getPlaylistVideos(
 /**
  * Convert a playlist title to a URL-friendly slug
  */
-export function toPlaylistSlug(title: string): string {
-  return title
+export function toPlaylistSlug(title: string, playlistId?: string): string {
+  const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+
+  if (!slug && playlistId) {
+    return playlistId.toLowerCase();
+  }
+
+  return slug || "playlist";
 }
 
 /**

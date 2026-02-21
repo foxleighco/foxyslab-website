@@ -36,6 +36,6 @@
 }
 
 .linkActive {
-  color: var(--primary);
+  color: var(--primary-text);
   font-weight: 500;
 }

@@ -50,7 +50,7 @@
 .categoryText {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--primary);
+  color: var(--primary-text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -175,7 +175,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--primary);
+  color: var(--primary-text);
   text-decoration: none;
   transition: opacity 0.2s;
 }
@@ -244,7 +244,7 @@
 }
 
 .postNavLink:hover .postNavTitle {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 /* Sidebar */

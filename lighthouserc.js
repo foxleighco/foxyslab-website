@@ -1,9 +1,14 @@
 module.exports = {
   ci: {
     collect: {
-      url: ["/", "/about", "/videos", "/enquiries"],
+      url: [
+        "http://localhost:3000/",
+        "http://localhost:3000/about",
+        "http://localhost:3000/videos",
+        "http://localhost:3000/enquiries",
+      ],
       startServerCommand: "npm start",
-      startServerReadyPattern: "Ready",
+      startServerReadyPattern: "Local:",
       numberOfRuns: 3,
     },
     assert: {

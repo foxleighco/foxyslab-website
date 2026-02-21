@@ -52,7 +52,7 @@
 .topicTitle {
   font-size: 1.25rem;
   margin-bottom: 0.75rem;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .topicDescription {

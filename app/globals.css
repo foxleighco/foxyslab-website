@@ -10,6 +10,7 @@
 /* === Design Tokens === */
 :root {
   --primary: #d32365;
+  --primary-text: #e8558c;
   --secondary: #32002d;
   --accent-yellow: #ffe868;
   --accent-orange: #df5a13;
@@ -181,7 +182,7 @@ main {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border: 1px solid var(--primary);
-  color: var(--primary);
+  color: var(--primary-text);
   border-radius: 9999px;
   font-weight: 600;
   background: transparent;
@@ -266,7 +267,7 @@ main {
 }
 
 .prose a {
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .prose a:hover {
@@ -350,7 +351,7 @@ main {
   font-family:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
     monospace;
-  color: var(--primary);
+  color: var(--primary-text);
 }
 
 .heading-anchor {

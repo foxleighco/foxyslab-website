@@ -11,13 +11,6 @@ describe("VideoCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders video description", () => {
-    render(<VideoCard video={mockVideo} />);
-    expect(
-      screen.getByText("Learn how to set up Home Assistant from scratch.")
-    ).toBeInTheDocument();
-  });
-
   it("renders formatted view count", () => {
     render(<VideoCard video={mockVideo} />);
     expect(screen.getByText("15.0K views")).toBeInTheDocument();

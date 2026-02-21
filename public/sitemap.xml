@@ -19,18 +19,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foxyslab.com/blog</loc>
-    <lastmod>2026-02-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foxyslab.com/blog/getting-started-with-home-assistant</loc>
-    <lastmod>2024-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://foxyslab.com/enquiries</loc>
     <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>

@@ -6,6 +6,7 @@ import {
   toPlaylistSlug,
 } from "@/lib/youtube";
 import { VideoGallery } from "@/components/VideoGallery";
+import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -25,6 +26,10 @@ export default async function VideosPage() {
     console.error("[VideosPage] Failed to load videos:", videosResult.error);
     return (
       <div className={`container ${styles.page}`}>
+        <PageHeader
+          title="All Videos"
+          subtitle="Browse through our complete collection of tutorials and guides"
+        />
         <div className={styles.errorState}>
           <div className={styles.errorIcon}>
             <svg

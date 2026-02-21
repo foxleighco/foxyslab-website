@@ -20,6 +20,7 @@ export function TransparentVideo({
   useEffect(() => {
     if (clips.length === 0) return;
     const randomIndex = Math.floor(Math.random() * clips.length);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: random clip selection after mount to avoid SSR hydration mismatch
     setSelectedClip(clips[randomIndex]);
   }, [clips]);
 

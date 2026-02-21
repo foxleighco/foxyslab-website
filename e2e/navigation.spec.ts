@@ -21,6 +21,11 @@ test.describe("Navigation", () => {
     await expect(page.locator("h1")).toBeVisible();
   });
 
+  test("blog page loads", async ({ page }) => {
+    await page.goto("/blog");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
   test("nav links navigate between pages", async ({ page }) => {
     await page.goto("/");
 

@@ -6,6 +6,7 @@ module.exports = {
         "http://localhost:3000/about",
         "http://localhost:3000/videos",
         "http://localhost:3000/enquiries",
+        "http://localhost:3000/blog",
       ],
       startServerCommand: "npm start",
       startServerReadyPattern: "Local:",

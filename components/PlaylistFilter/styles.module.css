@@ -20,10 +20,6 @@
   cursor: pointer;
 }
 
-.pill:disabled {
-  opacity: 0.5;
-}
-
 .pillActive {
   background-color: var(--primary);
   color: white;
@@ -37,26 +33,6 @@
 
 .pillInactive:hover {
   border-color: color-mix(in srgb, var(--primary) 50%, transparent);
-}
-
-.loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-  height: 1rem;
-  width: 1rem;
-}
-
-.spinnerBg {
-  opacity: 0.25;
-}
-
-.spinnerFg {
-  opacity: 0.75;
 }
 
 .count {

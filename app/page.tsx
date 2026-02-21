@@ -58,8 +58,9 @@ export default async function Home() {
             </h1>
 
             <p className={`${styles.heroSubtitle} text-balance`}>
-              Your ultimate destination for smart home technology, automation
-              tutorials, and cutting-edge tech education.
+              Smart home and homelab tech without the corporate waffle. Honest
+              reviews, local control advocacy, and the occasional
+              strongly-worded opinion about cloud-dependent tat.
             </p>
 
             <div className={styles.heroButtons}>
@@ -114,9 +115,30 @@ export default async function Home() {
         )}
       </section>
 
-      {/* Features Section */}
+      {/* Meet Foxy */}
       <section className={styles.section}>
-        <h2 className={styles.featuresTitle}>What You&apos;ll Learn</h2>
+        <div className={styles.introCard}>
+          <h2 className={styles.introTitle}>Who&apos;s This Then?</h2>
+          <p className={styles.introText}>
+            I&apos;m Foxy — I cover smart home tech, homelabs, and the
+            occasional bit of general tech that catches my eye. I started this
+            channel because I got fed up watching reviews that gloss over the
+            important stuff: does it work locally? Will the company still exist
+            in two years? Can you set it up without losing a weekend? Everything
+            here gets tested in my actual home (for better or worse), every
+            opinion is mine, and if something&apos;s rubbish, I&apos;ll tell
+            you.
+          </p>
+          <p className={styles.introCatchphrase}>
+            So... go grab a coffee, I&apos;ll get one too and then we&apos;ll
+            get into it.
+          </p>
+        </div>
+      </section>
+
+      {/* What's on the Channel */}
+      <section className={styles.section}>
+        <h2 className={styles.featuresTitle}>What&apos;s on the Channel</h2>
 
         <div className={styles.featuresGrid}>
           <div className={styles.featureCard}>
@@ -131,14 +153,16 @@ export default async function Home() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                 />
               </svg>
             </div>
-            <h3 className={styles.featureTitle}>Smart Home Basics</h3>
+            <h3 className={styles.featureTitle}>Local Control Matters</h3>
             <p className={styles.featureText}>
-              From choosing devices to setting up your first automation, we
-              cover everything you need to get started.
+              I&apos;m a firm believer that your smart home and your homelab
+              should work even when your internet doesn&apos;t. A big chunk of
+              what I do is about keeping your data and your devices under your
+              own roof.
             </p>
           </div>
 
@@ -154,14 +178,24 @@ export default async function Home() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                 />
               </svg>
             </div>
-            <h3 className={styles.featureTitle}>Advanced Automation</h3>
+            <h3 className={styles.featureTitle}>Honest Reviews</h3>
             <p className={styles.featureText}>
-              Take your smart home to the next level with complex automations
-              and custom integrations.
+              I test smart home gear, homelab hardware, and the odd bit of
+              general tech, then tell you what I honestly think — whether I
+              bought it, was sent it, or it&apos;s part of a sponsorship. Every
+              product gets the same honest treatment. If it&apos;s brilliant,
+              I&apos;ll say so. If it&apos;s a waste of fifty quid, I&apos;ll
+              say that too.
             </p>
           </div>
 
@@ -177,14 +211,46 @@ export default async function Home() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
             </div>
-            <h3 className={styles.featureTitle}>Security & Privacy</h3>
+            <h3 className={styles.featureTitle}>What the Heck?!</h3>
             <p className={styles.featureText}>
-              Learn best practices for keeping your smart home secure and
-              protecting your privacy.
+              My beginner-friendly series that explains smart home and homelab
+              concepts in plain English. Zigbee, Z-Wave, Docker, VLANs — all the
+              jargon that makes your eyes glaze over, broken down without the
+              condescension.
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={`${styles.featureIcon} gradient-primary`}>
+              <svg
+                className={styles.featureIconSvg}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            <h3 className={styles.featureTitle}>Tutorials & Tinkering</h3>
+            <p className={styles.featureText}>
+              Step-by-step guides for people who want to get their hands dirty.
+              Home Assistant setups, homelab builds, self-hosted services, and
+              automations that actually make your life easier.
             </p>
           </div>
         </div>

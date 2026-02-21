@@ -8,24 +8,6 @@
   }
 }
 
-.videoGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .videoGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .videoGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 .errorState {
   text-align: center;
   padding: 3rem 0;
@@ -73,56 +55,6 @@
 
 .retryLink:hover {
   opacity: 0.8;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 3rem 0;
-}
-
-.emptyIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 9999px;
-  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
-  margin-bottom: 1rem;
-}
-
-.emptyIconSvg {
-  width: 2rem;
-  height: 2rem;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.emptyText {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.125rem;
-}
-
-.skeleton {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.skeletonCard {
-  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
-  border-radius: 0.75rem;
-  aspect-ratio: 16 / 9;
-}
-
-.playlistWarning {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background-color: rgba(234, 179, 8, 0.1);
-  border: 1px solid rgba(234, 179, 8, 0.3);
-  border-radius: 0.5rem;
-}
-
-.playlistWarningText {
-  color: #eab308;
-  font-size: 0.875rem;
 }
 
 .ctaWrapper {

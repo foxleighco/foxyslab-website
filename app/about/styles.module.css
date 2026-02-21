@@ -64,21 +64,44 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   text-align: center;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 0.75rem;
+  padding: 2.5rem 1.5rem;
 }
 
 @media (min-width: 768px) {
   .statsGrid {
     grid-template-columns: repeat(4, 1fr);
+    padding: 3rem 2rem;
   }
 }
 
+.statsSubtext {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+
 .statValue {
-  font-size: 2.25rem;
+  font-size: 2.75rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .statValue {
+    font-size: 3rem;
+  }
 }
 
 .statLabel {
   color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .communityCard {

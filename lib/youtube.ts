@@ -115,6 +115,7 @@ interface YouTubeApiChannelResponse {
       subscriberCount: string;
       videoCount: string;
       viewCount: string;
+      commentCount?: string;
     };
     contentDetails: {
       relatedPlaylists: {
@@ -136,6 +137,7 @@ interface YouTubeApiPlaylistItemsResponse {
       };
     };
   }>;
+  nextPageToken?: string;
   error?: {
     message: string;
     code: number;
@@ -159,6 +161,7 @@ interface YouTubeApiVideoResponse {
     statistics: {
       viewCount: string;
       likeCount: string;
+      commentCount: string;
     };
     contentDetails: {
       duration: string;
@@ -293,6 +296,7 @@ async function fetchVideoDetails(
         publishedAt: video.snippet.publishedAt,
         viewCount: video.statistics.viewCount || "0",
         likeCount: video.statistics.likeCount || "0",
+        commentCount: video.statistics.commentCount || "0",
         duration: video.contentDetails.duration,
         url: `https://www.youtube.com/watch?v=${video.id}`,
       }));
@@ -329,51 +333,71 @@ export async function getLatestVideos(
       const uploadsPlaylistId =
         channelResult.data![0].contentDetails.relatedPlaylists.uploads;
 
-      // Fetch more videos than needed to account for filtered Shorts
-      const fetchCount = Math.min(maxResults * 2, 50);
+      // Only paginate beyond a single API page (50) when needed
+      const needsPagination = maxResults > 50;
 
       try {
-        const playlistResponse = await fetchWithRetry(
-          `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=${fetchCount}&key=${apiKey}`,
-          { next: { revalidate: 1800 } }
-        );
+        const allVideos: YouTubeVideo[] = [];
+        let pageToken: string | undefined;
+        const perPage = 50; // YouTube API max per request
 
-        if (!playlistResponse.ok) {
-          console.error(
-            `[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`
+        do {
+          const tokenParam = pageToken ? `&pageToken=${pageToken}` : "";
+          const fetchCount = needsPagination
+            ? perPage
+            : Math.min(maxResults * 2, 50);
+
+          const playlistResponse = await fetchWithRetry(
+            `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=${fetchCount}${tokenParam}&key=${apiKey}`,
+            { next: { revalidate: 1800 } }
           );
-          span.setAttribute("http.status_code", playlistResponse.status);
-          return {
-            success: false,
-            error: `Failed to fetch uploads: ${playlistResponse.status}`,
-          };
-        }
 
-        const playlistData: YouTubeApiPlaylistItemsResponse =
-          await playlistResponse.json();
+          if (!playlistResponse.ok) {
+            console.error(
+              `[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`
+            );
+            span.setAttribute("http.status_code", playlistResponse.status);
+            return {
+              success: false,
+              error: `Failed to fetch uploads: ${playlistResponse.status}`,
+            };
+          }
 
-        if (playlistData.error) {
-          console.error(
-            "[YouTube] Uploads API returned error:",
-            playlistData.error.message
+          const playlistData: YouTubeApiPlaylistItemsResponse =
+            await playlistResponse.json();
+
+          if (playlistData.error) {
+            console.error(
+              "[YouTube] Uploads API returned error:",
+              playlistData.error.message
+            );
+            return { success: false, error: playlistData.error.message };
+          }
+
+          if (!playlistData.items || playlistData.items.length === 0) {
+            break;
+          }
+
+          const videoIds = playlistData.items.map(
+            (item) => item.snippet.resourceId.videoId
           );
-          return { success: false, error: playlistData.error.message };
-        }
 
-        if (!playlistData.items || playlistData.items.length === 0) {
-          return { success: true, data: [] };
-        }
+          // Fetch video details for this batch (also filters Shorts)
+          const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
+          if (!videosResult.success) {
+            return videosResult;
+          }
+          allVideos.push(...videosResult.data);
 
-        const videoIds = playlistData.items.map(
-          (item) => item.snippet.resourceId.videoId
-        );
-        const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
+          // Stop early once we have enough non-Shorts videos
+          if (allVideos.length >= maxResults) {
+            break;
+          }
 
-        if (!videosResult.success) {
-          return videosResult;
-        }
+          pageToken = needsPagination ? playlistData.nextPageToken : undefined;
+        } while (pageToken);
 
-        const videos = videosResult.data.slice(0, maxResults);
+        const videos = allVideos.slice(0, maxResults);
         span.setAttribute("video.count", videos.length);
         return { success: true, data: videos };
       } catch (error) {
@@ -568,6 +592,96 @@ export async function getPlaylistVideos(
         const message =
           error instanceof Error ? error.message : "Unknown error";
         console.error("Error fetching playlist videos:", message);
+        return { success: false, error: message };
+      }
+    }
+  );
+}
+
+/**
+ * Convert a playlist title to a URL-friendly slug
+ */
+export function toPlaylistSlug(title: string, playlistId?: string): string {
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  if (!slug && playlistId) {
+    return playlistId.toLowerCase();
+  }
+
+  return slug || "playlist";
+}
+
+/**
+ * Fetch only video IDs from a playlist (lightweight, no video details)
+ */
+export async function getPlaylistVideoIds(
+  playlistId: string
+): Promise<ApiResult<string[]>> {
+  return Sentry.startSpan(
+    {
+      op: "youtube.api",
+      name: "getPlaylistVideoIds",
+    },
+    async (span) => {
+      const apiKey = getApiKey();
+
+      if (!apiKey) {
+        return { success: false, error: "No YouTube API key configured" };
+      }
+
+      if (!playlistId || !YOUTUBE_ID_REGEX.test(playlistId)) {
+        return { success: false, error: "Invalid playlist ID format" };
+      }
+
+      span.setAttribute("playlist.id", playlistId);
+
+      try {
+        const allVideoIds: string[] = [];
+        let pageToken: string | undefined;
+
+        do {
+          const tokenParam = pageToken ? `&pageToken=${pageToken}` : "";
+          const response = await fetchWithRetry(
+            `${YOUTUBE_API_BASE}/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50${tokenParam}&key=${apiKey}`,
+            { next: { revalidate: 1800 } }
+          );
+
+          if (!response.ok) {
+            console.error(
+              `[YouTube] Playlist items API error: ${response.status} ${response.statusText}`
+            );
+            span.setAttribute("http.status_code", response.status);
+            return {
+              success: false,
+              error: `Failed to fetch playlist items: ${response.status}`,
+            };
+          }
+
+          const data: YouTubeApiPlaylistItemsResponse = await response.json();
+
+          if (data.error) {
+            return { success: false, error: data.error.message };
+          }
+
+          if (!data.items || data.items.length === 0) {
+            break;
+          }
+
+          const ids = data.items.map((item) => item.snippet.resourceId.videoId);
+          allVideoIds.push(...ids);
+          pageToken = data.nextPageToken;
+        } while (pageToken);
+
+        span.setAttribute("video_id.count", allVideoIds.length);
+        return { success: true, data: allVideoIds };
+      } catch (error) {
+        Sentry.captureException(error);
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        console.error("Error fetching playlist video IDs:", message);
         return { success: false, error: message };
       }
     }

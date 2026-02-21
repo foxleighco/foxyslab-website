@@ -8,6 +8,7 @@ export const mockVideo: YouTubeVideo = {
   publishedAt: "2025-06-15T12:00:00Z",
   viewCount: "15000",
   likeCount: "850",
+  commentCount: "42",
   duration: "PT12M30S",
   url: "https://www.youtube.com/watch?v=abc123",
 };
@@ -20,6 +21,7 @@ export const mockVideo2: YouTubeVideo = {
   publishedAt: "2025-07-01T14:00:00Z",
   viewCount: "8500",
   likeCount: "420",
+  commentCount: "28",
   duration: "PT8M15S",
   url: "https://www.youtube.com/watch?v=def456",
 };

@@ -1,11 +1,13 @@
 # Project: Foxy's Lab YouTube Channel Website
 
 ## Overview
+
 Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTube channel, featuring dark contemporary design with YouTube API integration, optimized for tech education content delivery and community engagement.
 
 ## Critical Considerations
 
 ### Security
+
 - Secure API key management using environment variables
 - Implementation of Content Security Policy headers
 - Rate limiting for API endpoints
@@ -15,6 +17,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - Secure cookie configuration for analytics/preferences
 
 ### Performance
+
 - Target Lighthouse score of 95+ across all metrics
 - Implement ISR (Incremental Static Regeneration) for video content
 - Image optimization with Next.js Image component and blur placeholders
@@ -25,6 +28,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - YouTube API response caching strategy
 
 ### Accessibility
+
 - WCAG 2.1 AA compliance minimum
 - Full keyboard navigation support
 - Proper ARIA labels for all interactive elements
@@ -37,12 +41,14 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ## Technology Stack
 
 ### Core Framework
+
 - **Next.js 15.0+** with App Router
 - **TypeScript 5.3+** with strict mode
 - **React 19** (or latest stable)
 - **Node.js 20 LTS**
 
 ### Styling & UI
+
 - **Tailwind CSS 3.4+** with custom configuration
 - **Radix UI** for accessible primitives
 - **Framer Motion** for animations
@@ -50,11 +56,13 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **lucide-react** for icons
 
 ### Data & State
+
 - **TanStack Query v5** for server state
 - **Zustand** for client state (if needed)
 - **Zod** for schema validation
 
 ### Development & Quality
+
 - **ESLint** with Next.js config
 - **Prettier** for formatting
 - **Husky** + **lint-staged** for pre-commit hooks
@@ -63,6 +71,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Storybook** for component development
 
 ### Infrastructure
+
 - **Vercel** for deployment (optimized for Next.js)
 - **YouTube Data API v3** for video content
 - **Resend** or **SendGrid** for newsletter
@@ -154,6 +163,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 1: Project Setup and Configuration
 
 #### Task 1.1: Initialize Next.js Project with TypeScript
+
 - **Assigned to**: setup-agent
 - **Priority**: Critical
 - **Dependencies**: None
@@ -166,6 +176,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use `npx create-next-app@latest` with TypeScript, Tailwind, and App Router options
 
 #### Task 1.2: Configure Development Environment
+
 - **Assigned to**: setup-agent
 - **Priority**: Critical
 - **Dependencies**: Task 1.1
@@ -177,6 +188,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Include YOUTUBE_API_KEY, NEWSLETTER_API_KEY placeholders
 
 #### Task 1.3: Setup Tailwind with Custom Design System
+
 - **Assigned to**: frontend-agent
 - **Priority**: High
 - **Dependencies**: Task 1.1
@@ -191,6 +203,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 2: Core Infrastructure
 
 #### Task 2.1: Implement Base Layout Components
+
 - **Assigned to**: frontend-agent
 - **Priority**: Critical
 - **Dependencies**: Task 1.3
@@ -203,6 +216,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use Radix UI for accessible navigation primitives
 
 #### Task 2.2: Setup YouTube API Integration
+
 - **Assigned to**: backend-agent
 - **Priority**: Critical
 - **Dependencies**: Task 1.2
@@ -215,6 +229,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use edge runtime for API routes, implement stale-while-revalidate
 
 #### Task 2.3: Create Reusable UI Components
+
 - **Assigned to**: frontend-agent
 - **Priority**: High
 - **Dependencies**: Task 1.3
@@ -229,6 +244,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 3: Feature Implementation
 
 #### Task 3.1: Build Homepage
+
 - **Assigned to**: frontend-agent
 - **Priority**: Critical
 - **Dependencies**: Tasks 2.1, 2.2, 2.3
@@ -242,6 +258,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use background.png for hero, implement parallax if performance allows
 
 #### Task 3.2: Implement Videos Page
+
 - **Assigned to**: frontend-agent
 - **Priority**: Critical
 - **Dependencies**: Tasks 2.2, 2.3
@@ -255,6 +272,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Implement virtual scrolling for performance with large lists
 
 #### Task 3.3: Create Individual Video Pages
+
 - **Assigned to**: frontend-agent
 - **Priority**: High
 - **Dependencies**: Task 3.2
@@ -267,6 +285,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use dynamic OG images, implement structured data for videos
 
 #### Task 3.4: Build About Page
+
 - **Assigned to**: content-agent
 - **Priority**: Medium
 - **Dependencies**: Task 2.1
@@ -279,6 +298,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Include schema.org Person markup for SEO
 
 #### Task 3.5: Implement Newsletter Integration
+
 - **Assigned to**: backend-agent
 - **Priority**: High
 - **Dependencies**: Task 2.3
@@ -293,6 +313,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 4: Performance Optimization
 
 #### Task 4.1: Implement Image Optimization
+
 - **Assigned to**: performance-agent
 - **Priority**: High
 - **Dependencies**: Phase 3 completion
@@ -305,6 +326,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Generate blur data URLs at build time
 
 #### Task 4.2: Code Splitting and Bundle Optimization
+
 - **Assigned to**: performance-agent
 - **Priority**: High
 - **Dependencies**: Phase 3 completion
@@ -317,6 +339,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use dynamic imports for Framer Motion animations
 
 #### Task 4.3: Implement Caching Strategy
+
 - **Assigned to**: backend-agent
 - **Priority**: High
 - **Dependencies**: Task 2.2
@@ -331,6 +354,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 5: SEO and Analytics
 
 #### Task 5.1: Implement SEO Optimization
+
 - **Assigned to**: seo-agent
 - **Priority**: High
 - **Dependencies**: Phase 3 completion
@@ -344,6 +368,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use Next.js Metadata API, implement JSON-LD for videos
 
 #### Task 5.2: Setup Analytics and Monitoring
+
 - **Assigned to**: devops-agent
 - **Priority**: Medium
 - **Dependencies**: Phase 3 completion
@@ -358,6 +383,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 6: Testing and Quality Assurance
 
 #### Task 6.1: Implement Unit Tests
+
 - **Assigned to**: qa-agent
 - **Priority**: High
 - **Dependencies**: Phase 3 completion
@@ -370,6 +396,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Focus on critical business logic and complex components
 
 #### Task 6.2: Setup E2E Testing
+
 - **Assigned to**: qa-agent
 - **Priority**: High
 - **Dependencies**: Phase 3 completion
@@ -382,6 +409,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Test video playback, newsletter signup, navigation flows
 
 #### Task 6.3: Accessibility Audit
+
 - **Assigned to**: accessibility-agent
 - **Priority**: Critical
 - **Dependencies**: Phase 3 completion
@@ -395,6 +423,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Use axe-core for automated testing, manual testing with NVDA/JAWS
 
 #### Task 6.4: Performance Audit
+
 - **Assigned to**: performance-agent
 - **Priority**: High
 - **Dependencies**: Phase 4 completion
@@ -409,6 +438,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ### Phase 7: Deployment and Launch
 
 #### Task 7.1: Setup Production Environment
+
 - **Assigned to**: devops-agent
 - **Priority**: Critical
 - **Dependencies**: Phase 6 completion
@@ -421,6 +451,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Configure production branch protection, setup staging environment
 
 #### Task 7.2: Implement CI/CD Pipeline
+
 - **Assigned to**: devops-agent
 - **Priority**: High
 - **Dependencies**: Task 7.1
@@ -433,6 +464,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - **Implementation Notes**: Include performance budget checks in CI
 
 #### Task 7.3: Production Readiness Checklist
+
 - **Assigned to**: lead-agent
 - **Priority**: Critical
 - **Dependencies**: All previous tasks
@@ -448,6 +480,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ## Risk Assessment
 
 ### High Risk
+
 - **YouTube API quota limits**: Could limit video fetching capabilities
   - Mitigation: Implement aggressive caching, consider backup data source
 - **Performance degradation with large video libraries**: May impact user experience
@@ -456,6 +489,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
   - Mitigation: ISR implementation, structured data, sitemap generation
 
 ### Medium Risk
+
 - **Third-party service downtime** (YouTube, Newsletter provider): Service disruption
   - Mitigation: Graceful degradation, offline fallbacks, status page
 - **Browser compatibility issues**: Particularly with older browsers
@@ -464,6 +498,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
   - Mitigation: Storybook documentation, design tokens, component library
 
 ### Mitigation Strategies
+
 1. Implement comprehensive error boundaries and fallback UI
 2. Set up automated testing and monitoring from day one
 3. Create detailed documentation for all integration points
@@ -471,6 +506,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 5. Regular dependency updates and security audits
 
 ## Success Metrics
+
 - Lighthouse performance score consistently above 95
 - Core Web Vitals in "Good" range for 90% of users
 - Zero critical accessibility violations
@@ -481,11 +517,13 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 - SEO: First page ranking for "Foxy's Lab" within 3 months
 
 ## Timeline Estimate
+
 - **Total estimated effort**: 120-160 hours
 - **Optimal team size**: 3-4 developers
 - **Duration with parallel work**: 3-4 weeks
 
 ### Critical Path
+
 1. Project Setup (Days 1-2)
 2. Core Infrastructure (Days 3-5)
 3. Homepage and Videos Implementation (Days 6-10)
@@ -498,6 +536,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 ## Additional Recommendations
 
 ### Post-Launch Enhancements
+
 1. Implement A/B testing framework for conversion optimization
 2. Add comment system integration (Disqus or custom)
 3. Create member-only content area
@@ -506,6 +545,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 6. Consider implementing AMP pages for mobile performance
 
 ### Maintenance Considerations
+
 1. Weekly dependency updates schedule
 2. Monthly performance audits
 3. Quarterly accessibility reviews
@@ -513,6 +553,7 @@ Build a high-performance, accessible Next.js 15 website for the Foxy's Lab YouTu
 5. Regular backup testing and disaster recovery drills
 
 ### Documentation Requirements
+
 1. Complete API documentation
 2. Component library documentation in Storybook
 3. Deployment and rollback procedures

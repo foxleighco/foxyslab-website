@@ -8,7 +8,9 @@ test.describe("Enquiry Form", () => {
   test("shows validation errors for empty submission", async ({ page }) => {
     await page.getByRole("button", { name: "Send Enquiry" }).click();
 
-    await expect(page.getByText("Name must be at least 2 characters")).toBeVisible();
+    await expect(
+      page.getByText("Name must be at least 2 characters")
+    ).toBeVisible();
     await expect(page.getByText(/email/i)).toBeVisible();
   });
 

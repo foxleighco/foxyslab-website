@@ -48,7 +48,7 @@ This is the easiest method and includes everything you need out of the box:
 For those who want more control, you can run Home Assistant in Docker:
 
 ```yaml
-version: '3'
+version: "3"
 services:
   homeassistant:
     container_name: homeassistant

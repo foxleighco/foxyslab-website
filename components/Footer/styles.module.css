@@ -87,7 +87,9 @@
   color: var(--primary);
   border-radius: 9999px;
   text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .newsletterLink:hover {

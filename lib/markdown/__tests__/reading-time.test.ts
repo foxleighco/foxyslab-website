@@ -51,7 +51,8 @@ describe("generateExcerpt", () => {
   });
 
   it("truncates at word boundary with ellipsis", () => {
-    const longText = "This is a really long sentence that goes on and on and should eventually be truncated at some word boundary.";
+    const longText =
+      "This is a really long sentence that goes on and on and should eventually be truncated at some word boundary.";
     const result = generateExcerpt(longText, 50);
     expect(result.length).toBeLessThanOrEqual(53); // 50 + "..."
     expect(result).toMatch(/\.\.\.$/);

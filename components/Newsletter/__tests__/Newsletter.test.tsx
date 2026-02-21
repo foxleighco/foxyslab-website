@@ -83,9 +83,7 @@ describe("Newsletter", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(
-          "Thanks for subscribing! Check your email to confirm."
-        )
+        screen.getByText("Thanks for subscribing! Check your email to confirm.")
       ).toBeInTheDocument();
     });
 

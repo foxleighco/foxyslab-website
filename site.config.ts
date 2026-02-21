@@ -11,7 +11,8 @@ export const siteConfig = {
   tagline: "Smart Home & Tech Education",
   description:
     "Join Foxy's Lab for expert tutorials on smart home technology, home automation, and tech education. Learn, build, and automate with confidence.",
-  shortDescription: "Your guide to smart home technology, automation, and tech education.",
+  shortDescription:
+    "Your guide to smart home technology, automation, and tech education.",
 
   // URLs
   url: "https://www.foxyslab.com",

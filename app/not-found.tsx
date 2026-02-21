@@ -10,10 +10,7 @@ export default function NotFound() {
         <p className={styles.message}>
           Sorry, we couldn&apos;t find the page you&apos;re looking for.
         </p>
-        <Link
-          href="/"
-          className="btn-primary"
-        >
+        <Link href="/" className="btn-primary">
           Go Home
         </Link>
       </div>

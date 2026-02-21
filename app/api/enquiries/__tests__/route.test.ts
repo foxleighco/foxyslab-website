@@ -140,14 +140,11 @@ describe("POST /api/enquiries", () => {
     });
 
     const POST = await importRoute();
-    const request = new NextRequest(
-      "http://localhost:3000/api/enquiries",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: "not json",
-      }
-    );
+    const request = new NextRequest("http://localhost:3000/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "not json",
+    });
 
     const response = await POST(request);
     expect(response.status).toBe(400);

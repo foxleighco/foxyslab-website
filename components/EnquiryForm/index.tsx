@@ -31,7 +31,9 @@ export function EnquiryForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isPending, startTransition] = useTransition();
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
   const [submitMessage, setSubmitMessage] = useState("");
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +63,9 @@ export function EnquiryForm() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -106,12 +110,16 @@ export function EnquiryForm() {
               setFormData(initialFormData);
             } else {
               setSubmitStatus("error");
-              setSubmitMessage(data.error || "Something went wrong. Please try again.");
+              setSubmitMessage(
+                data.error || "Something went wrong. Please try again."
+              );
             }
           } catch (error) {
             Sentry.captureException(error);
             setSubmitStatus("error");
-            setSubmitMessage("Unable to send your message. Please try again later.");
+            setSubmitMessage(
+              "Unable to send your message. Please try again later."
+            );
           }
         }
       );
@@ -122,8 +130,19 @@ export function EnquiryForm() {
     return (
       <div className={styles.successCard} role="status">
         <div className={styles.successIcon}>
-          <svg className={styles.successIconSvg} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          <svg
+            className={styles.successIconSvg}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
         <h3 className={styles.successTitle}>Message Sent!</h3>
@@ -149,7 +168,12 @@ export function EnquiryForm() {
       )}
 
       {hasErrors && (
-        <div ref={errorSummaryRef} tabIndex={-1} className="sr-only" role="alert">
+        <div
+          ref={errorSummaryRef}
+          tabIndex={-1}
+          className="sr-only"
+          role="alert"
+        >
           Please correct the errors in the form below.
         </div>
       )}
@@ -174,7 +198,10 @@ export function EnquiryForm() {
         {/* Name */}
         <div>
           <label htmlFor="name" className={styles.label}>
-            Name <span className={styles.required} aria-hidden="true">*</span>
+            Name{" "}
+            <span className={styles.required} aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             type="text"
@@ -199,7 +226,10 @@ export function EnquiryForm() {
         {/* Email */}
         <div>
           <label htmlFor="email" className={styles.label}>
-            Email <span className={styles.required} aria-hidden="true">*</span>
+            Email{" "}
+            <span className={styles.required} aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             type="email"
@@ -242,7 +272,10 @@ export function EnquiryForm() {
         {/* Enquiry Type */}
         <div>
           <label htmlFor="enquiryType" className={styles.label}>
-            Enquiry Type <span className={styles.required} aria-hidden="true">*</span>
+            Enquiry Type{" "}
+            <span className={styles.required} aria-hidden="true">
+              *
+            </span>
           </label>
           <select
             id="enquiryType"
@@ -275,7 +308,10 @@ export function EnquiryForm() {
       {/* Message */}
       <div>
         <label htmlFor="message" className={styles.label}>
-          Message <span className={styles.required} aria-hidden="true">*</span>
+          Message{" "}
+          <span className={styles.required} aria-hidden="true">
+            *
+          </span>
         </label>
         <textarea
           id="message"
@@ -295,7 +331,9 @@ export function EnquiryForm() {
             {errors.message}
           </p>
         )}
-        <p id="message-hint" className={styles.hint}>Minimum 20 characters</p>
+        <p id="message-hint" className={styles.hint}>
+          Minimum 20 characters
+        </p>
       </div>
 
       {/* Submit Button */}
@@ -307,9 +345,25 @@ export function EnquiryForm() {
         >
           {isPending ? (
             <>
-              <svg className={styles.spinner} viewBox="0 0 24 24" aria-hidden="true">
-                <circle className={styles.spinnerBg} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className={styles.spinnerFg} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              <svg
+                className={styles.spinner}
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle
+                  className={styles.spinnerBg}
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className={styles.spinnerFg}
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
               </svg>
               Sending...
             </>

@@ -42,9 +42,7 @@ export const metadata: Metadata = {
       { url: "/icon.png", sizes: "192x192", type: "image/png" },
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     type: "website",
@@ -126,9 +124,7 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <Navigation />
-        <main id="main-content">
-          {children}
-        </main>
+        <main id="main-content">{children}</main>
         <Footer />
         <FlagDefinitions definitions={definitions} />
       </body>

@@ -80,9 +80,7 @@ describe("PlaylistFilter", () => {
   it("displays item count for each playlist", () => {
     render(<PlaylistFilter playlists={[mockPlaylist]} />);
 
-    expect(
-      screen.getByText(`(${mockPlaylist.itemCount})`)
-    ).toBeInTheDocument();
+    expect(screen.getByText(`(${mockPlaylist.itemCount})`)).toBeInTheDocument();
   });
 
   it("renders empty state with just 'All Videos'", () => {

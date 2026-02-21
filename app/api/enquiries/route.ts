@@ -12,7 +12,9 @@ const POSTMARK_FROM = process.env.POSTMARK_FROM;
 const POSTMARK_TO = process.env.POSTMARK_TO;
 
 // Valid enquiry types from config
-const validEnquiryTypes = siteConfig.enquiries.types.map((t) => t.value) as string[];
+const validEnquiryTypes = siteConfig.enquiries.types.map(
+  (t) => t.value
+) as string[];
 
 // Form validation schema
 const enquirySchema = z.object({
@@ -33,11 +35,9 @@ const enquirySchema = z.object({
     .trim()
     .optional()
     .transform((val) => val || undefined),
-  enquiryType: z
-    .string()
-    .refine((val) => validEnquiryTypes.includes(val), {
-      message: "Please select an enquiry type",
-    }),
+  enquiryType: z.string().refine((val) => validEnquiryTypes.includes(val), {
+    message: "Please select an enquiry type",
+  }),
   message: z
     .string()
     .min(20, "Message must be at least 20 characters")
@@ -149,7 +149,9 @@ function escapeHtml(str: string): string {
 export async function POST(request: NextRequest) {
   try {
     if (!POSTMARK_API_KEY || !POSTMARK_FROM || !POSTMARK_TO) {
-      logger.error("Missing Postmark environment variables (POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_TO)");
+      logger.error(
+        "Missing Postmark environment variables (POSTMARK_API_KEY, POSTMARK_FROM, POSTMARK_TO)"
+      );
       return NextResponse.json(
         { error: "Contact form is not configured. Please try again later." },
         { status: 503 }
@@ -194,10 +196,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       const issues = validationResult.error.issues;
       const errors = issues.map((e) => e.message);
-      return NextResponse.json(
-        { error: errors[0], errors },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: errors[0], errors }, { status: 400 });
     }
 
     const data = validationResult.data;

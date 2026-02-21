@@ -21,12 +21,10 @@ export default function Error({
         <h1 className={`${styles.title} gradient-text`}>Oops!</h1>
         <h2 className={styles.subtitle}>Something went wrong</h2>
         <p className={styles.message}>
-          We&apos;re sorry for the inconvenience. An error occurred while loading this page.
+          We&apos;re sorry for the inconvenience. An error occurred while
+          loading this page.
         </p>
-        <button
-          onClick={reset}
-          className="btn-primary"
-        >
+        <button onClick={reset} className="btn-primary">
           Try Again
         </button>
       </div>

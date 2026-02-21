@@ -13,9 +13,7 @@ describe("PostCard", () => {
 
   it("renders excerpt", () => {
     render(<PostCard post={mockPostMeta} />);
-    expect(
-      screen.getByText(mockPostMeta.excerpt)
-    ).toBeInTheDocument();
+    expect(screen.getByText(mockPostMeta.excerpt)).toBeInTheDocument();
   });
 
   it("renders reading time badge", () => {
@@ -26,10 +24,7 @@ describe("PostCard", () => {
   it("links to blog post slug", () => {
     render(<PostCard post={mockPostMeta} />);
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute(
-      "href",
-      `/blog/${mockPostMeta.slug}`
-    );
+    expect(link).toHaveAttribute("href", `/blog/${mockPostMeta.slug}`);
   });
 
   it("renders author name", () => {

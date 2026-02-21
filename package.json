@@ -15,7 +15,18 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:lighthouse": "lhci autorun",
-    "test:all": "vitest run && playwright test"
+    "test:all": "vitest run && playwright test",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@sentry/nextjs": "^10.39.0",
@@ -51,7 +62,10 @@
     "eslint": "^9",
     "eslint-config-next": "^15.0.2",
     "happy-dom": "^20.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "postcss": "^8",
+    "prettier": "^3.8.1",
     "schema-dts": "^1.1.5",
     "typescript": "^5",
     "vitest": "^4.0.18"

@@ -117,10 +117,7 @@ async function TagCloud() {
   return (
     <div className={styles.tagList}>
       {result.data.map((tag) => (
-        <span
-          key={tag}
-          className={styles.tag}
-        >
+        <span key={tag} className={styles.tag}>
           {tag}
         </span>
       ))}

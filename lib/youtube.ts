@@ -195,7 +195,9 @@ interface YouTubeApiPlaylistsResponse {
 /**
  * Get channel data - relies on Next.js fetch cache for deduplication
  */
-async function getChannelData(): Promise<ApiResult<YouTubeApiChannelResponse["items"]>> {
+async function getChannelData(): Promise<
+  ApiResult<YouTubeApiChannelResponse["items"]>
+> {
   const apiKey = getApiKey();
   if (!apiKey) {
     return { success: false, error: "No API key configured" };
@@ -208,7 +210,9 @@ async function getChannelData(): Promise<ApiResult<YouTubeApiChannelResponse["it
     );
 
     if (!response.ok) {
-      console.error(`[YouTube] Channel API error: ${response.status} ${response.statusText}`);
+      console.error(
+        `[YouTube] Channel API error: ${response.status} ${response.statusText}`
+      );
       return {
         success: false,
         error: `YouTube API error: ${response.status} ${response.statusText}`,
@@ -253,7 +257,9 @@ async function fetchVideoDetails(
     );
 
     if (!response.ok) {
-      console.error(`[YouTube] Video details API error: ${response.status} ${response.statusText}`);
+      console.error(
+        `[YouTube] Video details API error: ${response.status} ${response.statusText}`
+      );
       return {
         success: false,
         error: `Failed to fetch video details: ${response.status}`,
@@ -271,7 +277,9 @@ async function fetchVideoDetails(
     }
 
     const videos = data.items
-      .filter((video) => !filterShorts || !isShort(video.contentDetails.duration))
+      .filter(
+        (video) => !filterShorts || !isShort(video.contentDetails.duration)
+      )
       .map((video) => ({
         id: video.id,
         title: video.snippet.title,
@@ -298,7 +306,9 @@ async function fetchVideoDetails(
   }
 }
 
-export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult<YouTubeVideo[]>> {
+export async function getLatestVideos(
+  maxResults: number = 6
+): Promise<ApiResult<YouTubeVideo[]>> {
   return Sentry.startSpan(
     {
       op: "youtube.api",
@@ -316,7 +326,8 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
         return { success: false, error: channelResult.error };
       }
 
-      const uploadsPlaylistId = channelResult.data![0].contentDetails.relatedPlaylists.uploads;
+      const uploadsPlaylistId =
+        channelResult.data![0].contentDetails.relatedPlaylists.uploads;
 
       // Fetch more videos than needed to account for filtered Shorts
       const fetchCount = Math.min(maxResults * 2, 50);
@@ -328,7 +339,9 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
         );
 
         if (!playlistResponse.ok) {
-          console.error(`[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
+          console.error(
+            `[YouTube] Uploads API error: ${playlistResponse.status} ${playlistResponse.statusText}`
+          );
           span.setAttribute("http.status_code", playlistResponse.status);
           return {
             success: false,
@@ -336,10 +349,14 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
           };
         }
 
-        const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
+        const playlistData: YouTubeApiPlaylistItemsResponse =
+          await playlistResponse.json();
 
         if (playlistData.error) {
-          console.error("[YouTube] Uploads API returned error:", playlistData.error.message);
+          console.error(
+            "[YouTube] Uploads API returned error:",
+            playlistData.error.message
+          );
           return { success: false, error: playlistData.error.message };
         }
 
@@ -347,7 +364,9 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
           return { success: true, data: [] };
         }
 
-        const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
+        const videoIds = playlistData.items.map(
+          (item) => item.snippet.resourceId.videoId
+        );
         const videosResult = await fetchVideoDetails(videoIds, apiKey, true);
 
         if (!videosResult.success) {
@@ -359,7 +378,8 @@ export async function getLatestVideos(maxResults: number = 6): Promise<ApiResult
         return { success: true, data: videos };
       } catch (error) {
         Sentry.captureException(error);
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         console.error("[YouTube] Error fetching latest videos:", message);
         return { success: false, error: message };
       }
@@ -433,7 +453,9 @@ export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
         );
 
         if (!response.ok) {
-          console.error(`[YouTube] Playlists API error: ${response.status} ${response.statusText}`);
+          console.error(
+            `[YouTube] Playlists API error: ${response.status} ${response.statusText}`
+          );
           span.setAttribute("http.status_code", response.status);
           return {
             success: false,
@@ -444,7 +466,10 @@ export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
         const data: YouTubeApiPlaylistsResponse = await response.json();
 
         if (data.error) {
-          console.error("[YouTube] Playlists API returned error:", data.error.message);
+          console.error(
+            "[YouTube] Playlists API returned error:",
+            data.error.message
+          );
           return { success: false, error: data.error.message };
         }
 
@@ -468,7 +493,8 @@ export async function getPlaylists(): Promise<ApiResult<YouTubePlaylist[]>> {
         return { success: true, data: playlists };
       } catch (error) {
         Sentry.captureException(error);
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         console.error("Error fetching playlists:", message);
         return { success: false, error: message };
       }
@@ -508,7 +534,9 @@ export async function getPlaylistVideos(
         );
 
         if (!playlistResponse.ok) {
-          console.error(`[YouTube] Playlist videos API error: ${playlistResponse.status} ${playlistResponse.statusText}`);
+          console.error(
+            `[YouTube] Playlist videos API error: ${playlistResponse.status} ${playlistResponse.statusText}`
+          );
           span.setAttribute("http.status_code", playlistResponse.status);
           return {
             success: false,
@@ -516,10 +544,14 @@ export async function getPlaylistVideos(
           };
         }
 
-        const playlistData: YouTubeApiPlaylistItemsResponse = await playlistResponse.json();
+        const playlistData: YouTubeApiPlaylistItemsResponse =
+          await playlistResponse.json();
 
         if (playlistData.error) {
-          console.error("[YouTube] Playlist videos API returned error:", playlistData.error.message);
+          console.error(
+            "[YouTube] Playlist videos API returned error:",
+            playlistData.error.message
+          );
           return { success: false, error: playlistData.error.message };
         }
 
@@ -527,11 +559,14 @@ export async function getPlaylistVideos(
           return { success: true, data: [] };
         }
 
-        const videoIds = playlistData.items.map((item) => item.snippet.resourceId.videoId);
+        const videoIds = playlistData.items.map(
+          (item) => item.snippet.resourceId.videoId
+        );
         return await fetchVideoDetails(videoIds, apiKey, true);
       } catch (error) {
         Sentry.captureException(error);
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
         console.error("Error fetching playlist videos:", message);
         return { success: false, error: message };
       }

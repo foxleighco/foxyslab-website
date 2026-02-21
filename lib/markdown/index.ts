@@ -26,20 +26,10 @@ export {
 } from "./frontmatter";
 
 // TOC utilities
-export {
-  extractHeadings,
-  buildTocTree,
-} from "./headings";
+export { extractHeadings, buildTocTree } from "./headings";
 
 // Reading time and excerpt
-export {
-  calculateReadingTime,
-  generateExcerpt,
-} from "./reading-time";
+export { calculateReadingTime, generateExcerpt } from "./reading-time";
 
 // Highlighter (for advanced use cases)
-export {
-  getHighlighter,
-  loadLanguage,
-  SHIKI_THEME,
-} from "./highlighter";
+export { getHighlighter, loadLanguage, SHIKI_THEME } from "./highlighter";

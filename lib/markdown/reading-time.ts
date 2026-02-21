@@ -57,7 +57,10 @@ export function calculateReadingTime(content: string): ReadingTime {
 /**
  * Generate excerpt from markdown content
  */
-export function generateExcerpt(content: string, maxLength: number = 160): string {
+export function generateExcerpt(
+  content: string,
+  maxLength: number = 160
+): string {
   // Remove frontmatter
   const contentWithoutFrontmatter = content.replace(/^---[\s\S]*?---/, "");
 

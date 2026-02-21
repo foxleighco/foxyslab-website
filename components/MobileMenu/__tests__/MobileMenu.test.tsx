@@ -19,7 +19,9 @@ describe("MobileMenu", () => {
 
   it("menu is hidden by default", () => {
     render(<MobileMenu links={mockLinks} />);
-    expect(screen.queryByRole("link", { name: "Home" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Home" })
+    ).not.toBeInTheDocument();
   });
 
   it("shows menu when toggle is clicked", async () => {
@@ -55,7 +57,9 @@ describe("MobileMenu", () => {
     expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("link", { name: "Home" }));
-    expect(screen.queryByRole("link", { name: "Home" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Home" })
+    ).not.toBeInTheDocument();
   });
 
   it("renders YouTube CTA when menu is open", async () => {

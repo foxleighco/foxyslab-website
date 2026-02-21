@@ -58,7 +58,9 @@ export type MarkdownMetaResult =
 /**
  * Custom rehype plugin for Shiki syntax highlighting
  */
-function createRehypeShiki(highlighter: Awaited<ReturnType<typeof getHighlighter>>) {
+function createRehypeShiki(
+  highlighter: Awaited<ReturnType<typeof getHighlighter>>
+) {
   return () => {
     return async (tree: HastRoot) => {
       const codeBlocks: { node: Element; lang: string; code: string }[] = [];
@@ -108,7 +110,9 @@ function createRehypeShiki(highlighter: Awaited<ReturnType<typeof getHighlighter
           ];
         } catch {
           // If language not supported, fall back to plain code
-          console.warn(`Shiki: Language "${lang}" not supported, using plain text`);
+          console.warn(
+            `Shiki: Language "${lang}" not supported, using plain text`
+          );
         }
       }
     };
@@ -189,7 +193,9 @@ export async function processMarkdown(
     };
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Unknown error processing markdown";
+      error instanceof Error
+        ? error.message
+        : "Unknown error processing markdown";
     console.error("Markdown processing error:", error);
     return {
       success: false,
@@ -264,10 +270,7 @@ export interface ParsedMeta {
 /**
  * Convert parsed metadata to BlogPostMeta type
  */
-export function toBlogPostMeta(
-  slug: string,
-  meta: ParsedMeta
-): BlogPostMeta {
+export function toBlogPostMeta(slug: string, meta: ParsedMeta): BlogPostMeta {
   return {
     slug,
     frontmatter: meta.frontmatter,

@@ -14,7 +14,11 @@ export default function EnquiriesPage() {
   return (
     <div className={`container-md ${styles.page}`}>
       <PageHeader
-        title={<>Business <span className="gradient-text">Enquiries</span></>}
+        title={
+          <>
+            Business <span className="gradient-text">Enquiries</span>
+          </>
+        }
         subtitle="Interested in working together? I'm always open to discussing partnerships, collaborations, and opportunities that benefit the smart home community."
       />
 
@@ -38,9 +42,7 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className={styles.cardTitle}>
-              Product Reviews
-            </h3>
+            <h3 className={styles.cardTitle}>Product Reviews</h3>
             <p className={styles.cardDescription}>
               Send me smart home devices, sensors, or automation hardware for
               honest, in-depth reviews. Software and service access is also
@@ -93,9 +95,7 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className={styles.cardTitle}>
-              Collaborations
-            </h3>
+            <h3 className={styles.cardTitle}>Collaborations</h3>
             <p className={styles.cardDescription}>
               Partner on content, cross-promotions, or joint projects that bring
               value to both our audiences.
@@ -118,9 +118,7 @@ export default function EnquiriesPage() {
                 />
               </svg>
             </div>
-            <h3 className={styles.cardTitle}>
-              Media & Press
-            </h3>
+            <h3 className={styles.cardTitle}>Media & Press</h3>
             <p className={styles.cardDescription}>
               Press enquiries, interviews, and media opportunities related to
               smart home technology and content creation.
@@ -137,8 +135,8 @@ export default function EnquiriesPage() {
             I love testing new smart home and homelab tech. Cameras, sensors,
             servers, dashboards, Home Assistant gear, Zigbee and Matter devices,
             plus the software and services that tie it all together. If
-            you&apos;re building something that solves a real problem (or is at least a ton of fun), I want
-            to try it!
+            you&apos;re building something that solves a real problem (or is at
+            least a ton of fun), I want to try it!
           </p>
 
           <div className={styles.guidelinesList}>
@@ -157,11 +155,13 @@ export default function EnquiriesPage() {
                 />
               </svg>
               <p className={styles.guidelineLabel}>
-                <strong className={styles.guidelineBold}>Honest Reviews:</strong> Reviews
-                on Foxy&apos;s Lab are always honest. If something impresses me,
-                I&apos;ll show you why. If something annoys me or falls short,
-                I&apos;ll talk about that too. Long term reliability matters
-                more than launch day sparkle.
+                <strong className={styles.guidelineBold}>
+                  Honest Reviews:
+                </strong>{" "}
+                Reviews on Foxy&apos;s Lab are always honest. If something
+                impresses me, I&apos;ll show you why. If something annoys me or
+                falls short, I&apos;ll talk about that too. Long term
+                reliability matters more than launch day sparkle.
               </p>
             </div>
             <div className={styles.guidelineItem}>
@@ -179,7 +179,9 @@ export default function EnquiriesPage() {
                 />
               </svg>
               <p className={styles.guidelineLabel}>
-                <strong className={styles.guidelineBold}>Real-World Testing:</strong>{" "}
+                <strong className={styles.guidelineBold}>
+                  Real-World Testing:
+                </strong>{" "}
                 Everything gets used in my actual home for real world testing.
                 Support for open protocols like MQTT, local control, proper Home
                 Assistant integration and decent longevity are big wins for me.
@@ -200,7 +202,9 @@ export default function EnquiriesPage() {
                 />
               </svg>
               <p className={styles.guidelineLabel}>
-                <strong className={styles.guidelineBold}>No Guaranteed Coverage:</strong>{" "}
+                <strong className={styles.guidelineBold}>
+                  No Guaranteed Coverage:
+                </strong>{" "}
                 Sending a product or providing a licence does not guarantee
                 coverage. If it doesn&apos;t fit the channel or I cannot
                 recommend it to my audience, it will not appear. Sponsorships
@@ -223,7 +227,9 @@ export default function EnquiriesPage() {
                 />
               </svg>
               <p className={styles.guidelineLabel}>
-                <strong className={styles.guidelineBold}>Long-Term Testing:</strong>{" "}
+                <strong className={styles.guidelineBold}>
+                  Long-Term Testing:
+                </strong>{" "}
                 Review hardware is normally kept for long term testing so I can
                 follow up on updates and reliability. If a product must be
                 returned, that needs to be agreed up front because limited
@@ -283,8 +289,8 @@ export default function EnquiriesPage() {
             />
           </svg>
           <p className={styles.noticeText}>
-            <strong className={styles.noticeBold}>Response Time:</strong> I try to
-            respond to all genuine enquiries within 5-7 business days. Due to
+            <strong className={styles.noticeBold}>Response Time:</strong> I try
+            to respond to all genuine enquiries within 5-7 business days. Due to
             the volume of messages I receive, I may not be able to respond to
             every request, particularly unsolicited pitches that don&apos;t
             align with my content focus.

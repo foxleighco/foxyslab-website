@@ -18,20 +18,19 @@ vi.mock("@sentry/nextjs", () => {
     error: vi.fn(),
     fatal: vi.fn(),
     fmt: (strings: TemplateStringsArray, ...values: unknown[]) =>
-      strings.reduce(
-        (result, str, i) => result + str + (values[i] ?? ""),
-        ""
-      ),
+      strings.reduce((result, str, i) => result + str + (values[i] ?? ""), ""),
   };
 
   return {
     default: {},
     init: vi.fn(),
     captureException: vi.fn(),
-    startSpan: vi.fn((_options: unknown, callback: (span: unknown) => unknown) => {
-      const mockSpan = { setAttribute: vi.fn() };
-      return callback(mockSpan);
-    }),
+    startSpan: vi.fn(
+      (_options: unknown, callback: (span: unknown) => unknown) => {
+        const mockSpan = { setAttribute: vi.fn() };
+        return callback(mockSpan);
+      }
+    ),
     logger,
     withSentry: vi.fn((handler: unknown) => handler),
     consoleLoggingIntegration: vi.fn(),
@@ -58,8 +57,7 @@ vi.mock("next/navigation", () => ({
 // Mock next/image — returns React element
 vi.mock("next/image", () => ({
   default: function MockImage(props: Record<string, unknown>) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { fill, priority, ...rest } = props;
+    const { fill: _fill, priority: _priority, ...rest } = props;
     return createElement("img", rest);
   },
 }));

@@ -32,12 +32,8 @@ export function VideoCard({ video }: VideoCardProps) {
 
         {/* Content */}
         <div>
-          <h3 className={styles.title}>
-            {video.title}
-          </h3>
-          <p className={styles.description}>
-            {video.description}
-          </p>
+          <h3 className={styles.title}>{video.title}</h3>
+          <p className={styles.description}>{video.description}</p>
           <div className={styles.meta}>
             <span>{formatViewCount(video.viewCount)} views</span>
             <span>{formatViewCount(video.likeCount)} likes</span>

@@ -82,13 +82,8 @@ export function TableOfContents({ headings, tocTree }: TableOfContentsProps) {
   }
 
   return (
-    <nav
-      className={styles.nav}
-      aria-label="Table of contents"
-    >
-      <h2 className={styles.heading}>
-        On This Page
-      </h2>
+    <nav className={styles.nav} aria-label="Table of contents">
+      <h2 className={styles.heading}>On This Page</h2>
       <ul className={styles.list}>
         {tocTree.map((item) => (
           <TocItem key={item.heading.id} item={item} activeId={activeId} />
@@ -107,13 +102,8 @@ export function SimpleToc({ headings }: { headings: TocHeading[] }) {
   }
 
   return (
-    <nav
-      className={styles.nav}
-      aria-label="Table of contents"
-    >
-      <h2 className={styles.heading}>
-        Contents
-      </h2>
+    <nav className={styles.nav} aria-label="Table of contents">
+      <h2 className={styles.heading}>Contents</h2>
       <ul className={styles.list}>
         {headings.map((heading) => (
           <li key={heading.id}>

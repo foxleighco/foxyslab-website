@@ -9,7 +9,11 @@ interface TransparentVideoProps {
   alt?: string;
 }
 
-export function TransparentVideo({ clips, className, alt = "" }: TransparentVideoProps) {
+export function TransparentVideo({
+  clips,
+  className,
+  alt = "",
+}: TransparentVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [selectedClip, setSelectedClip] = useState<string | null>(null);
 

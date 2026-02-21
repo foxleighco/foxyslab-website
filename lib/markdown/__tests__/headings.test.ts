@@ -44,10 +44,7 @@ describe("extractHeadings", () => {
   });
 
   it("skips h1 headings", () => {
-    const tree = makeTree(
-      makeHeading(1, "Title"),
-      makeHeading(2, "Section")
-    );
+    const tree = makeTree(makeHeading(1, "Title"), makeHeading(2, "Section"));
 
     const result = extractHeadings(tree);
 

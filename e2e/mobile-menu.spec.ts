@@ -21,8 +21,10 @@ test.describe("Mobile Menu", () => {
     await page.goto("/");
 
     await page.getByRole("button", { name: "Toggle menu" }).click();
-    // Scope to the mobile menu list to avoid matching the desktop nav link
-    await page.getByRole("list").getByRole("link", { name: "About" }).click();
+    await page
+      .getByTestId("mobile-menu")
+      .getByRole("link", { name: "About" })
+      .click();
 
     await expect(page).toHaveURL(/\/about/);
   });
@@ -32,8 +34,10 @@ test.describe("Mobile Menu", () => {
 
     const toggle = page.getByRole("button", { name: "Toggle menu" });
     await toggle.click();
-    // Scope to the mobile menu list to avoid matching the desktop nav link
-    await page.getByRole("list").getByRole("link", { name: "About" }).click();
+    await page
+      .getByTestId("mobile-menu")
+      .getByRole("link", { name: "About" })
+      .click();
 
     // After navigation, menu should be closed
     await expect(toggle).toHaveAttribute("aria-expanded", "false");

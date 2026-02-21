@@ -40,7 +40,7 @@ export function MobileMenu({ links }: MobileMenuProps) {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className={styles.menu}>
+        <div className={styles.menu} data-testid="mobile-menu">
           <div className={styles.menuLinks}>
             {links.map((link) => (
               <Link

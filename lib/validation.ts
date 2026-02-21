@@ -6,8 +6,5 @@ export function isValidEmail(email: string): boolean {
 
 // Sanitize input to prevent XSS
 export function sanitizeInput(input: string): string {
-  return input
-    .trim()
-    .replace(/[<>]/g, "")
-    .substring(0, 255); // Limit length
+  return input.trim().replace(/[<>]/g, "").substring(0, 255); // Limit length
 }

@@ -7,7 +7,9 @@ import styles from "./styles.module.css";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -32,7 +34,7 @@ export function Newsletter() {
         try {
           // TODO: Integrate with email service (Mailchimp, ConvertKit, etc.)
           // For now, just simulate success
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
 
           setStatus("success");
           setMessage("Thanks for subscribing! Check your email to confirm.");
@@ -54,11 +56,10 @@ export function Newsletter() {
   return (
     <section id="newsletter" className={styles.section}>
       <div className={styles.inner}>
-        <h2 className={styles.heading}>
-          Stay Updated
-        </h2>
+        <h2 className={styles.heading}>Stay Updated</h2>
         <p className={styles.description}>
-          Get the latest tutorials, tips, and smart home news delivered straight to your inbox.
+          Get the latest tutorials, tips, and smart home news delivered straight
+          to your inbox.
         </p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -83,7 +84,9 @@ export function Newsletter() {
 
         {message && (
           <p
-            className={status === "success" ? styles.messageSuccess : styles.messageError}
+            className={
+              status === "success" ? styles.messageSuccess : styles.messageError
+            }
             role="alert"
             aria-live="polite"
           >

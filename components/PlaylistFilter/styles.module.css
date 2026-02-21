@@ -12,7 +12,10 @@
   padding: 0.5rem 1.5rem;
   border-radius: 9999px;
   font-weight: 600;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
   border: 1px solid transparent;
   cursor: pointer;
 }

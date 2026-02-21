@@ -17,6 +17,7 @@ Foxy's Lab - A modern Next.js 15 website for a YouTube channel focused on smart 
 ## Common Commands
 
 ### Development
+
 ```bash
 npm run dev          # Start development server on http://localhost:3000
 npm run build        # Create production build
@@ -26,6 +27,7 @@ npm run type-check   # Run TypeScript type checking
 ```
 
 ### Important Notes
+
 - The directory name contains special characters (`Foxy's Lab`) which can cause issues with Next.js dynamic metadata files (sitemap.ts, robots.ts, manifest.ts)
 - Static files (robots.txt, sitemap.xml, manifest.webmanifest) are in the `public/` directory instead
 - All builds complete successfully with static pre-rendering
@@ -33,12 +35,14 @@ npm run type-check   # Run TypeScript type checking
 ## Design System
 
 ### Color Palette
+
 - Primary: `#d32365` (pink/magenta)
 - Secondary: `#32002d` (dark purple)
 - Accent Yellow: `#ffe868`
 - Accent Orange: `#df5a13`
 
 ### Global Utilities (in `app/globals.css`)
+
 - `.gradient-primary`: Primary gradient background (primary → orange)
 - `.gradient-text`: Gradient text effect (primary → yellow)
 - `.container` / `.container-md`: Shared page wrapper with max-width and padding
@@ -49,6 +53,7 @@ npm run type-check   # Run TypeScript type checking
 - Custom focus indicators: `outline: 2px solid var(--primary); outline-offset: 2px`
 
 ### Design Principles
+
 - Dark color scheme
 - Mobile-first responsive design
 - WCAG 2.1 AA accessibility compliance
@@ -57,6 +62,7 @@ npm run type-check   # Run TypeScript type checking
 ## Architecture
 
 ### App Structure
+
 ```
 app/
 ├── layout.tsx           # Root layout with navigation, SEO metadata, structured data
@@ -79,7 +85,9 @@ app/
 ```
 
 ### Components
+
 Each component lives in its own folder with `index.tsx` + `styles.module.css`:
+
 ```
 components/
 ├── Navigation/         # Main navigation (server component)
@@ -97,6 +105,7 @@ components/
 ```
 
 ### Utilities
+
 ```
 lib/
 ├── youtube.ts          # YouTube API utilities (currently mock data)
@@ -107,12 +116,14 @@ lib/
 ## Key Features
 
 ### Performance
+
 - Static pre-rendering for all pages
 - Optimized images with width/height attributes
 - Code splitting and lazy loading
 - Server components by default, client components only when needed
 
 ### Accessibility
+
 - Skip-to-main-content link
 - Semantic HTML5 elements
 - ARIA labels and landmarks
@@ -121,14 +132,16 @@ lib/
 - Screen reader announcements (aria-live regions)
 
 ### SEO
+
 - Metadata in layout.tsx with metadataBase
 - Open Graph and Twitter cards
 - JSON-LD structured data (Organization, WebSite)
-- Sitemap (public/sitemap.xml)
+- **Sitemap** (`public/sitemap.xml`) — **must be updated whenever a page is added, amended, or removed**
 - Robots.txt (public/robots.txt)
 - Web manifest (public/manifest.webmanifest)
 
 ### Security
+
 - Content Security Policy headers
 - X-Frame-Options: DENY
 - Input validation and sanitization
@@ -147,16 +160,19 @@ Currently using mock data in `lib/youtube.ts`. To integrate with YouTube Data AP
 ## Important Patterns
 
 ### Component Split
+
 - Navigation is a server component
 - MobileMenu is a client component (uses useState)
 - This pattern optimizes performance while maintaining interactivity
 
 ### Error Handling
+
 - Global error boundary in `app/error.tsx`
 - Loading states in `app/loading.tsx`
 - 404 handling in `app/not-found.tsx`
 
 ### Styling
+
 - **CSS Modules** (`styles.module.css`) for component/page-scoped styles
 - **Global CSS** in `app/globals.css` for shared utilities, design tokens, and resets
 - CSS custom properties in `:root` for design tokens (`--primary`, `--secondary`, `--accent-yellow`, `--accent-orange`)
@@ -202,7 +218,7 @@ function TestComponent() {
         span.setAttribute("metric", metric);
 
         doSomething();
-      },
+      }
     );
   };
 
@@ -230,7 +246,7 @@ async function fetchUserData(userId) {
       const response = await fetch(`/api/users/${userId}`);
       const data = await response.json();
       return data;
-    },
+    }
   );
 }
 ```
@@ -293,11 +309,8 @@ logger.fatal("Database connection pool exhausted", {
 });
 ```
 
-
 ## Future Enhancements
 
 - Add newsletter service integration (Mailchimp, ConvertKit)
 - Implement video filtering and pagination
-- Set up testing (Vitest, Playwright)
-- Add CI/CD pipeline
 - Implement rate limiting for forms

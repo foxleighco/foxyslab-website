@@ -17,11 +17,7 @@ export async function Navigation() {
           {/* Desktop Navigation */}
           <div className={styles.desktopNav}>
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={styles.navLink}
-              >
+              <Link key={link.href} href={link.href} className={styles.navLink}>
                 {link.label}
                 <span className={styles.navLinkUnderline} />
               </Link>

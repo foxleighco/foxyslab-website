@@ -38,14 +38,10 @@ export function PostCard({ post }: PostCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             {/* Reading time badge */}
-            <div className={styles.badge}>
-              {readingTime.text}
-            </div>
+            <div className={styles.badge}>{readingTime.text}</div>
             {/* Featured badge */}
             {frontmatter.featured && (
-              <div className={styles.featuredBadge}>
-                Featured
-              </div>
+              <div className={styles.featuredBadge}>Featured</div>
             )}
           </div>
         ) : (
@@ -64,14 +60,10 @@ export function PostCard({ post }: PostCardProps) {
               />
             </svg>
             {/* Reading time badge */}
-            <div className={styles.badge}>
-              {readingTime.text}
-            </div>
+            <div className={styles.badge}>{readingTime.text}</div>
             {/* Featured badge */}
             {frontmatter.featured && (
-              <div className={styles.featuredBadge}>
-                Featured
-              </div>
+              <div className={styles.featuredBadge}>Featured</div>
             )}
           </div>
         )}
@@ -81,16 +73,12 @@ export function PostCard({ post }: PostCardProps) {
           {/* Category */}
           {frontmatter.category && (
             <div className={styles.categoryWrap}>
-              <span className={styles.category}>
-                {frontmatter.category}
-              </span>
+              <span className={styles.category}>{frontmatter.category}</span>
             </div>
           )}
 
           {/* Title */}
-          <h3 className={styles.title}>
-            {frontmatter.title}
-          </h3>
+          <h3 className={styles.title}>{frontmatter.title}</h3>
 
           {/* Excerpt */}
           <p className={styles.excerpt}>{excerpt}</p>
@@ -106,10 +94,7 @@ export function PostCard({ post }: PostCardProps) {
           {frontmatter.tags.length > 0 && (
             <div className={styles.tags}>
               {frontmatter.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className={styles.tag}
-                >
+                <span key={tag} className={styles.tag}>
                   {tag}
                 </span>
               ))}

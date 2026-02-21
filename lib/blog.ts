@@ -14,11 +14,7 @@ import {
   toBlogPost,
   toBlogPostMeta,
 } from "./markdown";
-import type {
-  BlogPost,
-  BlogPostMeta,
-  BlogQueryOptions,
-} from "@/types/blog";
+import type { BlogPost, BlogPostMeta, BlogQueryOptions } from "@/types/blog";
 
 // Re-use ApiResult pattern from youtube.ts
 export type ApiResult<T> =
@@ -70,9 +66,7 @@ async function findMarkdownFiles(dir: string): Promise<string[]> {
  */
 function filePathToSlug(filePath: string, baseDir: string): string {
   const relativePath = path.relative(baseDir, filePath);
-  return relativePath
-    .replace(/\.(md|mdx)$/, "")
-    .replace(/\\/g, "/"); // Normalize path separators
+  return relativePath.replace(/\.(md|mdx)$/, "").replace(/\\/g, "/"); // Normalize path separators
 }
 
 /**
@@ -162,7 +156,9 @@ export async function getAllBlogPosts(
       } catch (error) {
         Sentry.captureException(error);
         const message =
-          error instanceof Error ? error.message : "Unknown error loading posts";
+          error instanceof Error
+            ? error.message
+            : "Unknown error loading posts";
         console.error("Error loading blog posts:", error);
         return { success: false, error: message };
       }
@@ -334,7 +330,8 @@ export async function getAdjacentPosts(
     success: true,
     data: {
       prev: currentIndex > 0 ? posts[currentIndex - 1] : undefined,
-      next: currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined,
+      next:
+        currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined,
     },
   };
 }

@@ -61,9 +61,7 @@ export async function loadLanguage(lang: string): Promise<boolean> {
     }
     return true;
   } catch {
-    console.warn(
-      `Failed to load language: ${lang}, falling back to plaintext`
-    );
+    console.warn(`Failed to load language: ${lang}, falling back to plaintext`);
     return false;
   }
 }

@@ -8,7 +8,8 @@ import styles from "./styles.module.css";
 
 export const metadata: Metadata = {
   title: "About | Foxy's Lab",
-  description: "Learn more about Foxy's Lab and our mission to make smart home technology accessible to everyone.",
+  description:
+    "Learn more about Foxy's Lab and our mission to make smart home technology accessible to everyone.",
 };
 
 export default async function AboutPage() {
@@ -20,7 +21,11 @@ export default async function AboutPage() {
   return (
     <div className={`container-md ${styles.page}`}>
       <PageHeader
-        title={<>About <span className="gradient-text">Foxy&apos;s Lab</span></>}
+        title={
+          <>
+            About <span className="gradient-text">Foxy&apos;s Lab</span>
+          </>
+        }
         subtitle="Making smart home technology accessible to everyone"
       />
 
@@ -29,16 +34,18 @@ export default async function AboutPage() {
         <h2 className={styles.sectionTitle}>Our Mission</h2>
         <div>
           <p className={styles.missionText}>
-            At Foxy&apos;s Lab, we believe that smart home technology should be accessible,
-            understandable, and fun for everyone. Whether you&apos;re just getting started
-            with your first smart bulb or building complex home automation systems,
-            we&apos;re here to guide you every step of the way.
+            At Foxy&apos;s Lab, we believe that smart home technology should be
+            accessible, understandable, and fun for everyone. Whether
+            you&apos;re just getting started with your first smart bulb or
+            building complex home automation systems, we&apos;re here to guide
+            you every step of the way.
           </p>
           <p className={styles.missionText}>
-            Our goal is to demystify smart home technology through clear, practical
-            tutorials that you can follow along with. We focus on real-world applications,
-            security best practices, and helping you make informed decisions about the
-            technology you bring into your home.
+            Our goal is to demystify smart home technology through clear,
+            practical tutorials that you can follow along with. We focus on
+            real-world applications, security best practices, and helping you
+            make informed decisions about the technology you bring into your
+            home.
           </p>
         </div>
       </section>
@@ -62,7 +69,8 @@ export default async function AboutPage() {
           <div className={styles.topicCard}>
             <h3 className={styles.topicTitle}>Automation Tutorials</h3>
             <p className={styles.topicDescription}>
-              Step-by-step guides for creating useful automations and integrations.
+              Step-by-step guides for creating useful automations and
+              integrations.
             </p>
           </div>
           <div className={styles.topicCard}>
@@ -107,9 +115,9 @@ export default async function AboutPage() {
         <h2 className={styles.sectionTitle}>Join Our Community</h2>
         <div className={styles.communityCard}>
           <p className={styles.communityText}>
-            We&apos;re more than just a YouTube channel - we&apos;re a community of smart
-            home enthusiasts sharing knowledge, troubleshooting together, and pushing
-            the boundaries of home automation.
+            We&apos;re more than just a YouTube channel - we&apos;re a community
+            of smart home enthusiasts sharing knowledge, troubleshooting
+            together, and pushing the boundaries of home automation.
           </p>
           <div className={styles.communityButtons}>
             <a

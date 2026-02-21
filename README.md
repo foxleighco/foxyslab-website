@@ -121,10 +121,10 @@ Feature flags are managed using the [Vercel Flags SDK](https://vercel.com/docs/w
 
 ### Available Flags
 
-| Flag | Env Variable | Description |
-|------|-------------|-------------|
-| `blogFlag` | `FLAG_BLOG` | Shows blog section and navigation links |
-| `newsletterFlag` | `FLAG_NEWSLETTER` | Shows newsletter signup sections |
+| Flag             | Env Variable      | Description                             |
+| ---------------- | ----------------- | --------------------------------------- |
+| `blogFlag`       | `FLAG_BLOG`       | Shows blog section and navigation links |
+| `newsletterFlag` | `FLAG_NEWSLETTER` | Shows newsletter signup sections        |
 
 Flags are defined in `app/flags.ts` and default to `false`.
 
@@ -189,6 +189,7 @@ The site is ready for YouTube Data API integration. To use real data:
 3. Update the `getLatestVideos()` function in `lib/youtube.ts`
 
 Example API endpoint:
+
 ```
 https://www.googleapis.com/youtube/v3/search?key=YOUR_API_KEY&channelId=YOUR_CHANNEL_ID&part=snippet,id&order=date&maxResults=20
 ```
@@ -205,6 +206,7 @@ https://www.googleapis.com/youtube/v3/search?key=YOUR_API_KEY&channelId=YOUR_CHA
 ### Other Platforms
 
 The site can be deployed to any platform that supports Next.js:
+
 - Netlify
 - AWS Amplify
 - Railway

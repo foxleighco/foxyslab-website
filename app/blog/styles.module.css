@@ -8,8 +8,6 @@
   }
 }
 
-
-
 .tagCloud {
   margin-bottom: 2rem;
 }
@@ -27,7 +25,9 @@
   border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 9999px;
   color: rgba(255, 255, 255, 0.7);
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
   cursor: pointer;
 }
 

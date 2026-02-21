@@ -38,3 +38,6 @@ next-env.d.ts
 
 # large media files
 public/lab-coat-clips/*.webp
+
+# Sentry Config File
+.env.sentry-build-plugin

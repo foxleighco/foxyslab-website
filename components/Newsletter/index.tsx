@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useState, FormEvent } from "react";
 import { isValidEmail, sanitizeInput } from "@/lib/validation";
 import styles from "./styles.module.css";
@@ -22,23 +23,32 @@ export function Newsletter() {
 
     setStatus("loading");
 
-    try {
-      // TODO: Integrate with email service (Mailchimp, ConvertKit, etc.)
-      // For now, just simulate success
-      await new Promise(resolve => setTimeout(resolve, 1000));
+    await Sentry.startSpan(
+      {
+        op: "ui.submit",
+        name: "Newsletter Signup",
+      },
+      async () => {
+        try {
+          // TODO: Integrate with email service (Mailchimp, ConvertKit, etc.)
+          // For now, just simulate success
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
-      setStatus("success");
-      setMessage("Thanks for subscribing! Check your email to confirm.");
-      setEmail("");
+          setStatus("success");
+          setMessage("Thanks for subscribing! Check your email to confirm.");
+          setEmail("");
 
-      setTimeout(() => {
-        setStatus("idle");
-        setMessage("");
-      }, 5000);
-    } catch (error) {
-      setStatus("error");
-      setMessage("Something went wrong. Please try again later.");
-    }
+          setTimeout(() => {
+            setStatus("idle");
+            setMessage("");
+          }, 5000);
+        } catch (error) {
+          Sentry.captureException(error);
+          setStatus("error");
+          setMessage("Something went wrong. Please try again later.");
+        }
+      }
+    );
   };
 
   return (

@@ -5,7 +5,11 @@
 .link {
   display: block;
   padding: 1.5rem;
-  background-color: color-mix(in srgb, var(--secondary) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--secondary), var(--accent-orange) 8%),
+    #ffffff 5%
+  );
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
   text-decoration: none;

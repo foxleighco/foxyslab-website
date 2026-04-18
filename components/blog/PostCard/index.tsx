@@ -69,7 +69,7 @@ export function PostCard({ post }: PostCardProps) {
         )}
 
         {/* Content */}
-        <div>
+        <div className={styles.content}>
           {/* Category */}
           {frontmatter.category && (
             <div className={styles.categoryWrap}>

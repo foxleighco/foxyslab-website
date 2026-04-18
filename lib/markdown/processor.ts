@@ -12,6 +12,9 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeStringify from "rehype-stringify";
 import matter from "gray-matter";
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
+import { imageSize } from "image-size";
 import type { Root as MdastRoot } from "mdast";
 import type { Root as HastRoot, Element } from "hast";
 import { visit } from "unist-util-visit";
@@ -54,6 +57,38 @@ export type MarkdownMetaResult =
       };
     }
   | { success: false; error: string };
+
+/**
+ * Custom rehype plugin to add width/height and lazy loading to images
+ */
+function rehypeImageSize() {
+  return () => {
+    return (tree: HastRoot) => {
+      visit(tree, "element", (node: Element) => {
+        if (node.tagName !== "img" || !node.properties?.src) return;
+
+        const src = String(node.properties.src);
+        if (!src.startsWith("/")) return;
+
+        const filePath = join(process.cwd(), "public", src);
+        if (!existsSync(filePath)) return;
+
+        try {
+          const dimensions = imageSize(readFileSync(filePath));
+          if (dimensions.width && dimensions.height) {
+            node.properties.width = dimensions.width;
+            node.properties.height = dimensions.height;
+          }
+        } catch {
+          // Skip if we can't read dimensions
+        }
+
+        node.properties.loading = "lazy";
+        node.properties.decoding = "async";
+      });
+    };
+  };
+}
 
 /**
  * Custom rehype plugin for Shiki syntax highlighting
@@ -174,6 +209,7 @@ export async function processMarkdown(
         },
       })
       .use(createRehypeShiki(highlighter))
+      .use(rehypeImageSize())
       .use(rehypeStringify, { allowDangerousHtml: true });
 
     // Step 8: Process to HTML

@@ -322,6 +322,8 @@ main {
 }
 
 .prose img {
+  max-width: 100%;
+  height: auto;
   border-radius: 0.75rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;

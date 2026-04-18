@@ -2,12 +2,18 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import {
   getBlogPostBySlug,
   getAllPostSlugs,
   getAdjacentPosts,
 } from "@/lib/blog";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import {
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getVideoObjectSchema,
+} from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -89,9 +95,9 @@ function formatDate(date: Date): string {
 }
 
 /*
- * SECURITY NOTE: Blog post HTML is generated at build time from trusted local
- * markdown files via the remark/rehype pipeline (lib/blog.ts). No user-supplied
- * content is rendered, so using innerHTML for the rendered blog body is safe.
+ * SECURITY NOTE: Blog post HTML and JSON-LD schemas use dangerouslySetInnerHTML
+ * by design. All content is generated server-side from trusted local markdown
+ * files and config — no user-supplied content is rendered.
  */
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -109,8 +115,58 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const adjacentResult = await getAdjacentPosts(slug);
   const adjacent = adjacentResult.success ? adjacentResult.data : {};
 
+  const articleSchema = JSON.stringify(
+    getArticleSchema({
+      title: frontmatter.title,
+      description: frontmatter.description,
+      slug,
+      author: frontmatter.author,
+      publishedAt: frontmatter.publishedAt,
+      updatedAt: frontmatter.updatedAt,
+      tags: frontmatter.tags,
+      heroImage: frontmatter.heroImage,
+    })
+  );
+
+  const breadcrumbSchema = JSON.stringify(
+    getBreadcrumbSchema([
+      { name: "Home", url: siteConfig.url },
+      { name: "Blog", url: `${siteConfig.url}/blog` },
+      { name: frontmatter.title, url: `${siteConfig.url}/blog/${slug}` },
+    ])
+  );
+
+  const videoSchema = frontmatter.videoId
+    ? JSON.stringify(
+        getVideoObjectSchema({
+          title: frontmatter.title,
+          description: frontmatter.description,
+          videoId: frontmatter.videoId,
+          uploadDate: frontmatter.publishedAt,
+        })
+      )
+    : null;
+
   return (
     <article className={`container ${styles.page}`}>
+      <Script
+        id="article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: articleSchema }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />
+      {videoSchema && (
+        <Script
+          id="video-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: videoSchema }}
+        />
+      )}
+
       {/* Back link */}
       <div className={styles.backLink}>
         <Link href="/blog" className={styles.backLinkAnchor}>
@@ -201,6 +257,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <iframe
                 src={`https://www.youtube-nocookie.com/embed/${frontmatter.videoId}`}
                 title={`Video: ${frontmatter.title}`}
+                loading="lazy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />

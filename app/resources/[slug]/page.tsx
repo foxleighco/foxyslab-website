@@ -36,6 +36,17 @@ export async function generateMetadata({
   return {
     title: `${frontmatter.title} | Foxy's Lab Resources`,
     description: frontmatter.description,
+    openGraph: {
+      type: "website",
+      title: frontmatter.title,
+      description: frontmatter.description,
+      url: `https://www.foxyslab.com/resources/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: frontmatter.title,
+      description: frontmatter.description,
+    },
   };
 }
 
@@ -84,6 +95,7 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${frontmatter.videoId}`}
             title={`Video: ${frontmatter.title}`}
+            loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />

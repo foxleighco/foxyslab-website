@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       {
@@ -16,6 +17,8 @@ const nextConfig: NextConfig = {
         pathname: "/vi/**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60,
   },
   eslint: {
     dirs: ["app", "components", "lib", "hooks"],

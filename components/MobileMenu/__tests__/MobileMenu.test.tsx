@@ -13,7 +13,7 @@ describe("MobileMenu", () => {
   it("renders toggle button", () => {
     render(<MobileMenu links={mockLinks} />);
     expect(
-      screen.getByRole("button", { name: "Toggle menu" })
+      screen.getByRole("button", { name: "Open menu" })
     ).toBeInTheDocument();
   });
 
@@ -28,7 +28,7 @@ describe("MobileMenu", () => {
     const user = userEvent.setup();
     render(<MobileMenu links={mockLinks} />);
 
-    await user.click(screen.getByRole("button", { name: "Toggle menu" }));
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
 
     expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "About" })).toBeInTheDocument();
@@ -39,21 +39,27 @@ describe("MobileMenu", () => {
     const user = userEvent.setup();
     render(<MobileMenu links={mockLinks} />);
 
-    const toggle = screen.getByRole("button", { name: "Toggle menu" });
+    const toggle = screen.getByRole("button", { name: "Open menu" });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
 
     await user.click(toggle);
-    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Close menu" })).toHaveAttribute(
+      "aria-expanded",
+      "true"
+    );
 
-    await user.click(toggle);
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await user.click(screen.getByRole("button", { name: "Close menu" }));
+    expect(screen.getByRole("button", { name: "Open menu" })).toHaveAttribute(
+      "aria-expanded",
+      "false"
+    );
   });
 
   it("closes menu when a link is clicked", async () => {
     const user = userEvent.setup();
     render(<MobileMenu links={mockLinks} />);
 
-    await user.click(screen.getByRole("button", { name: "Toggle menu" }));
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
     expect(screen.getByRole("link", { name: "Home" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("link", { name: "Home" }));
@@ -66,7 +72,7 @@ describe("MobileMenu", () => {
     const user = userEvent.setup();
     render(<MobileMenu links={mockLinks} />);
 
-    await user.click(screen.getByRole("button", { name: "Toggle menu" }));
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
 
     const cta = screen.getByRole("link", { name: "Subscribe on YouTube" });
     expect(cta).toHaveAttribute("target", "_blank");

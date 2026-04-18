@@ -14,7 +14,22 @@ export const metadata: Metadata = {
   title: "About | Foxy's Lab",
   description:
     "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
+  openGraph: {
+    type: "website",
+    title: "About | Foxy's Lab",
+    description:
+      "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
+    url: "https://www.foxyslab.com/about",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About | Foxy's Lab",
+    description:
+      "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
+  },
 };
+
+export const revalidate = 3600;
 
 export default async function AboutPage() {
   const [channelResult, videosResult, showNewsletter] = await Promise.all([

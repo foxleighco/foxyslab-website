@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   title: "Blog | Foxy's Lab",
   description:
     "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
+  openGraph: {
+    type: "website",
+    title: "Blog | Foxy's Lab",
+    description:
+      "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
+    url: "https://www.foxyslab.com/blog",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | Foxy's Lab",
+    description:
+      "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
+  },
 };
 
 // Revalidate every hour

@@ -83,7 +83,7 @@
 }
 
 .errorSubtitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
@@ -107,7 +107,7 @@
 .emptyIconSvg {
   width: 2rem;
   height: 2rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .emptyTitle {
@@ -117,7 +117,7 @@
 }
 
 .emptySubtitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
 }
 
@@ -169,6 +169,6 @@
 }
 
 .ctaText {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 1rem;
 }

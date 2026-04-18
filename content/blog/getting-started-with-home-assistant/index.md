@@ -6,6 +6,8 @@ tags: ["home-assistant", "smart-home", "tutorial", "beginners", "zigbee"]
 category: "tutorials"
 status: "published"
 featured: true
+heroImage: "/images/blog/getting-started-with-home-assistant/hero.png"
+thumbnail: "/images/blog/getting-started-with-home-assistant/thumbnail.png"
 videoId: "u2RF_v937eI"
 ---
 

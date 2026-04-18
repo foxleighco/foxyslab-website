@@ -131,6 +131,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </Link>
       </div>
 
+      {/* Hero Image — full width, above title */}
+      {frontmatter.heroImage && (
+        <div className={styles.heroImage}>
+          <Image
+            src={frontmatter.heroImage}
+            alt={frontmatter.title}
+            width={0}
+            height={0}
+            className={styles.heroImageEl}
+            priority
+            sizes="(max-width: 1024px) 100vw, 1200px"
+          />
+        </div>
+      )}
+
       <div className={styles.layout}>
         {/* Main content */}
         <div>
@@ -188,20 +203,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 title={`Video: ${frontmatter.title}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-              />
-            </div>
-          )}
-
-          {/* Hero Image */}
-          {frontmatter.heroImage && !frontmatter.videoId && (
-            <div className={styles.heroImage}>
-              <Image
-                src={frontmatter.heroImage}
-                alt={frontmatter.title}
-                fill
-                className={styles.heroImageEl}
-                priority
-                sizes="(max-width: 1024px) 100vw, 800px"
               />
             </div>
           )}

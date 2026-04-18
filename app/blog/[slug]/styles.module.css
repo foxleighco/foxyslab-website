@@ -130,15 +130,15 @@
 
 /* Hero Image */
 .heroImage {
-  position: relative;
-  aspect-ratio: 16 / 9;
   border-radius: 0.75rem;
   overflow: hidden;
   margin-bottom: 2rem;
 }
 
 .heroImageEl {
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* Mobile TOC */

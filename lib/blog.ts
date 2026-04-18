@@ -66,7 +66,10 @@ async function findMarkdownFiles(dir: string): Promise<string[]> {
  */
 function filePathToSlug(filePath: string, baseDir: string): string {
   const relativePath = path.relative(baseDir, filePath);
-  return relativePath.replace(/\.(md|mdx)$/, "").replace(/\\/g, "/"); // Normalize path separators
+  return relativePath
+    .replace(/\.(md|mdx)$/, "")
+    .replace(/\\/g, "/") // Normalize path separators
+    .replace(/\/index$/, ""); // Support folder-based posts (e.g. my-post/index.md)
 }
 
 /**
@@ -181,10 +184,12 @@ export async function getBlogPostBySlug(
       span.setAttribute("blog.slug", slug);
 
       try {
-        // Try both .md and .mdx extensions
+        // Try flat files and folder-based posts (e.g. my-post/index.md)
         const possiblePaths = [
           path.join(BLOG_DIR, `${slug}.md`),
           path.join(BLOG_DIR, `${slug}.mdx`),
+          path.join(BLOG_DIR, slug, "index.md"),
+          path.join(BLOG_DIR, slug, "index.mdx"),
         ];
 
         let filePath: string | null = null;

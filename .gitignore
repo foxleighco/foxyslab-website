@@ -44,5 +44,8 @@ next-env.d.ts
 # large media files
 public/lab-coat-clips/*.webp
 
+# generated blog assets (synced from content/blog/ at build time)
+public/images/blog/
+
 # Sentry Config File
 .env.sentry-build-plugin

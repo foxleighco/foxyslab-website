@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
-import { blogFlag } from "@/app/flags";
 import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
@@ -126,8 +124,6 @@ async function TagCloud() {
 }
 
 export default async function BlogPage() {
-  if (!(await blogFlag())) notFound();
-
   return (
     <div className={`container ${styles.page}`}>
       <PageHeader

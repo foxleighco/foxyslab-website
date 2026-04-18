@@ -1,0 +1,121 @@
+.page {
+  padding: 5rem 1rem 3rem;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 3rem 0;
+  }
+}
+
+.backLink {
+  margin-bottom: 2rem;
+}
+
+.backLinkAnchor {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.backLinkAnchor:hover {
+  color: white;
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.videoEmbed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  max-width: 48rem;
+}
+
+.videoEmbed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.category {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--primary-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+.description {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.intro {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+  max-width: 48rem;
+}
+
+.intro p {
+  margin-bottom: 1rem;
+}
+
+.intro p:last-child {
+  margin-bottom: 0;
+}
+
+.disclosure {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  margin-bottom: 2rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

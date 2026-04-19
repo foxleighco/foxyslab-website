@@ -2,8 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { VideoCard } from "@/components/VideoCard";
 import { Newsletter } from "@/components/Newsletter";
+import { ShopPreview } from "@/components/ShopPreview";
 import { TransparentVideo } from "@/components/TransparentVideo";
 import { getLatestVideos } from "@/lib/youtube";
+import { getProducts } from "@/lib/fourthwall";
 import { newsletterFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
@@ -16,11 +18,13 @@ const labCoatClips = Array.from(
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [videosResult, showNewsletter] = await Promise.all([
+  const [videosResult, productsResult, showNewsletter] = await Promise.all([
     getLatestVideos(6),
+    getProducts(3),
     newsletterFlag(),
   ]);
   const videos = videosResult.success ? videosResult.data : [];
+  const featuredProducts = productsResult.success ? productsResult.data : [];
 
   return (
     <>
@@ -135,6 +139,24 @@ export default async function Home() {
           </p>
         </div>
       </section>
+
+      {/* Shop Preview */}
+      {featuredProducts.length > 0 && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>From the Shop</h2>
+            <a
+              href={siteConfig.social.shop}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.viewAllLink}
+            >
+              Visit Shop →
+            </a>
+          </div>
+          <ShopPreview products={featuredProducts} />
+        </section>
+      )}
 
       {/* What's on the Channel */}
       <section className={styles.section}>

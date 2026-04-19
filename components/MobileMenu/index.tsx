@@ -120,16 +120,29 @@ export function MobileMenu({ links }: MobileMenuProps) {
           data-testid="mobile-menu"
         >
           <div className={styles.menuLinks}>
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={styles.link}
-                onClick={close}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {links.map((link) =>
+              "external" in link && link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                  onClick={close}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={styles.link}
+                  onClick={close}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             <a
               href={siteConfig.social.youtube}
               target="_blank"

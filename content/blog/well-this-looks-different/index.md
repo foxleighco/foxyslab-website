@@ -48,7 +48,7 @@ So here we are. New blog, new platform, same mad bugger wittering about technolo
 
 ## What's next?
 
-I've got a few articles in the works already and some videos will now come with a companion article where I am able to find the time - my home assistant video is the first. Beyond that, I'm keeping it loose. If you want to keep up with new posts, the best way is probably to join the [Discord](https://discord.gg/foxyslab) where I'll share new articles as they go live, or just check back here occasionally like it's 2012 and RSS feeds are still cool.
+I've got a few articles in the works already and some videos will now come with a companion article where I am able to find the time - my [home assistant article](/blog/getting-started-with-home-assistant) is the first. Beyond that, I'm keeping it loose. If you want to keep up with new posts, the best way is probably to join the [Discord](https://discord.gg/foxyslab) where I'll share new articles as they go live, or just check back here occasionally like it's 2012 and RSS feeds are still cool.
 
 (Actually, RSS feeds might be cool again, I bet AI loves them!)
 

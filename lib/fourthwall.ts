@@ -8,11 +8,7 @@ type ApiResult<T> =
   | { success: false; error: string };
 
 function getStorefrontToken(): string {
-  const token = process.env.FOURTHWALL_STOREFRONT_TOKEN;
-  if (!token && process.env.NODE_ENV === "production") {
-    throw new Error("FOURTHWALL_STOREFRONT_TOKEN is required in production");
-  }
-  return token || "";
+  return process.env.FOURTHWALL_STOREFRONT_TOKEN || "";
 }
 
 /**
@@ -46,7 +42,7 @@ export async function getProducts(
           return { success: false, error: "No storefront token configured" };
         }
 
-        const url = `${STOREFRONT_API_BASE}/collections/all/products?storefront_token=${token}`;
+        const url = `${STOREFRONT_API_BASE}/collections/all/products?storefront_token=${encodeURIComponent(token)}`;
         const response = await fetch(url, {
           next: { revalidate: 3600 },
         });

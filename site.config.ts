@@ -55,7 +55,7 @@ export const siteConfig = {
       {
         href: "https://shop.foxyslab.com",
         label: "Shop",
-        external: true as const,
+        external: true,
       },
       { href: "/about", label: "About" },
       { href: "/enquiries", label: "Enquiries" },

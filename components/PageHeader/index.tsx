@@ -11,7 +11,7 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
     <div className={styles.header}>
       <div className={styles.logo}>
         <Image
-          src="/images/foxys-lab-logo-round.png"
+          src="/images/foxys-lab-logo-round.webp"
           alt="Foxy's Lab"
           fill
           className={styles.logoImage}

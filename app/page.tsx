@@ -46,7 +46,7 @@ export default async function Home() {
             <div className={styles.heroLogoWrap}>
               <div className={styles.heroLogo}>
                 <Image
-                  src="/images/foxys-lab-logo-round.png"
+                  src="/images/foxys-lab-logo-round.webp"
                   alt="Foxy's Lab"
                   fill
                   className={styles.heroLogoImage}

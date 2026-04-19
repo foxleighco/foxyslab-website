@@ -6,8 +6,8 @@ tags: ["meta", "blog"]
 category: "updates"
 status: "published"
 featured: true
-heroImage: "/images/blog/well-this-looks-different/hero.png"
-thumbnail: "/images/blog/well-this-looks-different/thumbnail.png"
+heroImage: "/images/blog/well-this-looks-different/hero.webp"
+thumbnail: "/images/blog/well-this-looks-different/thumbnail.webp"
 ---
 
 If you've been paying attention to the website, you might have noticed a shiny new "Blog" link in the navigation. If you haven't been paying attention, fair enough, I barely have either.
@@ -38,7 +38,7 @@ I might occasionally point you towards something I've not personally used but it
 
 ## Here's a quick history
 
-![Foxy's Tale - the original blog](/images/blog/well-this-looks-different/foxys-tale.png)
+![Foxy's Tale - the original blog](/images/blog/well-this-looks-different/foxys-tale.webp)
 
 For those who don't know (which is most of you, and that's fine), I used to run a personal blog for years. It covered everything from tech automation to [party planning tips](https://foxleigh.me/meandering-insanity/ten-tips-for-throwing-a-great-party) to deeply self-indulgent life updates. I wrote about [losing my cat](https://foxleigh.me/meandering-insanity/farewell-to-my-best-friend), [becoming a contractor](https://foxleigh.me/digital-industry/becoming-a-contactor), [moving across the country](https://foxleigh.me/meandering-insanity/london-baby), and why I thought [cloud storage would save civilisation](https://foxleigh.me/technically-minded/head-in-the-cloud) (the jury's still out on that one).
 

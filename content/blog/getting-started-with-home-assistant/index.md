@@ -6,8 +6,8 @@ tags: ["home-assistant", "smart-home", "tutorial", "beginners", "zigbee"]
 category: "tutorials"
 status: "published"
 featured: true
-heroImage: "/images/blog/getting-started-with-home-assistant/hero.png"
-thumbnail: "/images/blog/getting-started-with-home-assistant/thumbnail.png"
+heroImage: "/images/blog/getting-started-with-home-assistant/hero.webp"
+thumbnail: "/images/blog/getting-started-with-home-assistant/thumbnail.webp"
 videoId: "u2RF_v937eI"
 ---
 
@@ -69,7 +69,7 @@ Once you're in:
 
 When the Ubuntu installer loads, **select "Try Ubuntu"** — not "Install Ubuntu". We're just using Ubuntu as a stepping stone to get Home Assistant onto the machine.
 
-![Ubuntu installer with the Try Ubuntu option highlighted](/images/blog/getting-started-with-home-assistant/try-ubuntu.png)
+![Ubuntu installer with the Try Ubuntu option highlighted](/images/blog/getting-started-with-home-assistant/try-ubuntu.webp)
 
 I know, it's a ridiculously convoluted process. I don't know why Home Assistant does it this way, but it is what it is.
 
@@ -82,7 +82,7 @@ Now that you're in Ubuntu's live environment:
 3. Open the **Disks** app (click "Show Apps" and search for "disk").
 4. Select the main internal drive, click the three dots menu, and choose **Restore Disk Image**.
 
-![Ubuntu Disks app showing the Restore Disk Image option](/images/blog/getting-started-with-home-assistant/disks-restore.png)
+![Ubuntu Disks app showing the Restore Disk Image option](/images/blog/getting-started-with-home-assistant/disks-restore.webp)
 
 5. Select the Home Assistant image you just downloaded.
 
@@ -98,7 +98,7 @@ Reboot the device and head to your browser on another computer. Try `http://home
 
 You'll see a preparation screen that takes a minute or two, then the **"Create My Smart Home"** button will appear.
 
-![Home Assistant onboarding screen with the Create My Smart Home button](/images/blog/getting-started-with-home-assistant/create-smart-home.png)
+![Home Assistant onboarding screen with the Create My Smart Home button](/images/blog/getting-started-with-home-assistant/create-smart-home.webp)
 
 1. Create your user account with a strong password.
 2. Set your home address (this is used for location-based automations like sunrise/sunset triggers).
@@ -111,7 +111,7 @@ Home Assistant lets you organise your home into floors, areas (rooms), and zones
 
 It comes with living room, kitchen, and bedroom by default. I'd recommend creating **floors** first (ground floor, first floor, etc.), then creating your actual rooms and assigning them to floors.
 
-![Home Assistant areas and floors configuration screen](/images/blog/getting-started-with-home-assistant/areas-floors.png)
+![Home Assistant areas and floors configuration screen](/images/blog/getting-started-with-home-assistant/areas-floors.webp)
 
 **Zones** are for location-based automations outside your home. Your home zone is set up automatically. You can add others like "Work" — just drop a pin on the map. This used to be really painful to set up, but now it's dead easy.
 
@@ -187,7 +187,7 @@ Open the Home Assistant companion app on your phone, tap **Connect to My Home As
 
 Your phone gets added as a device, which means you can use it for location-based automations and receive notifications. You can also control all your smart home devices from the app.
 
-![Home Assistant companion app showing device controls](/images/blog/getting-started-with-home-assistant/ha-companion-app.png)
+![Home Assistant companion app showing device controls](/images/blog/getting-started-with-home-assistant/ha-companion-app.webp)
 
 ## Step 12: Add an Integration
 

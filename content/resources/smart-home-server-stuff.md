@@ -16,19 +16,19 @@ If you're just getting started with a smart home server, you don't need anything
 {
 "name": "Beelink SER3 Mini PC",
 "description": "This is my smart home server running Home Assistant OS directly. The SER3 with a Ryzen 3, 16GB RAM and a 500GB SSD is more than enough for this kind of workload.",
-"link": "http://www.amazon.com/gp/product/B0FT7H55QR",
+"link": "https://www.amazon.com/gp/product/B0FT7H55QR",
 "image": "/images/resources/smart-home-server-stuff/beelink-ser3.jpg"
 },
 {
 "name": "SONOFF Zigbee 3.0 USB Dongle Plus",
 "description": "A universal Zigbee gateway with antenna. Plug this into your server and you've got a Zigbee network up and running. Works great with Home Assistant and Zigbee2MQTT.",
-"link": "http://www.amazon.com/gp/product/B09KXTCMSC",
+"link": "https://www.amazon.com/gp/product/B09KXTCMSC",
 "image": "/images/resources/smart-home-server-stuff/sonoff-zigbee-dongle.jpg"
 },
 {
 "name": "Raspberry Pi 5 8GB",
 "description": "This is a satellite device on my desk that I connect my Stream Deck to. It runs Companion Pi and controls my smart home from my desk.",
-"link": "http://www.amazon.com/gp/product/B0CK2FCG1K",
+"link": "https://www.amazon.com/gp/product/B0CK2FCG1K",
 "image": "/images/resources/smart-home-server-stuff/raspberry-pi-5.jpg"
 }
 ]

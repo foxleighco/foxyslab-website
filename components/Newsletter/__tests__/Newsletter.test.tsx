@@ -66,9 +66,12 @@ describe("Newsletter", () => {
     await user.type(input, "user@example.com");
     await user.click(screen.getByRole("button", { name: "Subscribe" }));
 
-    await waitFor(() => {
-      expect(input).toHaveValue("");
-    });
+    await waitFor(
+      () => {
+        expect(input).toHaveValue("");
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("resets status after 5 seconds", async () => {

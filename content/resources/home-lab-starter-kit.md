@@ -21,13 +21,13 @@ This is a solid starting point. You can always expand later with more storage, b
 {
 "name": "NETGEAR 8-Port Gigabit Switch (GS308)",
 "description": "A simple, silent, plug-and-play unmanaged switch. Eight gigabit ports is enough to get started and it doesn't need any configuration — just plug it in.",
-"link": "http://www.amazon.com/gp/product/B07PFYM5MZ",
+"link": "https://www.amazon.com/gp/product/B07PFYM5MZ",
 "image": "/images/resources/home-lab-starter-kit/netgear-switch.jpg"
 },
 {
 "name": "Amazon Basics Cat6 Ethernet Cables (5-Pack)",
 "description": "A multicolour 5-pack of short Cat6 cables. Handy for connecting everything up without ending up with a rat's nest of identical-looking cables.",
-"link": "http://www.amazon.com/gp/product/B07RS68QKW",
+"link": "https://www.amazon.com/gp/product/B07RS68QKW",
 "image": "/images/resources/home-lab-starter-kit/ethernet-cables.jpg"
 }
 ]

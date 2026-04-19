@@ -17,19 +17,19 @@ Once it's set up, you can display anything you want on it — dashboards, calend
 {
 "name": "Waveshare 7.5\" E-Paper Display HAT",
 "description": "A 800x480 pixel e-ink display that connects directly to the Raspberry Pi via the GPIO header. No backlight, so it's easy on the eyes and barely uses any power.",
-"link": "http://www.amazon.com/gp/product/B075YP81JR",
+"link": "https://www.amazon.com/gp/product/B075YP81JR",
 "image": "/images/resources/diy-e-paper-display/waveshare-epaper.jpg"
 },
 {
 "name": "CanaKit Raspberry Pi Zero 2 W Kit",
 "description": "The brains of the operation. The Zero 2 W is tiny, cheap, and has built-in Wi-Fi. This kit comes with the official case, which keeps things tidy.",
-"link": "http://www.amazon.com/gp/product/B0CT1Y3CQJ",
+"link": "https://www.amazon.com/gp/product/B0CT1Y3CQJ",
 "image": "/images/resources/diy-e-paper-display/pi-zero-2w.jpg"
 },
 {
 "name": "SanDisk 8GB microSDHC Card",
 "description": "You don't need much storage for this project. An 8GB card is more than enough to run the OS and the display software.",
-"link": "http://www.amazon.com/gp/product/B0012Y2LLE",
+"link": "https://www.amazon.com/gp/product/B0012Y2LLE",
 "image": "/images/resources/diy-e-paper-display/sandisk-microsd.jpg"
 }
 ]

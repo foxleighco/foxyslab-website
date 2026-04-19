@@ -6,21 +6,22 @@ test.describe("Mobile Menu", () => {
   test("toggle button opens and closes menu", async ({ page }) => {
     await page.goto("/");
 
-    const toggle = page.getByRole("button", { name: "Toggle menu" });
-    await expect(toggle).toBeVisible();
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    const openBtn = page.getByRole("button", { name: "Open menu" });
+    await expect(openBtn).toBeVisible();
+    await expect(openBtn).toHaveAttribute("aria-expanded", "false");
 
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await openBtn.click();
+    const closeBtn = page.getByRole("button", { name: "Close menu" });
+    await expect(closeBtn).toHaveAttribute("aria-expanded", "true");
 
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await closeBtn.click();
+    await expect(openBtn).toHaveAttribute("aria-expanded", "false");
   });
 
   test("menu links navigate to pages", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Toggle menu" }).click();
+    await page.getByRole("button", { name: "Open menu" }).click();
     await page
       .getByTestId("mobile-menu")
       .getByRole("link", { name: "About" })
@@ -32,7 +33,7 @@ test.describe("Mobile Menu", () => {
   test("menu closes after link click", async ({ page }) => {
     await page.goto("/");
 
-    const toggle = page.getByRole("button", { name: "Toggle menu" });
+    const toggle = page.getByRole("button", { name: "Open menu" });
     await toggle.click();
     await page
       .getByTestId("mobile-menu")

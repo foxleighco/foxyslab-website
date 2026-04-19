@@ -35,6 +35,7 @@ export const siteConfig = {
     discord: "https://discord.gg/tPdaADbM2N",
     kofi: "https://ko-fi.com/foxyslab",
     kit: "https://kit.co/foxleigh81",
+    shop: "https://shop.foxyslab.com",
   },
 
   // YouTube Channel Configuration
@@ -51,6 +52,11 @@ export const siteConfig = {
       { href: "/blog", label: "Blog" },
       { href: "/resources", label: "Resources" },
       { href: "/videos", label: "Videos" },
+      {
+        href: "https://shop.foxyslab.com",
+        label: "Shop",
+        external: true as const,
+      },
       { href: "/about", label: "About" },
       { href: "/enquiries", label: "Enquiries" },
     ],

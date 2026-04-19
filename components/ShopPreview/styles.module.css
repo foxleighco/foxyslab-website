@@ -1,0 +1,81 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background-color: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--secondary), var(--accent-orange) 8%),
+    #ffffff 5%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  transform: translateY(-2px);
+}
+
+.imageWrap {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.info {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.price {
+  color: var(--accent-yellow);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.cta {
+  margin-top: auto;
+  color: var(--primary-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.card:hover .cta {
+  text-decoration: underline;
+}

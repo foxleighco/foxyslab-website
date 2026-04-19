@@ -12,12 +12,29 @@ export async function Navigation() {
         <div className={styles.inner}>
           {/* Desktop Navigation */}
           <div className={styles.desktopNav}>
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className={styles.navLink}>
-                {link.label}
-                <span className={styles.navLinkUnderline} />
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              "external" in link && link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.navLink}
+                >
+                  {link.label}
+                  <span className={styles.navLinkUnderline} />
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={styles.navLink}
+                >
+                  {link.label}
+                  <span className={styles.navLinkUnderline} />
+                </Link>
+              )
+            )}
             <a
               href={siteConfig.social.youtube}
               target="_blank"

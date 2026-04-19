@@ -13,7 +13,7 @@ const labCoatClips = Array.from(
   (_, i) => `/lab-coat-clips/lab-coat-clip-${i + 1}`
 );
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export default async function Home() {
   const [videosResult, showNewsletter] = await Promise.all([

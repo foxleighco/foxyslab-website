@@ -1,0 +1,92 @@
+.page {
+  padding: 5rem 1rem 3rem;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 3rem 0;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.emptyTitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.emptySubtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.skeleton {
+  padding: 1.5rem;
+  background-color: color-mix(in srgb, var(--secondary) 40%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeletonIcon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  margin-bottom: 1rem;
+}
+
+.skeletonCategory {
+  height: 0.75rem;
+  width: 20%;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonTitle {
+  height: 1.25rem;
+  width: 60%;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.skeletonText {
+  height: 1rem;
+  width: 90%;
+  background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
+  border-radius: 0.25rem;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

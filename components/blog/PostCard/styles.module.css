@@ -1,5 +1,20 @@
 .card {
-  /* group container for hover effects */
+  background-color: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--secondary), var(--accent-orange) 8%),
+    #ffffff 5%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  transform: translateY(-2px);
 }
 
 .link {
@@ -11,9 +26,7 @@
 .thumbnail {
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: 0.75rem;
   overflow: hidden;
-  margin-bottom: 1rem;
   background-color: color-mix(in srgb, var(--secondary) 50%, transparent);
 }
 
@@ -29,9 +42,7 @@
 .thumbnailPlaceholder {
   position: relative;
   aspect-ratio: 16 / 9;
-  border-radius: 0.75rem;
   overflow: hidden;
-  margin-bottom: 1rem;
   background: linear-gradient(
     to bottom right,
     color-mix(in srgb, var(--primary) 20%, transparent),
@@ -69,6 +80,10 @@
   border-radius: 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
+}
+
+.content {
+  padding: 1rem;
 }
 
 .categoryWrap {
@@ -113,7 +128,7 @@
   align-items: center;
   gap: 0.75rem;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .dot {
@@ -141,5 +156,5 @@
 .tagMore {
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }

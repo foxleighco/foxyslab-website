@@ -1,13 +1,10 @@
 import Link from "next/link";
-import { blogFlag, newsletterFlag } from "@/app/flags";
+import { newsletterFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
 export async function Footer() {
-  const [showBlog, showNewsletter] = await Promise.all([
-    blogFlag(),
-    newsletterFlag(),
-  ]);
+  const showNewsletter = await newsletterFlag();
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
@@ -91,15 +88,13 @@ export async function Footer() {
           <div>
             <h4 className={styles.heading}>Quick Links</h4>
             <ul className={styles.linkList}>
-              {siteConfig.navigation.main
-                .filter((link) => link.href !== "/blog" || showBlog)
-                .map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className={styles.link}>
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+              {siteConfig.navigation.main.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={styles.link}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

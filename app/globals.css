@@ -24,7 +24,7 @@ html {
 body {
   background-color: var(--secondary);
   color: white;
-  font-family: var(--font-futuru), system-ui, sans-serif;
+  font-family: var(--font-poppins), system-ui, sans-serif;
   letter-spacing: 0.025em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,12 +35,17 @@ body {
 
 h1,
 h2,
-h3,
 h4,
 h5,
 h6 {
   font-family: var(--font-sink), system-ui, sans-serif;
   font-weight: normal;
+  letter-spacing: normal;
+}
+
+h3 {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-weight: 900;
   letter-spacing: normal;
 }
 
@@ -244,7 +249,7 @@ main {
 }
 
 .prose h3 {
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
@@ -317,6 +322,8 @@ main {
 }
 
 .prose img {
+  max-width: 100%;
+  height: auto;
   border-radius: 0.75rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -390,4 +397,16 @@ main {
   font-family:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
     monospace;
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

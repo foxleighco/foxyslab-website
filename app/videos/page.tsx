@@ -14,7 +14,22 @@ export const metadata: Metadata = {
   title: "Videos | Foxy's Lab",
   description:
     "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
+  openGraph: {
+    type: "website",
+    title: "Videos | Foxy's Lab",
+    description:
+      "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
+    url: "https://www.foxyslab.com/videos",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Videos | Foxy's Lab",
+    description:
+      "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
+  },
 };
+
+export const revalidate = 3600;
 
 export default async function VideosPage() {
   const [videosResult, playlistsResult] = await Promise.all([

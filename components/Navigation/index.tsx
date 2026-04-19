@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { MobileMenu } from "../MobileMenu";
-import { blogFlag } from "@/app/flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
 export async function Navigation() {
-  const showBlog = await blogFlag();
-  const navLinks = siteConfig.navigation.main.filter(
-    (link) => link.href !== "/blog" || showBlog
-  );
+  const navLinks = siteConfig.navigation.main;
 
   return (
     <nav className={styles.nav}>

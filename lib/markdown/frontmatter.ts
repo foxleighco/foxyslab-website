@@ -33,6 +33,7 @@ export const frontmatterSchema = z.object({
 
   // Optional media fields
   heroImage: z.string().optional(),
+  thumbnail: z.string().optional(),
   videoId: z.string().optional(),
 
   // Related content

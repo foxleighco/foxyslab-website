@@ -2,13 +2,18 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import {
   getBlogPostBySlug,
   getAllPostSlugs,
   getAdjacentPosts,
 } from "@/lib/blog";
 import { TableOfContents } from "@/components/blog/TableOfContents";
-import { blogFlag } from "@/app/flags";
+import {
+  getArticleSchema,
+  getBreadcrumbSchema,
+  getVideoObjectSchema,
+} from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -90,14 +95,12 @@ function formatDate(date: Date): string {
 }
 
 /*
- * SECURITY NOTE: Blog post HTML is generated at build time from trusted local
- * markdown files via the remark/rehype pipeline (lib/blog.ts). No user-supplied
- * content is rendered, so using innerHTML for the rendered blog body is safe.
+ * SECURITY NOTE: Blog post HTML and JSON-LD schemas use dangerouslySetInnerHTML
+ * by design. All content is generated server-side from trusted local markdown
+ * files and config — no user-supplied content is rendered.
  */
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  if (!(await blogFlag())) notFound();
-
   const { slug } = await params;
   const result = await getBlogPostBySlug(slug);
 
@@ -112,8 +115,58 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const adjacentResult = await getAdjacentPosts(slug);
   const adjacent = adjacentResult.success ? adjacentResult.data : {};
 
+  const articleSchema = JSON.stringify(
+    getArticleSchema({
+      title: frontmatter.title,
+      description: frontmatter.description,
+      slug,
+      author: frontmatter.author,
+      publishedAt: frontmatter.publishedAt,
+      updatedAt: frontmatter.updatedAt,
+      tags: frontmatter.tags,
+      heroImage: frontmatter.heroImage,
+    })
+  );
+
+  const breadcrumbSchema = JSON.stringify(
+    getBreadcrumbSchema([
+      { name: "Home", url: siteConfig.url },
+      { name: "Blog", url: `${siteConfig.url}/blog` },
+      { name: frontmatter.title, url: `${siteConfig.url}/blog/${slug}` },
+    ])
+  );
+
+  const videoSchema = frontmatter.videoId
+    ? JSON.stringify(
+        getVideoObjectSchema({
+          title: frontmatter.title,
+          description: frontmatter.description,
+          videoId: frontmatter.videoId,
+          uploadDate: frontmatter.publishedAt,
+        })
+      )
+    : null;
+
   return (
     <article className={`container ${styles.page}`}>
+      <Script
+        id="article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: articleSchema }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />
+      {videoSchema && (
+        <Script
+          id="video-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: videoSchema }}
+        />
+      )}
+
       {/* Back link */}
       <div className={styles.backLink}>
         <Link href="/blog" className={styles.backLinkAnchor}>
@@ -133,6 +186,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           Back to Blog
         </Link>
       </div>
+
+      {/* Hero Image — full width, above title */}
+      {frontmatter.heroImage && (
+        <div className={styles.heroImage}>
+          <Image
+            src={frontmatter.heroImage}
+            alt={frontmatter.title}
+            width={1987}
+            height={720}
+            className={styles.heroImageEl}
+            priority
+            sizes="(max-width: 1024px) 100vw, 1200px"
+          />
+        </div>
+      )}
 
       <div className={styles.layout}>
         {/* Main content */}
@@ -183,16 +251,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
           </header>
 
-          {/* Hero Image */}
-          {frontmatter.heroImage && (
-            <div className={styles.heroImage}>
-              <Image
-                src={frontmatter.heroImage}
-                alt={frontmatter.title}
-                fill
-                className={styles.heroImageEl}
-                priority
-                sizes="(max-width: 1024px) 100vw, 800px"
+          {/* Video Embed */}
+          {frontmatter.videoId && (
+            <div className={styles.videoEmbed}>
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${frontmatter.videoId}`}
+                title={`Video: ${frontmatter.title}`}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
               />
             </div>
           )}
@@ -211,28 +278,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
-
-          {/* Related Video */}
-          {frontmatter.videoId && (
-            <div className={styles.relatedVideo}>
-              <h3 className={styles.relatedVideoTitle}>Watch the Video</h3>
-              <a
-                href={`https://www.youtube.com/watch?v=${frontmatter.videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.relatedVideoLink}
-              >
-                <svg
-                  className={styles.relatedVideoIcon}
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                </svg>
-                Watch on YouTube
-              </a>
-            </div>
-          )}
 
           {/* Post Navigation */}
           {(adjacent.prev || adjacent.next) && (

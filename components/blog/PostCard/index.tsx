@@ -28,10 +28,10 @@ export function PostCard({ post }: PostCardProps) {
     <article className={styles.card}>
       <Link href={`/blog/${slug}`} className={styles.link}>
         {/* Thumbnail */}
-        {frontmatter.heroImage ? (
+        {frontmatter.thumbnail || frontmatter.heroImage ? (
           <div className={styles.thumbnail}>
             <Image
-              src={frontmatter.heroImage}
+              src={frontmatter.thumbnail || frontmatter.heroImage!}
               alt={frontmatter.title}
               fill
               className={styles.thumbnailImage}
@@ -69,7 +69,7 @@ export function PostCard({ post }: PostCardProps) {
         )}
 
         {/* Content */}
-        <div>
+        <div className={styles.content}>
           {/* Category */}
           {frontmatter.category && (
             <div className={styles.categoryWrap}>

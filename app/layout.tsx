@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Poppins } from "next/font/google";
 import Script from "next/script";
 import { FlagDefinitions } from "flags/react";
 import { encryptFlagDefinitions } from "flags";
@@ -19,11 +20,11 @@ const sink = localFont({
   display: "swap",
 });
 
-const futuru = localFont({
-  src: "../public/fonts/futuru.woff2",
-  variable: "--font-futuru",
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
   display: "swap",
-  weight: "100 900",
+  weight: ["300", "400", "500", "600", "700", "900"],
 });
 
 const title = `${siteConfig.name} | ${siteConfig.tagline}`;
@@ -95,15 +96,15 @@ export default async function RootLayout({
   );
 
   return (
-    <html lang="en" className={`${sink.variable} ${futuru.variable}`}>
+    <html lang="en" className={`${sink.variable} ${poppins.variable}`}>
       <head>
         {gaId && (
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
             </Script>
           </>

@@ -5,7 +5,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
   overflow: hidden;
-  text-decoration: none;
+  cursor: pointer;
   color: inherit;
   transition:
     border-color 0.2s,
@@ -15,6 +15,11 @@
 .card:hover {
   border-color: color-mix(in srgb, var(--primary) 40%, transparent);
   transform: translateY(-2px);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .imageWrap {
@@ -66,7 +71,12 @@
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--primary-text);
+  text-decoration: none;
   margin-top: auto;
+}
+
+.cta:hover {
+  text-decoration: underline;
 }
 
 .ctaIcon {

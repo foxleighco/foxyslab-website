@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
   eslint: {
     dirs: ["app", "components", "lib", "hooks"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/resources/smart-home-server-stuff",
+        destination: "/resources/foxys-smart-home",
+        statusCode: 301,
+      },
+    ];
+  },
   async headers() {
     return [
       {

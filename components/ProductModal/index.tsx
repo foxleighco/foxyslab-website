@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { ResourceProduct } from "@/types/resource";
@@ -12,22 +13,48 @@ interface ProductModalProps {
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Focus trap, escape key, and body scroll lock
   useEffect(() => {
     closeButtonRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
         onClose();
       }
+
+      if (e.key === "Tab" && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
     }
 
-    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
@@ -47,7 +74,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
       aria-modal="true"
       aria-label={product.name}
     >
-      <div className={styles.modal}>
+      <div className={styles.modal} ref={modalRef}>
         <button
           ref={closeButtonRef}
           className={styles.closeButton}

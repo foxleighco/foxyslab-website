@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
       {
         source: "/resources/smart-home-server-stuff",
         destination: "/resources/foxys-smart-home",
-        permanent: true,
+        statusCode: 301,
       },
     ];
   },

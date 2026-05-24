@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import type React from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import type { ResourceProduct } from "@/types/resource";
 import { ProductModal } from "@/components/ProductModal";
@@ -12,12 +13,19 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [showModal, setShowModal] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = useCallback(() => {
+    setShowModal(false);
+    cardRef.current?.focus();
+  }, []);
 
   function handleCardClick() {
     setShowModal(true);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.target !== e.currentTarget) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setShowModal(true);
@@ -27,6 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <>
       <div
+        ref={cardRef}
         className={styles.card}
         onClick={handleCardClick}
         onKeyDown={handleKeyDown}
@@ -73,9 +82,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {showModal && (
-        <ProductModal product={product} onClose={() => setShowModal(false)} />
-      )}
+      {showModal && <ProductModal product={product} onClose={handleClose} />}
     </>
   );
 }

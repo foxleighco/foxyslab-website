@@ -19,6 +19,8 @@ export interface ResourceFrontmatter {
   category: string;
   featured?: boolean;
   videoId?: string;
+  blogSlug?: string;
+  blogTitle?: string;
 }
 
 export interface Resource {

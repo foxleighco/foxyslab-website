@@ -4,9 +4,12 @@ description: "Everything you need to get Home Assistant running on your own hard
 publishedAt: 2024-02-01
 category: "smart home"
 featured: true
+videoId: "u2RF_v937eI"
+blogSlug: "getting-started-with-home-assistant"
+blogTitle: "Getting Started with Home Assistant on a Mini PC"
 ---
 
-This is the kit I walk through in my [Getting Started with Home Assistant](/blog/getting-started-with-home-assistant) guide. It's everything you need to go from a blank mini PC to a fully working smart home with Zigbee devices, all running locally.
+This is the kit I walk through in the video and blog post above. It's everything you need to go from a blank mini PC to a fully working smart home with Zigbee devices, all running locally.
 
 If you want something simpler, there's also the Home Assistant Green which comes pre-installed — but this setup gives you a lot more headroom for add-ons, Docker containers, and future expansion.
 

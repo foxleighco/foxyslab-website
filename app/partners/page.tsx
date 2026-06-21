@@ -71,7 +71,7 @@ export default function PartnersPage() {
               href={`/partners/${partner.slug}`}
               className={`btn-outline ${styles.cardButton}`}
             >
-              View partner page
+              View {partner.name}
             </Link>
           </article>
         ))}

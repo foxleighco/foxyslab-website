@@ -121,13 +121,13 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
           className={styles.videoGrid}
           style={
             {
-              "--video-cols": videoColumns,
+              "--video-cols": String(videoColumns),
               "--video-max": videoColumns === 1 ? "48rem" : "none",
             } as CSSProperties
           }
         >
           {videoIds.map((id, index) => (
-            <div key={id} className={styles.videoEmbed}>
+            <div key={`${id}-${index}`} className={styles.videoEmbed}>
               <iframe
                 src={`https://www.youtube-nocookie.com/embed/${id}`}
                 title={

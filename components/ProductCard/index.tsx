@@ -4,6 +4,7 @@ import type React from "react";
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import type { ResourceProduct } from "@/types/resource";
+import { isAmazonLink } from "@/lib/affiliate";
 import { ProductModal } from "@/components/ProductModal";
 import styles from "./styles.module.css";
 
@@ -32,8 +33,9 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const isAmazon = /amazon\.|amzn\./i.test(product.link);
-  const ctaLabel = isAmazon ? "View on Amazon" : "View product";
+  const ctaLabel = isAmazonLink(product.link)
+    ? "View on Amazon"
+    : "View product";
 
   return (
     <>

@@ -155,8 +155,8 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
 
       {/* Product groups */}
       {groups.map((group) => (
-        <section
-          key={group.category || "all"}
+        <div
+          key={group.category || "__uncategorized__"}
           className={styles.productSection}
         >
           {group.category && (
@@ -167,7 +167,7 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
               <ProductCard key={product.link} product={product} />
             ))}
           </div>
-        </section>
+        </div>
       ))}
 
       {/* Brand stores */}

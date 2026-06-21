@@ -30,13 +30,25 @@
   height: 1rem;
 }
 
+.videoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: var(--video-max, none);
+}
+
+@media (min-width: 768px) {
+  .videoGrid {
+    grid-template-columns: repeat(var(--video-cols, 1), 1fr);
+  }
+}
+
 .videoEmbed {
   position: relative;
   aspect-ratio: 16 / 9;
   border-radius: 0.75rem;
   overflow: hidden;
-  margin-bottom: 2rem;
-  max-width: 48rem;
 }
 
 .videoEmbed iframe {

@@ -5,7 +5,9 @@ publishedAt: 2024-02-01
 updatedAt: 2026-06-21
 category: "smart home"
 featured: true
-videoId: "u2RF_v937eI"
+videoIds:
+  - "kM7i8i5egQ0"
+  - "u2RF_v937eI"
 blogSlug: "getting-started-with-home-assistant"
 blogTitle: "Getting Started with Home Assistant on a Mini PC"
 brandStores:

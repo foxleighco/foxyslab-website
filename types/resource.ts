@@ -25,7 +25,10 @@ export interface ResourceFrontmatter {
   updatedAt?: string;
   category: string;
   featured?: boolean;
+  /** Single featured video. Prefer `videoIds` when a resource has several. */
   videoId?: string;
+  /** Multiple featured videos, shown in order. Takes precedence over videoId. */
+  videoIds?: string[];
   blogSlug?: string;
   blogTitle?: string;
   /** Brand store links shown as a subsection below the products. */

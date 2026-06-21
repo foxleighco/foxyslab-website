@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getResourceBySlug, getAllResourceSlugs } from "@/lib/resources";
@@ -75,6 +76,16 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
 
   const brandStores = frontmatter.brandStores ?? [];
 
+  // Prefer the videoIds array; fall back to the single videoId for resources
+  // that only have one.
+  const videoIds =
+    frontmatter.videoIds ?? (frontmatter.videoId ? [frontmatter.videoId] : []);
+
+  // Choose the grid width by video count: 1→single, 2→2-col, 3→3-col,
+  // 4→2x2, 5+→3-col. Capped at 3 columns to keep each embed a usable size.
+  const videoColumns =
+    videoIds.length <= 3 ? videoIds.length : videoIds.length === 4 ? 2 : 3;
+
   return (
     <div className={`container ${styles.page}`}>
       {/* Back link */}
@@ -104,16 +115,32 @@ export default async function ResourcePage({ params }: ResourcePageProps) {
         <p className={styles.description}>{frontmatter.description}</p>
       </header>
 
-      {/* Video Embed */}
-      {frontmatter.videoId && (
-        <div className={styles.videoEmbed}>
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${frontmatter.videoId}`}
-            title={`Video: ${frontmatter.title}`}
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+      {/* Video Embeds */}
+      {videoIds.length > 0 && (
+        <div
+          className={styles.videoGrid}
+          style={
+            {
+              "--video-cols": String(videoColumns),
+              "--video-max": videoColumns === 1 ? "48rem" : "none",
+            } as CSSProperties
+          }
+        >
+          {videoIds.map((id, index) => (
+            <div key={`${id}-${index}`} className={styles.videoEmbed}>
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${id}`}
+                title={
+                  videoIds.length > 1
+                    ? `Video ${index + 1}: ${frontmatter.title}`
+                    : `Video: ${frontmatter.title}`
+                }
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          ))}
         </div>
       )}
 

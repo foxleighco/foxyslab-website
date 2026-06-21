@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "reolink",
+    "name": "Reolink",
+    "logo": "/images/partners/reolink.svg",
+    "website": "https://reolink.com",
+    "colors": {
+      "primary": "#0F1A2E",
+      "secondary": "#3FA9F5"
+    },
+    "videos": ["https://www.youtube.com/watch?v=B_fv-evtqXs"],
+    "discounts": [
+      {
+        "code": "foxyslab5",
+        "description": "5% off Reolink products when you use this code at checkout.",
+        "link": "https://reolink.com/?aff=1476"
+      }
+    ],
+    "shortDescription": "Security cameras and NVRs that work without a subscription.",
+    "intro": "Reolink make a wide range of security cameras and NVR systems, with a strong focus on local recording and no mandatory cloud subscription. Their kit covers everything from cheap-and-cheerful indoor cameras through to PoE-powered 4K dome and bullet setups, and most of it plays nicely with Home Assistant via RTSP or ONVIF."
+  },
+  {
+    "slug": "repenic",
+    "name": "Repenic",
+    "logo": "/images/partners/repenic.png",
+    "website": "https://www.repenic.com",
+    "colors": {
+      "primary": "#241710",
+      "secondary": "#2B2B2B"
+    },
+    "videos": ["https://www.youtube.com/watch?v=-WO3XpxX9_Y"],
+    "discounts": [
+      {
+        "code": "fox10",
+        "description": "10% off Repenic products when you use this code at checkout.",
+        "link": "https://www.repenic.com/discount/fox10?redirect=%2Fcollections%2Fall-products/?ref=SOCIALMEDIA"
+      }
+    ],
+    "shortDescription": "UK-designed smart switches, dimmers and thermostats with a focus on looking good.",
+    "intro": "Repenic are a UK-based smart home brand making Zigbee dimmers, switches and thermostats that don't look like they were designed by an engineer in a hurry. Local control by default, no subscription, and a properly UK-spec backbox-friendly form factor — which is rarer than it should be."
+  },
+  {
+    "slug": "qwertee",
+    "name": "Qwertee",
+    "logo": "/images/partners/qwertee.svg",
+    "website": "https://www.qwertee.com",
+    "colors": {
+      "primary": "#FFFFFF",
+      "secondary": "#000000"
+    },
+    "discounts": [
+      {
+        "code": "foxyslab",
+        "description": "£1/$1/€1 off Qwertee t-shirts when you use this code at checkout."
+      }
+    ],
+    "shortDescription": "Limited-edition geeky t-shirts, drops every day.",
+    "intro": "Qwertee run a daily rotation of limited-edition t-shirt designs from independent artists, mostly pitched squarely at the geeky, sci-fi, gaming and tech crowd. Designs are usually only available for 24 hours at the launch price, after which they roll into the back catalogue at a slightly higher price."
+  },
+  {
+    "slug": "aqara",
+    "name": "Aqara",
+    "logo": "/images/partners/aqara.svg",
+    "website": "https://www.aqara.com",
+    "enabled": false,
+    "colors": {
+      "primary": "#0B1F3A",
+      "secondary": "#00B14F"
+    },
+    "shortDescription": "Zigbee and Matter sensors, switches and hubs at sensible prices.",
+    "intro": "Aqara are one of the biggest names in affordable Zigbee smart home kit, with a sprawling catalogue of sensors, switches, locks, blinds and hubs. Most devices pair directly with Home Assistant via Zigbee2MQTT or ZHA, and the newer Matter-over-Thread hubs open things up further if you'd rather skip the proprietary hub entirely."
+  },
+  {
+    "slug": "smlight",
+    "name": "SMLight",
+    "logo": "/images/partners/smlight.webp",
+    "website": "https://smlight.tech",
+    "colors": {
+      "primary": "#0E1620",
+      "secondary": "#F5A623"
+    },
+    "shortDescription": "Zigbee and Thread coordinators built for serious smart home users.",
+    "intro": "SMLight make a range of Zigbee and Thread coordinators — both USB sticks and network-attached PoE devices — aimed at people running Home Assistant or other serious smart home setups. Their network coordinators in particular let you put the radio wherever the signal is best, rather than wherever your server happens to live."
+  },
+  {
+    "slug": "meross",
+    "name": "Meross",
+    "logo": "/images/partners/meross.png",
+    "website": "https://www.meross.com",
+    "enabled": false,
+    "colors": {
+      "primary": "#FFFFFF",
+      "secondary": "#F47B20"
+    },
+    "shortDescription": "Affordable smart plugs, lights and garage door openers with Matter and HomeKit support.",
+    "intro": "Meross are best known for their well-priced smart plugs, but the range stretches into smart lighting, garage door openers, water valves and more. A lot of their newer kit ships with Matter support out of the box, which makes them an easy entry point for anyone wanting smart devices that don't lock you to a single ecosystem."
+  },
+  {
+    "slug": "trmnl",
+    "name": "TRMNL",
+    "logo": "/images/partners/trmnl.svg",
+    "website": "https://trmnl.com",
+    "colors": {
+      "primary": "#f8654b",
+      "secondary": "#FFFFFF"
+    },
+    "videos": [
+      "https://www.youtube.com/watch?v=1xiExZwlxfQ",
+      "https://www.youtube.com/watch?v=q8gowSrn7Bg"
+    ],
+    "shortDescription": "Distraction-free e-ink dashboards with no subscription and open-source plugins.",
+    "intro": "TRMNL make a range of e-ink displays that can be used as distraction-free dashboards for your smart home, calendar, weather and more. The devices are designed to be used without a subscription, and the plugin system is open-source so you can add your own integrations if you want to."
+  }
+]

@@ -29,7 +29,7 @@ export default async function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className={styles.hero}>
+      <section className={`${styles.hero} home-hero`}>
         {/* Two-column Content */}
         <div className={styles.heroContent}>
           {/* Left column - Video (hidden on mobile) */}

@@ -51,6 +51,13 @@ h3 {
 
 main {
   flex: 1 1 auto;
+  /* Push content clear of the fixed nav overlay on all pages... */
+  padding-top: 50px;
+}
+
+/* ...except the home page, whose full-bleed hero sits under the nav by design. */
+main:has(> .home-hero) {
+  padding-top: 0;
 }
 
 ::selection {

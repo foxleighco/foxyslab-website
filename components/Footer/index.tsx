@@ -88,7 +88,7 @@ export async function Footer() {
           <div>
             <h4 className={styles.heading}>Quick Links</h4>
             <ul className={styles.linkList}>
-              {siteConfig.navigation.main.map((link) => (
+              {siteConfig.navigation.footer.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className={styles.link}>
                     {link.label}

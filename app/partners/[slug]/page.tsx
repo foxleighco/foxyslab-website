@@ -110,11 +110,15 @@ export default async function PartnerPage({ params }: PageProps) {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Videos</h2>
           <div className={styles.videoGrid}>
-            {videoIds.map(({ id, url }) => (
-              <div key={id} className={styles.videoEmbed}>
+            {videoIds.map(({ id, url }, index) => (
+              <div key={`${url}-${index}`} className={styles.videoEmbed}>
                 <iframe
                   src={`https://www.youtube-nocookie.com/embed/${id}`}
-                  title={`${partner.name} video`}
+                  title={
+                    videoIds.length > 1
+                      ? `${partner.name} video ${index + 1}`
+                      : `${partner.name} video`
+                  }
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"

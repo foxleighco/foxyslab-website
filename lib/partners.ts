@@ -31,7 +31,7 @@ export interface Partner {
 /** Extract the 11-character video ID from a YouTube watch/share URL. */
 export function getYouTubeId(url: string): string | null {
   const match = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/
+    /(?:youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/
   );
   return match ? match[1] : null;
 }

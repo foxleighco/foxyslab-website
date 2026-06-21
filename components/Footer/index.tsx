@@ -90,9 +90,20 @@ export async function Footer() {
             <ul className={styles.linkList}>
               {siteConfig.navigation.footer.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={styles.link}>
-                    {link.label}
-                  </Link>
+                  {"external" in link && link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.link}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.href} className={styles.link}>
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

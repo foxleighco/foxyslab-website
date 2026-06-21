@@ -4,6 +4,7 @@ import type React from "react";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { ResourceProduct } from "@/types/resource";
+import { isAmazonLink } from "@/lib/affiliate";
 import styles from "./styles.module.css";
 
 interface ProductModalProps {
@@ -65,6 +66,10 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     }
   }
 
+  const ctaLabel = isAmazonLink(product.link)
+    ? "View on Amazon"
+    : "View product";
+
   return (
     <div
       className={styles.overlay}
@@ -116,7 +121,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             rel="noopener noreferrer"
             className="btn-primary"
           >
-            View on Amazon
+            {ctaLabel}
             <svg
               width="16"
               height="16"

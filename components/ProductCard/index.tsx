@@ -4,6 +4,7 @@ import type React from "react";
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import type { ResourceProduct } from "@/types/resource";
+import { isAmazonLink } from "@/lib/affiliate";
 import { ProductModal } from "@/components/ProductModal";
 import styles from "./styles.module.css";
 
@@ -31,6 +32,10 @@ export function ProductCard({ product }: ProductCardProps) {
       setShowModal(true);
     }
   }
+
+  const ctaLabel = isAmazonLink(product.link)
+    ? "View on Amazon"
+    : "View product";
 
   return (
     <>
@@ -64,7 +69,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className={styles.cta}
             onClick={(e) => e.stopPropagation()}
           >
-            View on Amazon
+            {ctaLabel}
             <svg
               className={styles.ctaIcon}
               fill="none"

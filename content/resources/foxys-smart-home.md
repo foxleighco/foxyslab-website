@@ -20,10 +20,10 @@ If you're just getting started with a smart home server, you don't need anything
 "image": "/images/resources/foxys-smart-home/kuyia-mini-pc.jpg"
 },
 {
-"name": "SMLIGHT SLZB-MR2",
-"description": "A multi-protocol Zigbee/Thread/Matter coordinator. Plug this into your server and you've got your smart home radio network up and running. Works great with Home Assistant.",
-"link": "https://amzn.to/4f5Mp7C",
-"image": "/images/resources/foxys-smart-home/smlight-slzb-mr2.jpg"
+"name": "SMLIGHT SLZB-MR4U",
+"description": "A multi-protocol Zigbee/Thread/Matter coordinator. Plug this into your server and you've got your smart home radio network up and running. Works great with Home Assistant. Note: I actually use the SLZB-MR3, which no longer seems to be available on Amazon UK — the MR4 is its successor.",
+"link": "https://amzn.to/4evATQR",
+"image": "/images/resources/foxys-smart-home/smlight-slzb-mr4u.jpg"
 },
 {
 "name": "Raspberry Pi 5 8GB",

@@ -9,6 +9,13 @@ export interface ResourceProduct {
   description: string;
   link: string;
   image: string;
+  /** Optional grouping heading (e.g. "Hubs", "Sensors"). */
+  category?: string;
+}
+
+export interface BrandStore {
+  name: string;
+  link: string;
 }
 
 export interface ResourceFrontmatter {
@@ -21,6 +28,8 @@ export interface ResourceFrontmatter {
   videoId?: string;
   blogSlug?: string;
   blogTitle?: string;
+  /** Brand store links shown as a subsection below the products. */
+  brandStores?: BrandStore[];
 }
 
 export interface Resource {

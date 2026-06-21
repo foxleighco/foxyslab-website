@@ -32,6 +32,9 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
+  const isAmazon = /amazon\.|amzn\./i.test(product.link);
+  const ctaLabel = isAmazon ? "View on Amazon" : "View product";
+
   return (
     <>
       <div
@@ -64,7 +67,7 @@ export function ProductCard({ product }: ProductCardProps) {
             className={styles.cta}
             onClick={(e) => e.stopPropagation()}
           >
-            View on Amazon
+            {ctaLabel}
             <svg
               className={styles.ctaIcon}
               fill="none"

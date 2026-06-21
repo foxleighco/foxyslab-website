@@ -65,6 +65,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     }
   }
 
+  const isAmazon = /amazon\.|amzn\./i.test(product.link);
+  const ctaLabel = isAmazon ? "View on Amazon" : "View product";
+
   return (
     <div
       className={styles.overlay}
@@ -116,7 +119,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
             rel="noopener noreferrer"
             className="btn-primary"
           >
-            View on Amazon
+            {ctaLabel}
             <svg
               width="16"
               height="16"

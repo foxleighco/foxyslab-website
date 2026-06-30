@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { getReferLink } from "@/lib/refer";
 import { trackServerEvent } from "@/lib/ga";
 
@@ -26,7 +26,10 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     return NextResponse.redirect(new URL("/refer", request.url), 307);
   }
 
-  await trackServerEvent("refer_click", { slug: link.slug.toLowerCase() });
+  // Track the click after the response is sent so it never adds click latency.
+  after(() =>
+    trackServerEvent("refer_click", { slug: link.slug.toLowerCase() })
+  );
 
   // 307 (temporary) so clients don't cache the old target.
   return NextResponse.redirect(link.url, 307);

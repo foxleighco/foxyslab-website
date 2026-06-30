@@ -27,6 +27,7 @@ export async function trackServerEvent(
       `https://www.google-analytics.com/mp/collect?measurement_id=${GA_ID}&api_secret=${GA_API_SECRET}`,
       {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
           client_id: crypto.randomUUID(),

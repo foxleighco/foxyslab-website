@@ -33,7 +33,9 @@ for (const link of referLinks) {
  */
 export function getReferLink(slug: string): ReferLink | undefined {
   const normalised = slug.trim().toLowerCase();
-  const link = referLinks.find((l) => l.slug.toLowerCase() === normalised);
+  const link = referLinks.find(
+    (l) => l.slug.trim().toLowerCase() === normalised
+  );
   if (!link || link.enabled === false) {
     return undefined;
   }

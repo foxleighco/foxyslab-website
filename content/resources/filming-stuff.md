@@ -65,5 +65,23 @@ My studio is pretty small, so I've had to be quite deliberate about what I use a
 "description": "My first green screen. I've since switched to green screen fabric pinned to the wall as this was a touch too narrow, but it's incredibly high quality and I hope to use it again.",
 "link": "https://www.amazon.com/gp/product/B07DWTGLPM",
 "image": "/images/resources/filming-stuff/emart-green-screen.jpg"
+},
+{
+"name": "iVANKY FusionDock Ultra",
+"description": "The heart of my editing workstation. This Thunderbolt 5 dock adds a pile of high-speed ports to my Mac and ties everything together — including the fast external storage below — into one reliable, single-cable setup.",
+"link": "https://amzn.to/44giW4a",
+"image": "/images/resources/filming-stuff/ivanky-fusiondock-ultra.jpg"
+},
+{
+"name": "SABRENT M.2 NVMe Tool-Free Enclosure",
+"description": "A tool-free enclosure that turns an M.2 NVMe drive into fast external storage. Plugged into the FusionDock, it gives me high-speed scratch and project storage without cracking anything open.",
+"link": "https://amzn.to/3TgBleK",
+"image": "/images/resources/filming-stuff/sabrent-nvme-enclosure.jpg"
+},
+{
+"name": "Samsung 9100 PRO 4TB SSD",
+"description": "The drive that lives in the Sabrent enclosure. It adds 4TB of blisteringly fast storage to my Mac's paltry 1TB, which makes editing 4K footage smooth and keeps everything reliable.",
+"link": "https://amzn.to/4fmpLGH",
+"image": "/images/resources/filming-stuff/samsung-9100-pro-4tb.jpg"
 }
 ]

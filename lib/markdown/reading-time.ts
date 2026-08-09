@@ -5,12 +5,21 @@
  */
 
 import type { ReadingTime } from "@/types/blog";
+import { COLLAPSE_THRESHOLD } from "./code-blocks";
 
 // Average reading speed (words per minute)
 const WORDS_PER_MINUTE = 200;
 
 // Additional time for code blocks (seconds per line)
 const CODE_LINE_TIME_SECONDS = 2;
+
+/**
+ * Blocks past the collapse threshold render closed, so they are reference
+ * material the reader chooses to open rather than something they read on the
+ * way past. They add nothing to the estimate. Shorter blocks are visible
+ * inline and do count.
+ */
+const SKIP_COLLAPSED_BLOCKS = true;
 
 /**
  * Calculate estimated reading time from markdown content.
@@ -40,7 +49,9 @@ export function calculateReadingTime(content: string): ReadingTime {
 
   // Calculate time for code (code takes longer to read/understand)
   const codeLines = codeBlocks.reduce((total, block) => {
-    return total + block.split("\n").length - 2; // Subtract fence lines
+    const lines = block.split("\n").length - 2; // Subtract fence lines
+    if (SKIP_COLLAPSED_BLOCKS && lines > COLLAPSE_THRESHOLD) return total;
+    return total + lines;
   }, 0);
   const codeMinutes = (codeLines * CODE_LINE_TIME_SECONDS) / 60;
 

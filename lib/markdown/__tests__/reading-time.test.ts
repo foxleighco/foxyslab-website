@@ -83,3 +83,34 @@ The actual content here.`;
     expect(result).toContain("After code");
   });
 });
+
+describe("calculateReadingTime and collapsed code blocks", () => {
+  it("ignores blocks long enough to render collapsed", () => {
+    const prose = "word ".repeat(200);
+    const longBlock = "```json\n" + "x\n".repeat(400) + "```";
+
+    // the long block is collapsed on the page, so it adds nothing
+    expect(calculateReadingTime(prose + "\n\n" + longBlock).minutes).toBe(
+      calculateReadingTime(prose).minutes
+    );
+  });
+
+  it("still counts short blocks, which render inline", () => {
+    const prose = "word ".repeat(200);
+    const shortBlock = "```javascript\n" + "const a = 1;\n".repeat(10) + "```";
+
+    expect(
+      calculateReadingTime(prose + "\n\n" + shortBlock).minutes
+    ).toBeGreaterThan(calculateReadingTime(prose).minutes);
+  });
+
+  it("does not let a pile of collapsed blocks inflate the estimate", () => {
+    const prose = "word ".repeat(1000);
+    const block = "```json\n" + "x\n".repeat(150) + "```";
+    const many = prose + "\n\n" + Array(36).fill(block).join("\n\n");
+
+    expect(calculateReadingTime(many).minutes).toBe(
+      calculateReadingTime(prose).minutes
+    );
+  });
+});

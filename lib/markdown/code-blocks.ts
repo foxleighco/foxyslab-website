@@ -47,13 +47,28 @@ export interface CollapseOptions {
   threshold?: number;
 }
 
+/**
+ * Count the lines of a block of source.
+ *
+ * Exported so reading time can measure a block exactly as this plugin does.
+ * The two must agree: if they disagree about a block's length they can also
+ * disagree about whether it is past COLLAPSE_THRESHOLD, and a block that
+ * renders open would then be dropped from the reading estimate (or vice versa).
+ *
+ * Trailing newlines don't produce rendered lines, so they aren't counted.
+ */
+export function countSourceLines(raw: string): number {
+  const trimmed = raw.replace(/\n+$/, "");
+  return trimmed === "" ? 0 : trimmed.split("\n").length;
+}
+
 /** Count the lines of source inside a <code> element. */
 function countLines(codeNode: Element): number {
   let raw = "";
   visit(codeNode, "text", (textNode: { value: string }) => {
     raw += textNode.value;
   });
-  return raw.replace(/\n+$/, "").split("\n").length;
+  return countSourceLines(raw);
 }
 
 function getLanguage(codeNode: Element): string {

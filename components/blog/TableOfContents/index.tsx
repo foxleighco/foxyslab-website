@@ -20,6 +20,20 @@ import styles from "./styles.module.css";
 // Roughly clears the fixed nav so the highlight matches what you're reading.
 const ACTIVE_OFFSET = 140;
 
+/**
+ * Scroll behaviour honouring the reader's motion preference.
+ *
+ * Used for both the jump-to-heading click and the TOC's own auto-scroll: a
+ * reader who has asked for reduced motion should not be smooth-scrolled
+ * several thousand pixels down a long article.
+ */
+function scrollBehaviour(): ScrollBehavior {
+  if (typeof window === "undefined" || !window.matchMedia) return "smooth";
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+}
+
 interface TableOfContentsProps {
   headings: TocHeading[];
   tocTree: TocTree[];
@@ -41,7 +55,10 @@ function TocItem({ item, activeId }: { item: TocTree; activeId: string }) {
           e.preventDefault();
           const element = document.getElementById(item.heading.id);
           if (!element) return;
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
+          element.scrollIntoView({
+            behavior: scrollBehaviour(),
+            block: "start",
+          });
           window.history.pushState(null, "", `#${item.heading.id}`);
         }}
       >
@@ -175,9 +192,7 @@ export function TableOfContents({
     if (linkTop < viewTop + margin || linkBottom > viewBottom - margin) {
       scroller.scrollTo({
         top: Math.max(0, linkTop - scroller.clientHeight / 2),
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
+        behavior: scrollBehaviour(),
       });
     }
   }, [activeId]);

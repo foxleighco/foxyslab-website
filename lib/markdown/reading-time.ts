@@ -5,7 +5,7 @@
  */
 
 import type { ReadingTime } from "@/types/blog";
-import { COLLAPSE_THRESHOLD } from "./code-blocks";
+import { COLLAPSE_THRESHOLD, countSourceLines } from "./code-blocks";
 
 // Average reading speed (words per minute)
 const WORDS_PER_MINUTE = 200;
@@ -49,7 +49,12 @@ export function calculateReadingTime(content: string): ReadingTime {
 
   // Calculate time for code (code takes longer to read/understand)
   const codeLines = codeBlocks.reduce((total, block) => {
-    const lines = block.split("\n").length - 2; // Subtract fence lines
+    // Drop the opening and closing fences, then measure what's left exactly as
+    // the collapse plugin does. Counting differently here would let the two
+    // disagree about whether a block is past the threshold, so a block that
+    // renders open could be skipped by the estimate.
+    const body = block.split("\n").slice(1, -1).join("\n");
+    const lines = countSourceLines(body);
     if (SKIP_COLLAPSED_BLOCKS && lines > COLLAPSE_THRESHOLD) return total;
     return total + lines;
   }, 0);

@@ -5,7 +5,7 @@ publishedAt: 2026-04-17
 tags: ["meta", "blog"]
 category: "updates"
 status: "published"
-featured: true
+featured: false
 heroImage: "/images/blog/well-this-looks-different/hero.webp"
 thumbnail: "/images/blog/well-this-looks-different/thumbnail.webp"
 ---

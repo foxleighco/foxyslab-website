@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { calculateReadingTime, generateExcerpt } from "../reading-time";
+import { COLLAPSE_THRESHOLD, countSourceLines } from "../code-blocks";
 
 describe("calculateReadingTime", () => {
   it("returns minimum 1 minute for short content", () => {
@@ -112,5 +113,38 @@ describe("calculateReadingTime and collapsed code blocks", () => {
     expect(calculateReadingTime(many).minutes).toBe(
       calculateReadingTime(prose).minutes
     );
+  });
+
+  it("measures a block the same way the collapse plugin does", () => {
+    // Trailing blank lines produce no rendered lines, so they must not push a
+    // block over the threshold here when the plugin would still render it open.
+    const prose = "word ".repeat(200);
+    const body = "const a = 1;\n".repeat(COLLAPSE_THRESHOLD - 1);
+    const padded = "```javascript\n" + body + "\n\n\n```";
+
+    const lines = countSourceLines(body + "\n\n\n");
+    expect(lines).toBeLessThanOrEqual(COLLAPSE_THRESHOLD);
+
+    // Still under the threshold, so it renders inline and must be counted.
+    expect(
+      calculateReadingTime(prose + "\n\n" + padded).minutes
+    ).toBeGreaterThan(calculateReadingTime(prose).minutes);
+  });
+});
+
+describe("countSourceLines", () => {
+  it("ignores trailing newlines", () => {
+    expect(countSourceLines("a\nb\nc")).toBe(3);
+    expect(countSourceLines("a\nb\nc\n")).toBe(3);
+    expect(countSourceLines("a\nb\nc\n\n\n")).toBe(3);
+  });
+
+  it("counts an empty block as no lines", () => {
+    expect(countSourceLines("")).toBe(0);
+    expect(countSourceLines("\n\n")).toBe(0);
+  });
+
+  it("counts blank lines inside a block", () => {
+    expect(countSourceLines("a\n\nb")).toBe(3);
   });
 });

@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run type-check)",
+      "Bash(npm run lint)",
+      "Bash(npm run test)",
+      "Bash(docker compose ps)",
+      "Bash(docker compose logs *)",
+      "Bash(ffprobe *)",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-search"
+    ]
+  }
+}

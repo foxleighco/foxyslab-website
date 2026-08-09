@@ -9,6 +9,7 @@ import {
   getAdjacentPosts,
 } from "@/lib/blog";
 import { TableOfContents } from "@/components/blog/TableOfContents";
+import CodeBlockActions from "@/components/CodeBlockActions";
 import {
   getArticleSchema,
   getBreadcrumbSchema,
@@ -204,7 +205,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <div className={styles.layout}>
         {/* Main content */}
-        <div>
+        <div className={styles.mainColumn}>
           {/* Header */}
           <header style={{ marginBottom: "2rem" }}>
             {/* Category */}
@@ -267,17 +268,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Mobile TOC */}
           {headings.length > 2 && (
             <div className={styles.mobileToc}>
-              <TableOfContents headings={headings} tocTree={tocTree} />
+              <TableOfContents
+                headings={headings}
+                tocTree={tocTree}
+                variant="inline"
+              />
             </div>
           )}
 
           {/* Article content — trusted HTML from local markdown, see security note above */}
           <div className={styles.articleCard}>
             <div
+              id="article-content"
               className={`prose ${styles.proseContent}`}
               dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
+          <CodeBlockActions containerSelector="#article-content" />
 
           {/* Post Navigation */}
           {(adjacent.prev || adjacent.next) && (

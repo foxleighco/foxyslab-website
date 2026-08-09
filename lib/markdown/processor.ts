@@ -20,6 +20,8 @@ import type { Root as HastRoot, Element } from "hast";
 import { visit } from "unist-util-visit";
 
 import { getHighlighter, SHIKI_THEME } from "./highlighter";
+import { rehypeYouTube } from "./youtube";
+import { rehypeCollapseLongCode } from "./code-blocks";
 import { parseFrontmatter, type Frontmatter } from "./frontmatter";
 import { extractHeadings, buildTocTree } from "./headings";
 import { calculateReadingTime, generateExcerpt } from "./reading-time";
@@ -208,6 +210,10 @@ export async function processMarkdown(
           className: ["heading-anchor"],
         },
       })
+      // must come before Shiki, which would otherwise claim the fence
+      .use(rehypeYouTube())
+      // wraps long blocks in <details>; Shiki then highlights the <pre> inside
+      .use(rehypeCollapseLongCode())
       .use(createRehypeShiki(highlighter))
       .use(rehypeImageSize())
       .use(rehypeStringify, { allowDangerousHtml: true });

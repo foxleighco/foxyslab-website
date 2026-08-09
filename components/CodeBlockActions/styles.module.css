@@ -1,0 +1,69 @@
+.copyButton {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.copyButton:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.copyButton[data-state="done"] {
+  color: #111827;
+  background-color: var(--accent-yellow);
+  border-color: var(--accent-yellow);
+}
+
+.copyButton[data-state="error"] {
+  color: #fff;
+  background-color: var(--accent-orange);
+  border-color: var(--accent-orange);
+}
+
+/* Pinned to the corner of a standalone block */
+.inBlock {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  opacity: 0;
+}
+
+.inBlock:focus-visible {
+  opacity: 1;
+}
+
+:global(.code-block):hover .inBlock {
+  opacity: 1;
+}
+
+/* Always visible on touch, where there is no hover to reveal it */
+@media (hover: none) {
+  .inBlock {
+    opacity: 1;
+  }
+}
+
+/* Sitting in the summary bar of a collapsed block */
+.inSummary {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: #374151;
+  background-color: #fff;
+  border-color: #d1d5db;
+}
+
+.inSummary:hover {
+  color: #111827;
+  background-color: #f9fafb;
+}

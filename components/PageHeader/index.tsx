@@ -15,6 +15,9 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
           alt="Foxy's Lab"
           fill
           className={styles.logoImage}
+          /* Matches .logo: 3.5rem below 768px, 6rem above. Without this,
+             `fill` assumes 100vw and fetches a full-width variant. */
+          sizes="(max-width: 767px) 56px, 96px"
         />
       </div>
       <div className={styles.text}>

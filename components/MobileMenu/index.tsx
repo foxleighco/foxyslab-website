@@ -143,6 +143,14 @@ export function MobileMenu({ links }: MobileMenuProps) {
                 </Link>
               )
             )}
+            <Link
+              href={siteConfig.navigation.supportCta.href}
+              className={styles.supportCta}
+              aria-label={siteConfig.navigation.supportCta.ariaLabel}
+              onClick={close}
+            >
+              {siteConfig.navigation.supportCta.label}
+            </Link>
             <a
               href={siteConfig.social.youtube}
               target="_blank"

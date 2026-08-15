@@ -38,7 +38,7 @@
 .desktopNav {
   display: none;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   background-color: color-mix(in srgb, var(--secondary) 95%, transparent);
   backdrop-filter: blur(4px);
   border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
@@ -46,9 +46,25 @@
   padding: 0.5rem 0.5rem 0.5rem 1.5rem;
 }
 
-@media (min-width: 768px) {
+/*
+ * The pill is a fixed, right-aligned overlay, so it can't shrink or wrap — if
+ * it's wider than the viewport it runs off the left edge and the first links
+ * become unreachable. It's ~865px with the current items, so the switch to the
+ * desktop layout has to happen above that, not at 768px.
+ *
+ * Keep this in step with the .toggle breakpoint in MobileMenu, and re-measure
+ * if nav items are added: another button costs roughly 140px.
+ */
+@media (min-width: 1024px) {
   .desktopNav {
     display: flex;
+  }
+}
+
+/* Restore the roomier spacing once there's width to spare for it. */
+@media (min-width: 1280px) {
+  .desktopNav {
+    gap: 2rem;
   }
 }
 
@@ -88,4 +104,28 @@
 
 .cta:hover {
   opacity: 0.9;
+}
+
+/*
+ * Secondary CTA. Outlined rather than filled so Subscribe stays the obvious
+ * primary action and the two buttons don't fight each other.
+ */
+.supportCta {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.supportCta:hover {
+  color: #fff;
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 18%, transparent);
 }

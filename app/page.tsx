@@ -51,6 +51,9 @@ export default async function Home() {
                   fill
                   className={styles.heroLogoImage}
                   priority
+                  /* Matches .heroLogo: 8rem below 768px, 10rem above. Without
+                     this, `fill` assumes 100vw and fetches a full-width variant. */
+                  sizes="(max-width: 767px) 128px, 160px"
                 />
               </div>
             </div>

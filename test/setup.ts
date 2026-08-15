@@ -2,6 +2,12 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { createElement } from "react";
+import { config as loadEnv } from "dotenv";
+
+// Vitest doesn't read .env. Load it so tests gated on a real credential (the
+// live Fourthwall image-host check) can run locally instead of always skipping.
+// Existing env vars win, so CI secrets aren't overwritten.
+loadEnv({ override: false });
 
 // Explicit cleanup for happy-dom
 afterEach(() => {

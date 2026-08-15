@@ -61,6 +61,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/coverage-v8": "^4.0.18",
     "autoprefixer": "^10.4.21",
+    "dotenv": "16.6.1",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
     "happy-dom": "^20.7.0",

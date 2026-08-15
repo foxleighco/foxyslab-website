@@ -14,6 +14,11 @@ jobs:
   quality:
     name: Lint, Type Check & Unit Tests
     runs-on: ubuntu-latest
+    env:
+      # Enables the live Fourthwall image-host check in lib/__tests__/image-hosts.test.ts.
+      # That test skips without this, so the suite still passes if the secret is
+      # absent — but the check that catches a CDN migration won't be running.
+      FOURTHWALL_STOREFRONT_TOKEN: ${{ secrets.FOURTHWALL_STOREFRONT_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 

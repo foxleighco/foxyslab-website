@@ -33,7 +33,7 @@ export const siteConfig = {
     github: "https://github.com/foxleigh81",
     patreon: "https://www.patreon.com/c/foxyslab",
     discord: "https://discord.gg/tPdaADbM2N",
-    kofi: "https://ko-fi.com/foxyslab",
+    kofi: "https://ko-fi.com/foxleigh81",
     kit: "https://kit.co/foxleigh81",
     shop: "https://shop.foxyslab.com",
   },
@@ -72,12 +72,20 @@ export const siteConfig = {
       },
       { href: "/about", label: "About" },
       { href: "/partners", label: "Partners" },
+      { href: "/supporters", label: "Supporters" },
       { href: "/enquiries", label: "Enquiries" },
     ],
     // CTA button in navigation
     cta: {
       label: "Subscribe",
       ariaLabel: "Subscribe on YouTube",
+    },
+    // Secondary CTA, sat to the left of Subscribe. Internal link, so it stays
+    // visually quieter than the primary button rather than competing with it.
+    supportCta: {
+      href: "/supporters",
+      label: "Support",
+      ariaLabel: "Ways to support the channel",
     },
   },
 

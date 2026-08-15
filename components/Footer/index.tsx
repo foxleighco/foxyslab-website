@@ -105,15 +105,24 @@ export function Footer() {
           {/* Brand */}
           <div className={styles.brand}>
             <Link href="/" className={styles.brandLink}>
-              <h3 className={`${styles.brandName} gradient-text`}>
+              {/*
+                The footer is a top-level landmark, so its headings start at
+                h2. They were h3/h4, which reads fine on a page whose main
+                content has an h2 — and skips a level on one that doesn't. The
+                /videos error state is exactly that page: an h1 and no cards,
+                so the footer's h3 became the jump. Levels are set by the
+                document, not by how large the text looks; the sizes here are
+                explicit in CSS and unchanged.
+              */}
+              <h2 className={`${styles.brandName} gradient-text`}>
                 {siteConfig.name}
-              </h3>
+              </h2>
             </Link>
             <p className={styles.brandDescription}>
               {siteConfig.shortDescription}
             </p>
 
-            <h4 className={styles.heading}>Stay Connected</h4>
+            <h3 className={styles.heading}>Stay Connected</h3>
             <ul className={styles.socialLinks}>
               {socialLinks.map((social) => (
                 <li key={social.name}>
@@ -141,7 +150,7 @@ export function Footer() {
           <nav className={styles.groups} aria-label="Footer">
             {siteConfig.navigation.footer.map((group) => (
               <div key={group.title} className={styles.group}>
-                <h4 className={styles.heading}>{group.title}</h4>
+                <h3 className={styles.heading}>{group.title}</h3>
                 <ul className={styles.linkList}>
                   {group.links.map((link) => (
                     <li key={link.href}>

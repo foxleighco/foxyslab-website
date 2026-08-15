@@ -76,14 +76,16 @@ export const shortLinks: ShortLink[] = [
  */
 const seen = new Set<string>();
 for (const link of shortLinks) {
-  const key = link.slug.trim().toLowerCase();
-
-  if (!/^[a-z0-9-]+$/.test(key)) {
+  // Validate the slug exactly as written, not a normalised copy of it. The
+  // redirect source is built from the raw value, so normalising here would let
+  // " Discord " pass and then emit `source: "/ Discord "`.
+  if (!/^[a-z0-9-]+$/.test(link.slug)) {
     throw new Error(
-      `Invalid short-link slug "${link.slug}": use lowercase letters, numbers and hyphens only.`
+      `Invalid short-link slug ${JSON.stringify(link.slug)}: use lowercase ` +
+        `letters, numbers and hyphens only, with no surrounding whitespace.`
     );
   }
-  if (seen.has(key)) {
+  if (seen.has(link.slug)) {
     throw new Error(
       `Duplicate short-link slug "${link.slug}" in lib/short-links.ts. Slugs must be unique.`
     );
@@ -93,7 +95,7 @@ for (const link of shortLinks) {
       `Short-link "${link.slug}" has a non-absolute destination: ${link.url}`
     );
   }
-  seen.add(key);
+  seen.add(link.slug);
 }
 
 /**

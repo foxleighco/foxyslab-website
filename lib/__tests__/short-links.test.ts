@@ -57,11 +57,35 @@ describe("short link redirects", () => {
 describe("short link slugs don't shadow real routes", () => {
   const appDir = join(process.cwd(), "app");
 
-  const routeSegments = readdirSync(appDir, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name)
-    // Route groups (parens) and dynamic segments (brackets) aren't literal paths
-    .filter((n) => !n.startsWith("(") && !n.startsWith("[") && n !== "api");
+  /**
+   * Collect the literal first path segments the app can serve.
+   *
+   * Route groups don't appear in the URL, so `app/(marketing)/discord` still
+   * serves /discord. Recursing through them keeps the "new pages are covered
+   * automatically" guarantee honest — checking only the top level would miss
+   * a collision the moment anyone introduces a group.
+   */
+  function topLevelRouteSegments(dir: string): string[] {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter((e) => e.isDirectory())
+      .flatMap((e) => {
+        // Groups are transparent in the URL — look inside them.
+        if (e.name.startsWith("(")) {
+          return topLevelRouteSegments(join(dir, e.name));
+        }
+        // Dynamic segments match anything, and api isn't a page route.
+        if (
+          e.name.startsWith("[") ||
+          e.name.startsWith("@") ||
+          e.name === "api"
+        ) {
+          return [];
+        }
+        return [e.name];
+      });
+  }
+
+  const routeSegments = topLevelRouteSegments(appDir);
 
   const publicFiles = existsSync(join(process.cwd(), "public"))
     ? readdirSync(join(process.cwd(), "public"))

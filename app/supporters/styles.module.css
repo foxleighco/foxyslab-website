@@ -1,0 +1,322 @@
+.page {
+  padding: 5rem 1rem 3rem;
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 3rem 0;
+  }
+}
+
+/* === Intro === */
+
+.intro {
+  max-width: 46rem;
+  margin-bottom: 4rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.75;
+}
+
+.intro p + p {
+  margin-top: 1rem;
+}
+
+.introLead {
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.intro strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/*
+ * Currency caveat. Sits between the intro and the options so it's read once,
+ * up front, rather than repeated on every tier card.
+ */
+.priceDisclaimer {
+  max-width: 46rem;
+  margin-bottom: 2.5rem;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid
+    color-mix(in srgb, var(--accent-yellow) 65%, transparent);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.priceDisclaimer strong {
+  color: var(--accent-yellow);
+  font-weight: 600;
+}
+
+/* === Support option === */
+
+.option {
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+}
+
+@media (min-width: 768px) {
+  .option {
+    padding: 2.5rem;
+  }
+}
+
+.optionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .optionHeader {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+}
+
+/* Commitment label: one-off, monthly, tiered. */
+.kind {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.625rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-yellow);
+  background: color-mix(in srgb, var(--accent-yellow) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-yellow) 30%, transparent);
+  border-radius: 999px;
+}
+
+.optionTitle {
+  font-size: 1.875rem;
+  margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .optionTitle {
+    font-size: 2.25rem;
+  }
+}
+
+.optionHeadline {
+  font-size: 1.0625rem;
+  color: var(--primary-text);
+}
+
+.optionCta {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/*
+ * The page uses the wide container so the three Patreon tiers get room to
+ * breathe, but prose shouldn't stretch with it — these stay at a comfortable
+ * measure while the tier grid below uses the full width.
+ */
+.optionSummary {
+  max-width: 46rem;
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+}
+
+.optionBody {
+  max-width: 46rem;
+  margin-top: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+}
+
+/* === Perks === */
+
+.perksTitle {
+  margin-top: 1.75rem;
+  margin-bottom: 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.perks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.perkIcon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  color: var(--primary-text);
+}
+
+/* Caveats: the "not guaranteed" sort of thing. Quieter than the perks. */
+.perksNote {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* === Tiers === */
+
+.tiers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+/*
+ * auto-fit rather than a fixed count: options have different numbers of tiers
+ * (YouTube has two, Patreon three), and the upper bound stops a two-tier row
+ * stretching each card halfway across the page.
+ */
+@media (min-width: 900px) {
+  .tiers {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 23rem));
+    justify-content: start;
+    align-items: start;
+  }
+}
+
+.tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--secondary) 45%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tier:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.tierPopular {
+  border-color: var(--primary);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--primary) 14%, transparent),
+    color-mix(in srgb, var(--secondary) 50%, transparent)
+  );
+}
+
+.popularBadge {
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  transform: translateY(-50%);
+  padding: 0.1875rem 0.625rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--primary);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.tierName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.tierPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+}
+
+.tierAmount {
+  font-family: var(--font-sink), system-ui, sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.tierCadence {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tierSummary {
+  margin-bottom: 1.125rem;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+/* === Closing === */
+
+.closing {
+  max-width: 46rem;
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.75;
+}
+
+.closingTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.closingShop {
+  margin-top: 1rem;
+}
+
+.inlineLink {
+  color: var(--primary-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.inlineLink:hover {
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tier {
+    transition: none;
+  }
+
+  .tier:hover {
+    transform: none;
+  }
+}

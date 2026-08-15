@@ -72,6 +72,7 @@ export const siteConfig = {
       },
       { href: "/about", label: "About" },
       { href: "/partners", label: "Partners" },
+      { href: "/supporters", label: "Supporters" },
       { href: "/enquiries", label: "Enquiries" },
     ],
     // CTA button in navigation

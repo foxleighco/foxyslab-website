@@ -1,0 +1,102 @@
+{
+  "options": [
+    {
+      "id": "ko-fi",
+      "name": "Ko-fi",
+      "kind": "One-off",
+      "headline": "A one-off thank you, with no strings",
+      "summary": "A single, one-off thank you. No subscription, nothing to cancel, and no perks attached — which is entirely the point.",
+      "body": [
+        "If you've got something useful out of a video or an article and you'd like to say thanks, this is the simplest way to do it. Give what you like, once, and that's the end of it.",
+        "It goes straight back into the channel: the gear that gets torn apart on camera, the parts that don't survive the process, and the hosting bills behind this site."
+      ],
+      "perks": [],
+      "perksNote": "No rewards, no tiers, no ongoing commitment.",
+      "ctaLabel": "Buy me a coffee",
+      "url": "https://ko-fi.com/foxleigh81"
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube membership",
+      "kind": "Monthly",
+      "headline": "Support from where you're already watching",
+      "summary": "A monthly membership through YouTube itself, so it's handled by the same account you already watch on.",
+      "body": [
+        "If you'd rather not juggle another account, this is the least fiddly option. It's billed through YouTube alongside everything else you're subscribed to."
+      ],
+      "currencyNote": "Early access depends on how far ahead I am, which varies — so treat it as a regular thing rather than a guaranteed one.",
+      "tiers": [
+        {
+          "name": "Supporter",
+          "price": "£1.99",
+          "cadence": "per month",
+          "summary": "Chipping in each month to keep the channel going, with a role on the Discord server to show for it.",
+          "perks": ["A supporter role on the Discord server"]
+        },
+        {
+          "name": "Super Fan",
+          "price": "£4.99",
+          "cadence": "per month",
+          "popular": true,
+          "summary": "Everything the Supporter tier does, plus the extras.",
+          "perks": [
+            "Early access to videos",
+            "Members-only rooms on the Discord server",
+            "A discount in the merch store"
+          ]
+        }
+      ],
+      "ctaLabel": "Become a member",
+      "url": "https://www.youtube.com/@foxyslab/join"
+    },
+    {
+      "id": "patreon",
+      "name": "Patreon",
+      "kind": "Monthly, tiered",
+      "headline": "Pick a level that suits you",
+      "summary": "The most involved option, and the one with the most on offer. Three tiers, each building on the one before it.",
+      "body": [
+        "Patreon is where the deeper stuff lives: voting on what gets made next, early access as standard, and at the top tier a seat in the room where videos actually get planned."
+      ],
+      "tiers": [
+        {
+          "name": "Lab Assistant",
+          "price": "£1",
+          "cadence": "per month",
+          "summary": "You're saying thank you, and you're very welcome. You'll get your role on the Discord server.",
+          "perks": ["Discord server access", "Supporter role on Discord"]
+        },
+        {
+          "name": "Senior Technician",
+          "price": "£5",
+          "cadence": "per month",
+          "popular": true,
+          "summary": "Everything in Lab Assistant, plus a say in what gets made, a head start on watching it, and your name on screen.",
+          "perks": [
+            "Everything in Lab Assistant",
+            "Private Discord channels, where upcoming content gets shaped",
+            "Voting rights on how videos get prioritised",
+            "Early access to every video, usually at least 24 hours",
+            "Member-only videos, including behind the scenes",
+            "Exclusive livestreams",
+            "A shout-out credit in selected videos"
+          ]
+        },
+        {
+          "name": "Scientist",
+          "price": "£15",
+          "cadence": "per month",
+          "summary": "Everything in Senior Technician, plus a run of the Discord server and a seat at the table.",
+          "perks": [
+            "Everything in Senior Technician",
+            "Extra powers on the Discord server",
+            "An exclusive channel for thumbnail ideas, video pitches and planning",
+            "Group video calls to talk tech and the channel"
+          ]
+        }
+      ],
+      "ctaLabel": "See the tiers on Patreon",
+      "url": "https://www.patreon.com/cw/foxyslab/membership"
+    }
+  ]
+}

@@ -111,6 +111,16 @@
 }
 
 /*
+ * The two buttons read as a pair, so they get their own tighter gap instead of
+ * the wide one the pill uses to separate nav links from each other.
+ */
+.ctaGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/*
  * Secondary CTA. Outlined rather than filled so Subscribe stays the obvious
  * primary action and the two buttons don't fight each other.
  */

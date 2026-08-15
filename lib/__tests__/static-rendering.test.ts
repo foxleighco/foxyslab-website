@@ -101,41 +101,71 @@ type ScanMode = "code" | "line" | "block" | "'" | '"' | "`";
 
 function stripComments(src: string): string {
   let out = "";
-  let mode: ScanMode = "code";
   let i = 0;
+
+  /*
+   * A stack rather than a single mode, because `${…}` inside a template is
+   * executable code that can itself contain templates. Treating it as string
+   * content would hide anything written there from the guards. Each code frame
+   * tracks its own brace depth so the `}` that closes the interpolation can be
+   * told apart from braces in the expression.
+   */
+  const stack: ScanMode[] = ["code"];
+  const braceDepth: number[] = [0];
+  const mode = () => stack[stack.length - 1];
+  const inInterpolation = () =>
+    stack.length >= 2 && stack[stack.length - 2] === "`";
 
   while (i < src.length) {
     const char = src[i];
     const next = src[i + 1];
+    const current = mode();
 
-    if (mode === "code") {
+    if (current === "code") {
       if (char === "/" && next === "/") {
-        mode = "line";
+        stack.push("line");
         i += 2;
       } else if (char === "/" && next === "*") {
-        mode = "block";
+        stack.push("block");
         i += 2;
+      } else if (char === "'" || char === '"' || char === "`") {
+        stack.push(char);
+        out += char;
+        i += 1;
+      } else if (char === "{") {
+        braceDepth[braceDepth.length - 1] += 1;
+        out += char;
+        i += 1;
+      } else if (
+        char === "}" &&
+        braceDepth[braceDepth.length - 1] === 0 &&
+        inInterpolation()
+      ) {
+        braceDepth.pop();
+        stack.pop();
+        out += char;
+        i += 1;
       } else {
-        if (char === "'" || char === '"' || char === "`") mode = char;
+        if (char === "}") braceDepth[braceDepth.length - 1] -= 1;
         out += char;
         i += 1;
       }
       continue;
     }
 
-    if (mode === "line") {
+    if (current === "line") {
       // Keep the newline so line-anchored patterns still behave.
       if (char === "\n") {
-        mode = "code";
+        stack.pop();
         out += char;
       }
       i += 1;
       continue;
     }
 
-    if (mode === "block") {
+    if (current === "block") {
       if (char === "*" && next === "/") {
-        mode = "code";
+        stack.pop();
         i += 2;
       } else {
         i += 1;
@@ -149,7 +179,14 @@ function stripComments(src: string): string {
       i += 2;
       continue;
     }
-    if (char === mode) mode = "code";
+    if (current === "`" && char === "$" && next === "{") {
+      stack.push("code");
+      braceDepth.push(0);
+      out += "${";
+      i += 2;
+      continue;
+    }
+    if (char === current) stack.pop();
     out += char;
     i += 1;
   }
@@ -209,6 +246,22 @@ describe("stripComments", () => {
     expect(stripComments('const a = "/* not a comment */";')).toContain(
       '"/* not a comment */"'
     );
+  });
+
+  it("treats template interpolations as code, not string content", () => {
+    // Executable code lives inside `${…}`, so anything written there must stay
+    // visible to the guards rather than being read as string content.
+    const src = 'const a = `x ${await import("@/app/flags")} y`;';
+    expect(stripComments(src)).toContain('import("@/app/flags")');
+
+    // A comment inside an interpolation is still a comment.
+    expect(stripComments("const a = `${/* gone */ b}`;")).toBe(
+      "const a = `${ b}`;"
+    );
+
+    // Braces in the expression must not be mistaken for its closing brace.
+    const nested = "const a = `${ {k: 1} } ${cookies()}`;";
+    expect(stripComments(nested)).toContain("cookies()");
   });
 
   it("handles escapes and template literals", () => {

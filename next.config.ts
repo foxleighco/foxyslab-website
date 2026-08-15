@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.fourthwall.com",
       },
+      {
+        // Fourthwall now serves product images through imgproxy rather than
+        // cdn.fourthwall.com. Without this the optimizer rejects them with
+        // `"url" parameter is not allowed` and every shop image renders blank.
+        // Keep the cdn entry above as well: older assets still use it.
+        protocol: "https",
+        hostname: "imgproxy.fourthwall.dev",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,

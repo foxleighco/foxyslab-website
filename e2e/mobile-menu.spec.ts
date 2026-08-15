@@ -1,10 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { waitForHydration } from "./helpers";
 
 test.describe("Mobile Menu", () => {
   test.use({ viewport: { width: 390, height: 844 } }); // iPhone 14
 
   test("toggle button opens and closes menu", async ({ page }) => {
     await page.goto("/");
+    await waitForHydration(page, 'button[aria-label="Open menu"]');
 
     const openBtn = page.getByRole("button", { name: "Open menu" });
     await expect(openBtn).toBeVisible();
@@ -20,6 +22,7 @@ test.describe("Mobile Menu", () => {
 
   test("menu links navigate to pages", async ({ page }) => {
     await page.goto("/");
+    await waitForHydration(page, 'button[aria-label="Open menu"]');
 
     await page.getByRole("button", { name: "Open menu" }).click();
     await page
@@ -32,6 +35,7 @@ test.describe("Mobile Menu", () => {
 
   test("menu closes after link click", async ({ page }) => {
     await page.goto("/");
+    await waitForHydration(page, 'button[aria-label="Open menu"]');
 
     const toggle = page.getByRole("button", { name: "Open menu" });
     await toggle.click();

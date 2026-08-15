@@ -132,7 +132,9 @@
 
 .disclosure {
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.4);
+  /* 0.4 gave 3.58:1 on the page background, under the 4.5:1 AA floor for
+     13px text. 0.55 clears it at 5.81:1 while staying visibly secondary. */
+  color: rgba(255, 255, 255, 0.55);
   font-style: italic;
   margin-bottom: 2rem;
   padding: 0.75rem 1rem;

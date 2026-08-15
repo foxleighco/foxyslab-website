@@ -125,21 +125,36 @@ export default async function Home() {
       {/* Meet Foxy */}
       <section className={styles.section}>
         <div className={styles.introCard}>
-          <h2 className={styles.introTitle}>Who&apos;s This Then?</h2>
-          <p className={styles.introText}>
-            I&apos;m Foxy — I cover smart home tech, homelabs, and the
-            occasional bit of general tech that catches my eye. I started this
-            channel because I got fed up watching reviews that gloss over the
-            important stuff: does it work locally? Will the company still exist
-            in two years? Can you set it up without losing a weekend? Everything
-            here gets tested in my actual home (for better or worse), every
-            opinion is mine, and if something&apos;s rubbish, I&apos;ll tell
-            you.
-          </p>
-          <p className={styles.introCatchphrase}>
-            So... go grab a coffee, I&apos;ll get one too and then we&apos;ll
-            get into it.
-          </p>
+          <div className={styles.introPortrait}>
+            <Image
+              src="/images/foxy-portrait.webp"
+              alt="Alex Foxleigh at his desk, chin resting on his hand"
+              width={1200}
+              height={1200}
+              className={styles.introPortraitImage}
+              /* Below the fold, so it lazy-loads (the default). Rendered at
+                 up to 220px, so ask for that rather than the 100vw a bare
+                 fill/sizes-less image would assume. */
+              sizes="(max-width: 767px) 160px, 220px"
+            />
+          </div>
+          <div className={styles.introBody}>
+            <h2 className={styles.introTitle}>Who&apos;s This Then?</h2>
+            <p className={styles.introText}>
+              I&apos;m Foxy — I cover smart home tech, homelabs, and the
+              occasional bit of general tech that catches my eye. I started this
+              channel because I got fed up watching reviews that gloss over the
+              important stuff: does it work locally? Will the company still
+              exist in two years? Can you set it up without losing a weekend?
+              Everything here gets tested in my actual home (for better or
+              worse), every opinion is mine, and if something&apos;s rubbish,
+              I&apos;ll tell you.
+            </p>
+            <p className={styles.introCatchphrase}>
+              So... go grab a coffee, I&apos;ll get one too and then we&apos;ll
+              get into it.
+            </p>
+          </div>
         </div>
       </section>
 

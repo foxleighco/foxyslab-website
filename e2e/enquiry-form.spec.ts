@@ -1,8 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { waitForHydration } from "./helpers";
 
 test.describe("Enquiry Form", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/enquiries");
+    // The form is a client component. Filling before React attaches sets the
+    // DOM value without updating state, so submit then validates an empty form.
+    await waitForHydration(page, "#name");
   });
 
   test("shows validation errors for empty submission", async ({ page }) => {

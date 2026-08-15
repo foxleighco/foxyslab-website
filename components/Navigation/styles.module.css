@@ -49,11 +49,15 @@
 /*
  * The pill is a fixed, right-aligned overlay, so it can't shrink or wrap — if
  * it's wider than the viewport it runs off the left edge and the first links
- * become unreachable. It's ~865px with the current items, so the switch to the
- * desktop layout has to happen above that, not at 768px.
+ * become unreachable. That's why the switch to the desktop layout happens here
+ * rather than at 768px.
+ *
+ * Currently ~798px at this gap, so 1024 leaves ~160px of clearance. It would
+ * technically fit from around 900px, but the margin there is thin enough that
+ * one longer label would break it again.
  *
  * Keep this in step with the .toggle breakpoint in MobileMenu, and re-measure
- * if nav items are added: another button costs roughly 140px.
+ * when nav items change: a link costs roughly 85px, a button roughly 140px.
  */
 @media (min-width: 1024px) {
   .desktopNav {
@@ -104,6 +108,16 @@
 
 .cta:hover {
   opacity: 0.9;
+}
+
+/*
+ * The two buttons read as a pair, so they get their own tighter gap instead of
+ * the wide one the pill uses to separate nav links from each other.
+ */
+.ctaGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /*

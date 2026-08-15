@@ -33,6 +33,7 @@ export const siteConfig = {
     github: "https://github.com/foxleigh81",
     patreon: "https://www.patreon.com/c/foxyslab",
     discord: "https://discord.gg/tPdaADbM2N",
+    instagram: "https://www.instagram.com/foxyslab",
     kofi: "https://ko-fi.com/foxleigh81",
     kit: "https://kit.co/foxleigh81",
     shop: "https://shop.foxyslab.com",
@@ -52,28 +53,40 @@ export const siteConfig = {
       { href: "/blog", label: "Blog" },
       { href: "/resources", label: "Resources" },
       { href: "/videos", label: "Videos" },
-      {
-        href: "https://shop.foxyslab.com",
-        label: "Shop",
-        external: true,
-      },
       { href: "/about", label: "About" },
       { href: "/enquiries", label: "Enquiries" },
     ],
+    // Grouped rather than one flat list: nine links in a single column made
+    // the footer tall and hard to scan. "Home" is dropped - the brand name
+    // at the top of the footer already links there.
     footer: [
-      { href: "/", label: "Home" },
-      { href: "/blog", label: "Blog" },
-      { href: "/resources", label: "Resources" },
-      { href: "/videos", label: "Videos" },
       {
-        href: "https://shop.foxyslab.com",
-        label: "Shop",
-        external: true,
+        title: "Content",
+        links: [
+          { href: "/blog", label: "Blog" },
+          { href: "/videos", label: "Videos" },
+          { href: "/resources", label: "Resources" },
+        ],
       },
-      { href: "/about", label: "About" },
-      { href: "/partners", label: "Partners" },
-      { href: "/supporters", label: "Supporters" },
-      { href: "/enquiries", label: "Enquiries" },
+      {
+        title: "Support",
+        links: [
+          { href: "/supporters", label: "Supporters" },
+          {
+            href: "https://shop.foxyslab.com",
+            label: "Shop",
+            external: true,
+          },
+        ],
+      },
+      {
+        title: "Site",
+        links: [
+          { href: "/about", label: "About" },
+          { href: "/partners", label: "Partners" },
+          { href: "/enquiries", label: "Enquiries" },
+        ],
+      },
     ],
     // CTA button in navigation
     cta: {

@@ -35,22 +35,26 @@ export async function Navigation() {
                 </Link>
               )
             )}
-            <Link
-              href={siteConfig.navigation.supportCta.href}
-              className={styles.supportCta}
-              aria-label={siteConfig.navigation.supportCta.ariaLabel}
-            >
-              {siteConfig.navigation.supportCta.label}
-            </Link>
-            <a
-              href={siteConfig.social.youtube}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${styles.cta} gradient-primary`}
-              aria-label={siteConfig.navigation.cta.ariaLabel}
-            >
-              {siteConfig.navigation.cta.label}
-            </a>
+            {/* Grouped so the two buttons sit together as a pair, rather than
+                inheriting the wide gap used to separate the nav links. */}
+            <div className={styles.ctaGroup}>
+              <Link
+                href={siteConfig.navigation.supportCta.href}
+                className={styles.supportCta}
+                aria-label={siteConfig.navigation.supportCta.ariaLabel}
+              >
+                {siteConfig.navigation.supportCta.label}
+              </Link>
+              <a
+                href={siteConfig.social.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.cta} gradient-primary`}
+                aria-label={siteConfig.navigation.cta.ariaLabel}
+              >
+                {siteConfig.navigation.cta.label}
+              </a>
+            </div>
           </div>
 
           {/* Mobile menu */}

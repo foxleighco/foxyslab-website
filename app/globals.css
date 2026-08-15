@@ -10,7 +10,20 @@
 /* === Design Tokens === */
 :root {
   --primary: #d32365;
-  --primary-text: #e8558c;
+  /*
+   * Two text variants, because the brand pink can't clear WCAG AA 4.5:1 on
+   * both dark and light backgrounds at once.
+   *
+   *   --primary-text           for the dark UI. 4.62:1 on the card background
+   *                            (#491436), 5.65:1 on the page background.
+   *   --primary-text-on-light  for prose, which sits on a white card. 5.06:1
+   *                            on white and 4.60:1 on the #f3f4f6 inline-code
+   *                            background, which is the binding constraint.
+   *
+   * Using the wrong one fails contrast silently, so pick by background.
+   */
+  --primary-text: #ea6194;
+  --primary-text-on-light: #ba4470;
   --secondary: #32002d;
   --accent-yellow: #ffe868;
   --accent-orange: #df5a13;
@@ -279,7 +292,7 @@ main:has(> .home-hero) {
 }
 
 .prose a {
-  color: var(--primary-text);
+  color: var(--primary-text-on-light);
 }
 
 .prose a:hover {
@@ -365,7 +378,7 @@ main:has(> .home-hero) {
   font-family:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
     monospace;
-  color: var(--primary-text);
+  color: var(--primary-text-on-light);
 }
 
 .heading-anchor {

@@ -264,12 +264,59 @@
   padding: 2rem;
   max-width: 56rem;
   margin: 0 auto;
+  /* Portrait above the text on small screens, beside it once there's room. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .introCard {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+}
+
+.introPortrait {
+  flex-shrink: 0;
+  width: 10rem;
+}
+
+@media (min-width: 768px) {
+  .introPortrait {
+    width: 13.75rem;
+  }
+}
+
+.introPortraitImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  /* Echoes the ring on the logo mark, so the photo reads as part of the set
+     rather than a bare rectangle dropped into the card. */
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.introBody {
+  min-width: 0;
 }
 
 .introTitle {
   font-size: 1.875rem;
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+/* Centred while the portrait sits above; left-aligned once it's alongside. */
+@media (min-width: 768px) {
+  .introTitle,
+  .introCard .introText,
+  .introCard .introCatchphrase {
+    text-align: left;
+  }
 }
 
 @media (min-width: 768px) {

@@ -33,7 +33,7 @@ export const siteConfig = {
     github: "https://github.com/foxleigh81",
     patreon: "https://www.patreon.com/c/foxyslab",
     discord: "https://discord.gg/tPdaADbM2N",
-    kofi: "https://ko-fi.com/foxyslab",
+    kofi: "https://ko-fi.com/foxleigh81",
     kit: "https://kit.co/foxleigh81",
     shop: "https://shop.foxyslab.com",
   },

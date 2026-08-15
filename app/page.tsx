@@ -29,6 +29,16 @@ export default async function Home() {
     <>
       {/* Hero Section */}
       <section className={`${styles.hero} home-hero`}>
+        {/* Decorative, so no alt text — the tint above it comes from .hero::after. */}
+        <Image
+          src="/images/backdrop.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className={styles.heroBackdrop}
+        />
+
         {/* Two-column Content */}
         <div className={styles.heroContent}>
           {/* Left column - Video (hidden on mobile) */}

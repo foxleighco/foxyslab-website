@@ -60,11 +60,31 @@ vi.mock("next/navigation", () => ({
   notFound: vi.fn(),
 }));
 
-// Mock next/image — returns React element
+/*
+ * Mock next/image — returns React element.
+ *
+ * `priority` is translated rather than discarded, because it is the prop that
+ * decides whether an image is eager or lazy, and therefore whether it can be
+ * the LCP. Swallowing it meant no test could tell the two apart, so a
+ * lazily-loaded LCP image — worth real seconds — looked identical to a
+ * correctly prioritised one.
+ *
+ * `fill` is still dropped: it only produces layout styles, and passing it
+ * through would just trigger an unknown-prop warning.
+ */
 vi.mock("next/image", () => ({
   default: function MockImage(props: Record<string, unknown>) {
-    const { fill: _fill, priority: _priority, ...rest } = props;
-    return createElement("img", rest);
+    const { fill: _fill, priority, ...rest } = props;
+    /*
+     * Matches how the real component signals priority: it *omits* `loading`
+     * rather than setting "eager", and sets fetchpriority while the image is
+     * in flight. Asserting on "eager" would pass here and mean nothing in a
+     * browser.
+     */
+    return createElement("img", {
+      ...(priority ? { fetchPriority: "high" } : { loading: "lazy" }),
+      ...rest,
+    });
   },
 }));
 

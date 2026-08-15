@@ -26,6 +26,29 @@ describe("VideoCard", () => {
     expect(screen.getByText("12:30")).toBeInTheDocument();
   });
 
+  /*
+   * The first thumbnail on /videos is the LCP element. It was lazy-loaded,
+   * which deferred the largest paint behind the rest of the page — a
+   * regression that costs real seconds while looking completely fine.
+   */
+  it("lazy-loads the thumbnail by default", () => {
+    render(<VideoCard video={mockVideo} />);
+    expect(screen.getByAltText(mockVideo.title)).toHaveAttribute(
+      "loading",
+      "lazy"
+    );
+  });
+
+  it("eagerly loads the thumbnail when marked as the LCP candidate", () => {
+    render(<VideoCard video={mockVideo} priority />);
+    const img = screen.getByAltText(mockVideo.title);
+
+    // next/image signals priority by omitting `loading`, not by setting
+    // "eager" — verified against the rendered output in a real browser.
+    expect(img).not.toHaveAttribute("loading");
+    expect(img).toHaveAttribute("fetchpriority", "high");
+  });
+
   it("links to YouTube with external link attributes", () => {
     render(<VideoCard video={mockVideo} />);
     const link = screen.getByRole("link");

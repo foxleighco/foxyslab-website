@@ -74,21 +74,130 @@ const STATIC_PAGES = [
 ];
 
 /**
- * Strips comments so the guards only see executable code.
+ * Strips comments so the guards only see executable code, leaving string and
+ * template literals intact.
  *
- * Without this the suite fails on a doc comment that mentions `cookies()` —
- * which would punish someone for documenting the very rule being enforced.
- * String literals are deliberately left intact: import specifiers are string
- * literals, and stripping them would blind the import checks.
+ * Comments have to go, or the suite fails on a doc comment that mentions
+ * `cookies()` — punishing someone for documenting the very rule being
+ * enforced. Strings have to stay, because import specifiers are string
+ * literals and removing them would blind the import checks.
+ *
+ * A regex can't split those two apart: `//` inside a string such as
+ * `"foo//bar"` is indistinguishable from the start of a comment, so a
+ * pattern-based strip silently truncates the rest of that line and can drop an
+ * import the guards were meant to see. This walks the source once instead,
+ * tracking which construct it is currently inside.
+ *
+ * Known limitation: regex literals are not tracked, so one containing a quote
+ * (`/["']/`) would be read as opening a string. None of the checked files
+ * contain one; if that changes, this needs a case for it.
  */
+type ScanMode = "code" | "line" | "block" | "'" | '"' | "`";
+
 function stripComments(src: string): string {
-  return src
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/(^|[^:])\/\/.*$/gm, "$1");
+  let out = "";
+  let mode: ScanMode = "code";
+  let i = 0;
+
+  while (i < src.length) {
+    const char = src[i];
+    const next = src[i + 1];
+
+    if (mode === "code") {
+      if (char === "/" && next === "/") {
+        mode = "line";
+        i += 2;
+      } else if (char === "/" && next === "*") {
+        mode = "block";
+        i += 2;
+      } else {
+        if (char === "'" || char === '"' || char === "`") mode = char;
+        out += char;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (mode === "line") {
+      // Keep the newline so line-anchored patterns still behave.
+      if (char === "\n") {
+        mode = "code";
+        out += char;
+      }
+      i += 1;
+      continue;
+    }
+
+    if (mode === "block") {
+      if (char === "*" && next === "/") {
+        mode = "code";
+        i += 2;
+      } else {
+        i += 1;
+      }
+      continue;
+    }
+
+    // Inside a string or template literal.
+    if (char === "\\") {
+      out += char + (next ?? "");
+      i += 2;
+      continue;
+    }
+    if (char === mode) mode = "code";
+    out += char;
+    i += 1;
+  }
+
+  return out;
 }
 
 const read = (rel: string) =>
   stripComments(readFileSync(join(ROOT, rel), "utf8"));
+
+describe("stripComments", () => {
+  it("removes line and block comments", () => {
+    expect(stripComments("a // gone\nb")).toBe("a \nb");
+    expect(stripComments("a /* gone */ b")).toBe("a  b");
+    expect(stripComments("/*\n multi\n*/x")).toBe("x");
+  });
+
+  it("keeps string literals, including ones containing //", () => {
+    // The case a regex-based strip gets wrong: everything after `//` inside
+    // the string would be truncated, taking the rest of the line with it.
+    const src = 'const a = "foo//bar";\nimport { x } from "@/app/flags";';
+    expect(stripComments(src)).toContain('"foo//bar"');
+    expect(stripComments(src)).toContain('from "@/app/flags"');
+  });
+
+  it("keeps protocol-relative and absolute URLs in strings", () => {
+    expect(stripComments('const u = "https://x.dev/a";')).toContain(
+      '"https://x.dev/a"'
+    );
+    expect(stripComments('const u = "//cdn.x.dev/a";')).toContain(
+      '"//cdn.x.dev/a"'
+    );
+  });
+
+  it("does not treat comment markers inside strings as comments", () => {
+    expect(stripComments('const a = "/* not a comment */";')).toContain(
+      '"/* not a comment */"'
+    );
+  });
+
+  it("handles escapes and template literals", () => {
+    expect(stripComments('const a = "he said \\"//\\"";')).toContain(
+      '\\"//\\"'
+    );
+    expect(stripComments("const a = `x//y`;")).toContain("`x//y`");
+  });
+
+  it("strips a commented-out import", () => {
+    expect(stripComments('// import { x } from "@/app/flags";')).not.toContain(
+      "@/app/flags"
+    );
+  });
+});
 
 describe("static rendering", () => {
   it.each(LAYOUT_TREE.concat(STATIC_PAGES))(

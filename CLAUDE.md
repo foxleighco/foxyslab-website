@@ -165,6 +165,14 @@ Currently using mock data in `lib/youtube.ts`. To integrate with YouTube Data AP
 - MobileMenu is a client component (uses useState)
 - This pattern optimizes performance while maintaining interactivity
 
+### Feature Flags and Static Rendering
+
+- **Never evaluate a `flags/next` flag in the root layout or in anything it renders** (Navigation, Footer, MobileMenu). Calling a flag reads cookies, which opts the route into dynamic rendering — and from the layout that means the _entire site_. It silently voids every `export const revalidate` and forces `Cache-Control: no-store`, so nothing is CDN-cacheable or bfcache-eligible.
+- Build-time flag values belong in `lib/feature-flags.ts` as plain env-backed constants. Toggling one requires a redeploy, which is the intended trade.
+- `app/flags.ts` is passed wholesale to `getProviderData()`, so it may contain **only** flag definitions — no other exports.
+- If a flag genuinely needs per-request behaviour, evaluate it in a client component or an individual route, never in the layout.
+- Guarded by `lib/__tests__/static-rendering.test.ts`.
+
 ### Error Handling
 
 - Global error boundary in `app/error.tsx`

@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { newsletterFlag } from "@/app/flags";
+import { showNewsletter } from "@/lib/feature-flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export async function Footer() {
-  const showNewsletter = await newsletterFlag();
+export function Footer() {
   const currentYear = new Date().getFullYear();
 
   // Ordered by how much they matter to the channel rather than alphabetically.

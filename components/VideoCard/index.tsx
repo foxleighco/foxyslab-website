@@ -5,9 +5,18 @@ import styles from "./styles.module.css";
 
 interface VideoCardProps {
   video: YouTubeVideo;
+  /**
+   * Marks this card's thumbnail as the LCP candidate, so it is preloaded
+   * rather than lazily fetched. Set it on the first card of a grid only —
+   * on `/videos` the first thumbnail *is* the LCP element, and lazy-loading it
+   * delayed the largest paint behind everything else on the page. Applying it
+   * to more than one card just spends the same priority on images the visitor
+   * may never scroll to.
+   */
+  priority?: boolean;
 }
 
-export function VideoCard({ video }: VideoCardProps) {
+export function VideoCard({ video, priority = false }: VideoCardProps) {
   return (
     <article className={styles.card}>
       <a
@@ -22,6 +31,7 @@ export function VideoCard({ video }: VideoCardProps) {
             src={video.thumbnail}
             alt={video.title}
             fill
+            priority={priority}
             className={styles.thumbnailImage}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

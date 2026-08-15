@@ -136,8 +136,14 @@ export function VideoGallery({
       ) : (
         <>
           <div className={styles.videoGrid}>
-            {paginatedVideos.map((video) => (
-              <VideoCard key={video.id} video={video} />
+            {paginatedVideos.map((video, index) => (
+              <VideoCard
+                key={video.id}
+                video={video}
+                /* First thumbnail in the grid is the LCP element on this page.
+                   Only the first — see the prop's note in VideoCard. */
+                priority={index === 0}
+              />
             ))}
           </div>
 

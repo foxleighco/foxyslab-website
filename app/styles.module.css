@@ -5,18 +5,44 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background:
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--secondary) 50%, transparent),
-      color-mix(in srgb, var(--secondary) 80%, transparent),
-      var(--secondary)
-    ),
-    url("/images/backdrop.webp") center / cover no-repeat;
+  /* Shows while the backdrop loads, and is what the tint blends into. */
+  background-color: var(--secondary);
   border-bottom: 2px solid var(--primary);
   box-shadow:
     0 4px 20px color-mix(in srgb, var(--primary) 40%, transparent),
     0 1px 8px color-mix(in srgb, var(--primary) 60%, transparent);
+}
+
+/*
+ * The backdrop was a CSS `background-image`, which made it the LCP element and
+ * the slowest thing on the page: a background can't be discovered until the
+ * stylesheet has been fetched and parsed, and it can't carry `priority` or a
+ * `srcset`. As a real image it is preloaded, served at the viewport's width,
+ * and negotiated down to AVIF instead of always shipping the 3840px WebP.
+ */
+.heroBackdrop {
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/*
+ * The tint that used to be the first layer of the `background` shorthand. It
+ * has to be an overlay now rather than a background layer, because the image
+ * is a child element and children paint above their parent's background.
+ */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--secondary) 50%, transparent),
+    color-mix(in srgb, var(--secondary) 80%, transparent),
+    var(--secondary)
+  );
 }
 
 .heroContent {

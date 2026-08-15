@@ -53,11 +53,6 @@ export const siteConfig = {
       { href: "/blog", label: "Blog" },
       { href: "/resources", label: "Resources" },
       { href: "/videos", label: "Videos" },
-      {
-        href: "https://shop.foxyslab.com",
-        label: "Shop",
-        external: true,
-      },
       { href: "/about", label: "About" },
       { href: "/enquiries", label: "Enquiries" },
     ],

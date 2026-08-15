@@ -7,7 +7,7 @@ import {
   getLatestVideos,
   formatViewCount,
 } from "@/lib/youtube";
-import { newsletterFlag } from "@/app/flags";
+import { showNewsletter } from "@/lib/feature-flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -33,10 +33,9 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function AboutPage() {
-  const [channelResult, videosResult, showNewsletter] = await Promise.all([
+  const [channelResult, videosResult] = await Promise.all([
     getChannelInfo(),
     getLatestVideos(50),
-    newsletterFlag(),
   ]);
   const channel = channelResult.success ? channelResult.data : null;
   const totalComments = videosResult.success

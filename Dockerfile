@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:22-alpine AS base
 
 # Stage 1: Install dependencies
@@ -12,16 +13,34 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ARG YOUTUBE_API_KEY=build-placeholder
-ARG FLAGS_SECRET
+# Non-secret build inputs. These are fine as ARGs: the flags are booleans and
+# NEXT_PUBLIC_GA_ID is served to browsers by definition.
 ARG FLAG_BLOG=false
 ARG FLAG_NEWSLETTER=false
 ARG NEXT_PUBLIC_GA_ID
-ENV FLAGS_SECRET=$FLAGS_SECRET
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 ENV FLAG_BLOG=$FLAG_BLOG
 ENV FLAG_NEWSLETTER=$FLAG_NEWSLETTER
-RUN npm run build
+
+# YOUTUBE_API_KEY and FLAGS_SECRET are mounted rather than passed as ARGs.
+# Both are needed at build time — the YouTube pages are prerendered, and the
+# layout encrypts flag definitions — but an ARG is recorded in image history
+# and an ENV persists in layer metadata, so either would outlive the build.
+# A secret mount exists only for the duration of this RUN.
+#
+# The `|| true` keeps a missing secret from failing at `cat`, so it surfaces as
+# the application's own error instead: a build with no key is meant to fail
+# loudly, but with a message that says what to do about it. Note that a
+# placeholder value would not — see lib/youtube.ts.
+#
+# Worth knowing: BuildKit excludes secret *contents* from the cache key, so
+# changing a secret alone does not invalidate this layer. After rotating a key,
+# build with --no-cache to be sure it is actually picked up.
+RUN --mount=type=secret,id=youtube_api_key \
+    --mount=type=secret,id=flags_secret \
+    YOUTUBE_API_KEY="$(cat /run/secrets/youtube_api_key 2>/dev/null || true)" \
+    FLAGS_SECRET="$(cat /run/secrets/flags_secret 2>/dev/null || true)" \
+    npm run build
 
 # Stage 3: Production runner
 FROM base AS runner

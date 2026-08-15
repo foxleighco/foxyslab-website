@@ -6,7 +6,7 @@ import { ShopPreview } from "@/components/ShopPreview";
 import { TransparentVideo } from "@/components/TransparentVideo";
 import { getLatestVideos } from "@/lib/youtube";
 import { getProducts } from "@/lib/fourthwall";
-import { newsletterFlag } from "@/app/flags";
+import { showNewsletter } from "@/lib/feature-flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
@@ -18,10 +18,9 @@ const labCoatClips = Array.from(
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [videosResult, productsResult, showNewsletter] = await Promise.all([
+  const [videosResult, productsResult] = await Promise.all([
     getLatestVideos(6),
     getProducts(3),
-    newsletterFlag(),
   ]);
   const videos = videosResult.success ? videosResult.data : [];
   const featuredProducts = productsResult.success ? productsResult.data : [];

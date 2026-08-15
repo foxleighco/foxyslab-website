@@ -1,0 +1,358 @@
+import { describe, it, expect } from "vitest";
+import { readdirSync, readFileSync } from "fs";
+import { join } from "path";
+
+/**
+ * Guards the fix in `lib/feature-flags.ts`.
+ *
+ * Evaluating a `flags/next` flag reads cookies, which opts the calling route
+ * into dynamic rendering. Because the Footer sits in the root layout, a single
+ * `await someFlag()` there silently turned the *entire site* dynamic: every
+ * `export const revalidate` stopped applying and every response shipped
+ * `Cache-Control: no-store`, so nothing was CDN-cacheable or bfcache-eligible.
+ *
+ * The failure is invisible locally — the site works fine, it's just uncacheable
+ * — so it needs a test rather than review vigilance. These assert on source
+ * text because the property being protected (static rendering) only otherwise
+ * shows up in build output, which is far too slow to assert on in a unit test.
+ *
+ * The checks are deliberately structural rather than name-based. An earlier
+ * version matched call expressions ending in `flag`/`Flag`, which a flag named
+ * `export const newsletter = flag(...)` would have walked straight past. What
+ * actually makes a flag reachable is importing the module that defines it, so
+ * that is what gets asserted.
+ */
+
+const ROOT = join(__dirname, "..", "..");
+
+/**
+ * Any path pointing at the flag-definitions module, however it is spelled:
+ * `./flags`, `@/app/flags`, `../../app/flags`. Requiring a trailing `/flags`
+ * path segment is what keeps it from also matching `@/lib/feature-flags`.
+ */
+const FLAG_DEFS_MODULE = `(?:[^"']*/)flags`;
+
+/**
+ * Module specifiers that can hand back a callable flag. `app/flags.ts` is
+ * passed wholesale to `getProviderData()`, so it may only contain flag
+ * definitions — which is what makes this set complete.
+ */
+const FLAG_MODULE_SPECIFIERS = ["flags/next", "flags", FLAG_DEFS_MODULE];
+
+/**
+ * An explicit file extension is tolerated in these patterns. `bundler` module
+ * resolution accepts `@/app/flags.js` for a `.ts` file, so matching only the
+ * bare specifier would leave a way to import a flag without failing the suite.
+ * (`.ts` specifiers are already rejected by the compiler, since
+ * `allowImportingTsExtensions` is off, but there's no cost to covering them.)
+ */
+const EXT = "(?:\\.(?:ts|tsx|js|jsx|mjs|cjs))?";
+
+/**
+ * Matches any import of `spec`, in all three forms: `from "spec"`,
+ * `import("spec")` and the side-effect `import "spec"`. A static-import-only
+ * pattern would let `await import("@/app/flags")` through.
+ */
+const importOf = (spec: string) =>
+  new RegExp(`(?:from|import\\s*\\(|import)\\s*["']${spec}${EXT}["']`);
+
+/** Matches a named import of `spec` — `import { x } from "…"`. */
+const namedImportOf = (spec: string) =>
+  new RegExp(`import\\s*\\{[^}]*\\}\\s*from\\s*["']${spec}${EXT}["']`);
+
+/**
+ * Renders inside the root layout, so a flag call here turns the whole site
+ * dynamic. None of these have any reason to touch a flag module at all.
+ */
+const LAYOUT_TREE = [
+  "components/Footer/index.tsx",
+  "components/Navigation/index.tsx",
+  "components/MobileMenu/index.tsx",
+];
+
+/** Page routes expected to be statically prerendered. */
+const STATIC_PAGES = [
+  "app/page.tsx",
+  "app/about/page.tsx",
+  "app/videos/page.tsx",
+  "app/blog/page.tsx",
+];
+
+/**
+ * Strips comments so the guards only see executable code, leaving string and
+ * template literals intact.
+ *
+ * Comments have to go, or the suite fails on a doc comment that mentions
+ * `cookies()` — punishing someone for documenting the very rule being
+ * enforced. Strings have to stay, because import specifiers are string
+ * literals and removing them would blind the import checks.
+ *
+ * A regex can't split those two apart: `//` inside a string such as
+ * `"foo//bar"` is indistinguishable from the start of a comment, so a
+ * pattern-based strip silently truncates the rest of that line and can drop an
+ * import the guards were meant to see. This walks the source once instead,
+ * tracking which construct it is currently inside.
+ *
+ * Known limitation: regex literals are not tracked, so one containing a quote
+ * (`/["']/`) would be read as opening a string. None of the checked files
+ * contain one; if that changes, this needs a case for it.
+ */
+type ScanMode = "code" | "line" | "block" | "'" | '"' | "`";
+
+function stripComments(src: string): string {
+  let out = "";
+  let i = 0;
+
+  /*
+   * A stack rather than a single mode, because `${…}` inside a template is
+   * executable code that can itself contain templates. Treating it as string
+   * content would hide anything written there from the guards. Each code frame
+   * tracks its own brace depth so the `}` that closes the interpolation can be
+   * told apart from braces in the expression.
+   */
+  const stack: ScanMode[] = ["code"];
+  const braceDepth: number[] = [0];
+  const mode = () => stack[stack.length - 1];
+  const inInterpolation = () =>
+    stack.length >= 2 && stack[stack.length - 2] === "`";
+
+  while (i < src.length) {
+    const char = src[i];
+    const next = src[i + 1];
+    const current = mode();
+
+    if (current === "code") {
+      if (char === "/" && next === "/") {
+        stack.push("line");
+        i += 2;
+      } else if (char === "/" && next === "*") {
+        stack.push("block");
+        i += 2;
+      } else if (char === "'" || char === '"' || char === "`") {
+        stack.push(char);
+        out += char;
+        i += 1;
+      } else if (char === "{") {
+        braceDepth[braceDepth.length - 1] += 1;
+        out += char;
+        i += 1;
+      } else if (
+        char === "}" &&
+        braceDepth[braceDepth.length - 1] === 0 &&
+        inInterpolation()
+      ) {
+        braceDepth.pop();
+        stack.pop();
+        out += char;
+        i += 1;
+      } else {
+        if (char === "}") braceDepth[braceDepth.length - 1] -= 1;
+        out += char;
+        i += 1;
+      }
+      continue;
+    }
+
+    if (current === "line") {
+      // Keep the newline so line-anchored patterns still behave.
+      if (char === "\n") {
+        stack.pop();
+        out += char;
+      }
+      i += 1;
+      continue;
+    }
+
+    if (current === "block") {
+      if (char === "*" && next === "/") {
+        stack.pop();
+        i += 2;
+      } else {
+        i += 1;
+      }
+      continue;
+    }
+
+    // Inside a string or template literal.
+    if (char === "\\") {
+      out += char + (next ?? "");
+      i += 2;
+      continue;
+    }
+    if (current === "`" && char === "$" && next === "{") {
+      stack.push("code");
+      braceDepth.push(0);
+      out += "${";
+      i += 2;
+      continue;
+    }
+    if (char === current) stack.pop();
+    out += char;
+    i += 1;
+  }
+
+  return out;
+}
+
+const read = (rel: string) =>
+  stripComments(readFileSync(join(ROOT, rel), "utf8"));
+
+/** Every .ts/.tsx file under the given repo-relative directories. */
+function sourceFiles(dirs: string[]): string[] {
+  const found: string[] = [];
+
+  const walk = (rel: string) => {
+    for (const entry of readdirSync(join(ROOT, rel), { withFileTypes: true })) {
+      const child = `${rel}/${entry.name}`;
+      if (entry.isDirectory()) {
+        if (entry.name !== "__tests__" && entry.name !== "node_modules") {
+          walk(child);
+        }
+      } else if (/\.tsx?$/.test(entry.name)) {
+        found.push(child);
+      }
+    }
+  };
+
+  dirs.forEach(walk);
+  return found;
+}
+
+describe("stripComments", () => {
+  it("removes line and block comments", () => {
+    expect(stripComments("a // gone\nb")).toBe("a \nb");
+    expect(stripComments("a /* gone */ b")).toBe("a  b");
+    expect(stripComments("/*\n multi\n*/x")).toBe("x");
+  });
+
+  it("keeps string literals, including ones containing //", () => {
+    // The case a regex-based strip gets wrong: everything after `//` inside
+    // the string would be truncated, taking the rest of the line with it.
+    const src = 'const a = "foo//bar";\nimport { x } from "@/app/flags";';
+    expect(stripComments(src)).toContain('"foo//bar"');
+    expect(stripComments(src)).toContain('from "@/app/flags"');
+  });
+
+  it("keeps protocol-relative and absolute URLs in strings", () => {
+    expect(stripComments('const u = "https://x.dev/a";')).toContain(
+      '"https://x.dev/a"'
+    );
+    expect(stripComments('const u = "//cdn.x.dev/a";')).toContain(
+      '"//cdn.x.dev/a"'
+    );
+  });
+
+  it("does not treat comment markers inside strings as comments", () => {
+    expect(stripComments('const a = "/* not a comment */";')).toContain(
+      '"/* not a comment */"'
+    );
+  });
+
+  it("treats template interpolations as code, not string content", () => {
+    // Executable code lives inside `${…}`, so anything written there must stay
+    // visible to the guards rather than being read as string content.
+    const src = 'const a = `x ${await import("@/app/flags")} y`;';
+    expect(stripComments(src)).toContain('import("@/app/flags")');
+
+    // A comment inside an interpolation is still a comment.
+    expect(stripComments("const a = `${/* gone */ b}`;")).toBe(
+      "const a = `${ b}`;"
+    );
+
+    // Braces in the expression must not be mistaken for its closing brace.
+    const nested = "const a = `${ {k: 1} } ${cookies()}`;";
+    expect(stripComments(nested)).toContain("cookies()");
+  });
+
+  it("handles escapes and template literals", () => {
+    expect(stripComments('const a = "he said \\"//\\"";')).toContain(
+      '\\"//\\"'
+    );
+    expect(stripComments("const a = `x//y`;")).toContain("`x//y`");
+  });
+
+  it("strips a commented-out import", () => {
+    expect(stripComments('// import { x } from "@/app/flags";')).not.toContain(
+      "@/app/flags"
+    );
+  });
+});
+
+describe("static rendering", () => {
+  it.each(LAYOUT_TREE.concat(STATIC_PAGES))(
+    "%s does not import a flag module",
+    (file) => {
+      const src = read(file);
+      for (const spec of FLAG_MODULE_SPECIFIERS) {
+        expect(src).not.toMatch(importOf(spec));
+      }
+    }
+  );
+
+  /*
+   * The layout is the one exception. It imports `flags/next` for
+   * `getProviderData()`, which reads flag metadata for the toolbar and never
+   * touches cookies, so the import itself is safe. What it must never do is
+   * evaluate one.
+   */
+  it("app/layout.tsx does not evaluate a flag", () => {
+    const src = read("app/layout.tsx");
+
+    /*
+     * Any reach into the namespace, not just call syntax. Checking only for
+     * `flags.someFlag(` would miss `const { newsletterFlag } = flags`, which
+     * detaches the flag from the namespace and calls it under a bare name.
+     * `getProviderData(flags)` passes the namespace as a whole and touches no
+     * property, so it is unaffected by either assertion.
+     */
+    expect(src).not.toMatch(/\bflags\s*\.\s*\w+/);
+    expect(src).not.toMatch(/(?:const|let|var)\s*\{[^}]*\}\s*=\s*flags\b/);
+
+    // A named import would allow calling a flag directly by its own name, so
+    // the flag module may only be pulled in as a namespace.
+    expect(src).not.toMatch(namedImportOf(FLAG_DEFS_MODULE));
+  });
+
+  it.each(LAYOUT_TREE.concat(STATIC_PAGES, ["app/layout.tsx"]))(
+    "%s does not use request-scoped APIs",
+    (file) => {
+      const src = read(file);
+
+      /*
+       * `cookies()`, `headers()` and `draftMode()` force dynamic rendering for
+       * the same reason a flag call does. Banning the import is the check that
+       * matters: matching call names alone is defeated by an alias, as in
+       * `import { cookies as c } from "next/headers"`. The call check stays as
+       * a second line of defence.
+       */
+      expect(src).not.toMatch(importOf("next/headers"));
+      expect(src).not.toMatch(/\b(cookies|headers|draftMode)\s*\(\s*\)/);
+    }
+  );
+
+  /*
+   * `FLAG_NEWSLETTER` has no NEXT_PUBLIC_ prefix, so it is not inlined into the
+   * client bundle. A client component importing this module would read
+   * `undefined` and quietly treat the flag as off, rather than failing — the
+   * same shape of silent bug this whole suite exists to prevent.
+   *
+   * `import "server-only"` would enforce this at build time and cover
+   * transitive imports too, but it isn't currently a dependency. This covers
+   * the realistic case (a direct import) without adding one.
+   */
+  it("no client component imports the build-time flag values", () => {
+    const offenders = sourceFiles(["app", "components"]).filter((file) => {
+      const src = read(file);
+      const isClient = /^\s*["']use client["']/m.test(src);
+      return isClient && /from\s*["'][^"']*feature-flags["']/.test(src);
+    });
+
+    expect(offenders).toEqual([]);
+  });
+
+  it("feature flags are read from the environment, not a flags/next flag", () => {
+    const src = read("lib/feature-flags.ts");
+    expect(src).toMatch(/process\.env\.FLAG_NEWSLETTER/);
+    expect(src).not.toMatch(/from\s+["']flags/);
+  });
+});

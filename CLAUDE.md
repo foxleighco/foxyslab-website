@@ -31,6 +31,9 @@ npm run type-check   # Run TypeScript type checking
 - The directory name contains special characters (`Foxy's Lab`) which can cause issues with Next.js dynamic metadata files (sitemap.ts, robots.ts, manifest.ts)
 - Static files (robots.txt, sitemap.xml, manifest.webmanifest) are in the `public/` directory instead
 - All builds complete successfully with static pre-rendering
+- **Pages that show YouTube data are prerendered, so `YOUTUBE_API_KEY` is needed at _build_ time, not just at runtime.** A build with a missing or invalid key fails deliberately rather than baking an empty page into the static output — never satisfy it with a placeholder value, which passes the "is it set" check and then gets rejected by the API. Builds that never deploy (CI) set `ALLOW_MISSING_API_KEYS=true`.
+- **If an image silently fails to appear in the Docker container**, suspect a poisoned entry in Next's on-disk image cache before suspecting the code. A request interrupted mid-optimisation can leave one variant permanently stuck: requests for it hang with no browser error, the container logs `internal image response is empty`, and every other width of the same file still serves fine. Because `next/image` picks one candidate from `srcset`, a single bad variant is enough to blank the image. `docker compose down && docker compose up -d` clears it — a plain `restart` does **not**, as the cache lives in the container's writable layer. Verify against `npm start` before concluding it's a code problem.
+- Docker passes `YOUTUBE_API_KEY` and `FLAGS_SECRET` as **BuildKit secrets** (`secrets:` in `docker-compose.yml` + `RUN --mount=type=secret` in the `Dockerfile`), so neither ends up in image history or layer metadata. `env_file` alone is too late — it only applies at runtime. Both are sourced from `.env`, so `docker compose up --build` needs no extra step. Note that BuildKit excludes secret _contents_ from the cache key: after rotating a key, rebuild with `--no-cache` or the old value may be reused.
 
 ## Design System
 
@@ -164,6 +167,14 @@ Currently using mock data in `lib/youtube.ts`. To integrate with YouTube Data AP
 - Navigation is a server component
 - MobileMenu is a client component (uses useState)
 - This pattern optimizes performance while maintaining interactivity
+
+### Feature Flags and Static Rendering
+
+- **Never evaluate a `flags/next` flag in the root layout or in anything it renders** (Navigation, Footer, MobileMenu). Calling a flag reads cookies, which opts the route into dynamic rendering — and from the layout that means the _entire site_. It silently voids every `export const revalidate` and forces `Cache-Control: no-store`, so nothing is CDN-cacheable or bfcache-eligible.
+- Build-time flag values belong in `lib/feature-flags.ts` as plain env-backed constants. Toggling one requires a redeploy, which is the intended trade.
+- `app/flags.ts` is passed wholesale to `getProviderData()`, so it may contain **only** flag definitions — no other exports.
+- If a flag genuinely needs per-request behaviour, evaluate it in a client component or an individual route, never in the layout.
+- Guarded by `lib/__tests__/static-rendering.test.ts`.
 
 ### Error Handling
 

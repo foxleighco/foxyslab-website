@@ -15,15 +15,74 @@ const RETRYABLE_STATUS_CODES = [429, 500, 502, 503, 504];
 
 // Result types for proper error handling
 export type ApiResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };
+  { success: true; data: T } | { success: false; error: string };
 
 function getApiKey(): string {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey && process.env.NODE_ENV === "production") {
-    throw new Error("YOUTUBE_API_KEY is required in production");
+    /*
+     * Pages that show YouTube data are statically prerendered, so this runs at
+     * build time, not per request. Failing the build is the point: a deploy
+     * without a key would otherwise bake a permanently degraded page into the
+     * output, where it is far easier to miss than a failed deploy.
+     *
+     * CI is the one production-mode build that legitimately has no credentials
+     * — it only checks that the site compiles and runs Lighthouse, and never
+     * deploys — so it opts out explicitly. Anything that does deploy keeps the
+     * guard, because the opt-out has to be set deliberately.
+     */
+    if (process.env.ALLOW_MISSING_API_KEYS === "true") {
+      return "";
+    }
+    throw new Error(
+      "YOUTUBE_API_KEY is required in production. Pages using YouTube data " +
+        "are prerendered, so the key must be present at build time. Set " +
+        "ALLOW_MISSING_API_KEYS=true for builds that do not deploy."
+    );
   }
   return apiKey || "";
+}
+
+/**
+ * Turns a failed fetch into a failed build.
+ *
+ * The key guard above only catches a *missing* key. An invalid one is worse:
+ * it passes that check, the API rejects it, and every caller degrades politely
+ * to an empty list — which, now that these pages are prerendered, bakes an
+ * empty page into the static output. That is precisely how a Docker build
+ * shipped a homepage with no videos on it: the image supplied a truthy
+ * `build-placeholder` key.
+ *
+ * Degrading is right at *runtime*, where an empty section beats an error page
+ * and the next revalidation will recover. At *build* time there is nothing to
+ * recover — the empty result is what gets served — so failing is right.
+ *
+ * `NEXT_PHASE` is what separates the two. The opt-out is honoured so CI, which
+ * has no credentials by design, still builds.
+ *
+ * Takes the failure variant directly, since that is the only case it has
+ * anything to do. `T` is therefore the *caller's* data type rather than
+ * anything derivable from the argument — a failure carries no data — so call
+ * sites name it explicitly to say what result they are handing back.
+ */
+function failBuildOnMissingData<T>(
+  label: string,
+  failure: { success: false; error: string }
+): ApiResult<T> {
+  const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
+  const optedOut = process.env.ALLOW_MISSING_API_KEYS === "true";
+
+  if (isProductionBuild && !optedOut) {
+    throw new Error(
+      `Could not fetch ${label} during the build: ${failure.error}. These pages ` +
+        `are prerendered, so this would bake an empty page into the output. ` +
+        `Check YOUTUBE_API_KEY is present and valid for the build environment ` +
+        `(a placeholder value will fail here). Set ALLOW_MISSING_API_KEYS=true ` +
+        `for builds that never deploy.`
+    );
+  }
+
+  return failure;
 }
 
 /**
@@ -327,7 +386,10 @@ export async function getLatestVideos(
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return { success: false, error: channelResult.error };
+        return failBuildOnMissingData<YouTubeVideo[]>(
+          "latest videos",
+          channelResult
+        );
       }
 
       const uploadsPlaylistId =
@@ -426,7 +488,10 @@ export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return { success: false, error: channelResult.error };
+        return failBuildOnMissingData<YouTubeChannel>(
+          "channel info",
+          channelResult
+        );
       }
 
       const channel = channelResult.data![0];

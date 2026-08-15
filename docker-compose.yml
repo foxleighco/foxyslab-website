@@ -3,12 +3,26 @@ services:
     build:
       context: .
       args:
-        FLAGS_SECRET: ${FLAGS_SECRET}
         FLAG_BLOG: ${FLAG_BLOG:-false}
         FLAG_NEWSLETTER: ${FLAG_NEWSLETTER:-false}
         NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+      # Needed at build time now that the pages are prerendered — env_file
+      # below only applies at runtime, which is too late. Passed as secrets
+      # rather than args so they don't end up in image history.
+      secrets:
+        - youtube_api_key
+        - flags_secret
     ports:
       - "4983:3000"
     env_file:
       - .env
     restart: unless-stopped
+
+# Sourced from the environment rather than a file, so `.env` stays the single
+# place these live. Compose reads `.env` from the project directory itself, so
+# `docker compose up --build` picks them up with no extra step.
+secrets:
+  youtube_api_key:
+    environment: YOUTUBE_API_KEY
+  flags_secret:
+    environment: FLAGS_SECRET

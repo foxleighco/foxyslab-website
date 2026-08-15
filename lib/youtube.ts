@@ -59,17 +59,22 @@ function getApiKey(): string {
  *
  * `NEXT_PHASE` is what separates the two. The opt-out is honoured so CI, which
  * has no credentials by design, still builds.
+ *
+ * Takes the failure variant directly, since that is the only case it has
+ * anything to do. `T` is therefore the *caller's* data type rather than
+ * anything derivable from the argument — a failure carries no data — so call
+ * sites name it explicitly to say what result they are handing back.
  */
 function failBuildOnMissingData<T>(
   label: string,
-  result: ApiResult<T>
+  failure: { success: false; error: string }
 ): ApiResult<T> {
   const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
   const optedOut = process.env.ALLOW_MISSING_API_KEYS === "true";
 
-  if (!result.success && isProductionBuild && !optedOut) {
+  if (isProductionBuild && !optedOut) {
     throw new Error(
-      `Could not fetch ${label} during the build: ${result.error}. These pages ` +
+      `Could not fetch ${label} during the build: ${failure.error}. These pages ` +
         `are prerendered, so this would bake an empty page into the output. ` +
         `Check YOUTUBE_API_KEY is present and valid for the build environment ` +
         `(a placeholder value will fail here). Set ALLOW_MISSING_API_KEYS=true ` +
@@ -77,7 +82,7 @@ function failBuildOnMissingData<T>(
     );
   }
 
-  return result;
+  return failure;
 }
 
 /**

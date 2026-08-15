@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; img-src 'self' https://i.ytimg.com https://img.youtube.com https://cdn.fourthwall.com https://www.googletagmanager.com data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://www.youtube.com https://www.googleapis.com https://storefront-api.fourthwall.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src https://www.youtube-nocookie.com; media-src 'self';",
+              "default-src 'self'; img-src 'self' https://i.ytimg.com https://img.youtube.com https://cdn.fourthwall.com https://www.googletagmanager.com data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://www.youtube.com https://www.googleapis.com https://storefront-api.fourthwall.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.ingest.de.sentry.io; worker-src 'self' blob:; frame-src https://www.youtube-nocookie.com; media-src 'self';",
           },
           {
             key: "X-Frame-Options",

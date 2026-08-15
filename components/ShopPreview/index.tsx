@@ -1,10 +1,10 @@
 import Image from "next/image";
-import type { FourthwallProduct } from "@/types/fourthwall";
+import type { ShopProductPreview } from "@/types/fourthwall";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
 interface ShopPreviewProps {
-  products: FourthwallProduct[];
+  products: ShopProductPreview[];
 }
 
 function formatPrice(value: number, currency: string): string {
@@ -20,8 +20,7 @@ export function ShopPreview({ products }: ShopPreviewProps) {
   return (
     <div className={styles.grid}>
       {products.map((product) => {
-        const image = product.images[0];
-        const price = product.variants[0]?.unitPrice;
+        const { image, price } = product;
 
         return (
           <a

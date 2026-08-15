@@ -8,7 +8,6 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   integrations: [
-    Sentry.replayIntegration(),
     Sentry.consoleLoggingIntegration({ levels: ["warn", "error"] }),
   ],
 
@@ -28,5 +27,28 @@ Sentry.init({
   // Disable automatic PII collection (IPs, usernames, etc.) for privacy
   sendDefaultPii: false,
 });
+
+/*
+ * Session Replay is loaded on demand rather than bundled.
+ *
+ * Bundling it cost 40kB of First Load JS on every page — 17% of the total —
+ * to record 10% of sessions. Fetching it from Sentry's CDN keeps the feature
+ * and the sampling rates exactly as they were, at 1kB of bundle instead.
+ *
+ * This needs `https://browser.sentry-cdn.com` in script-src and `blob:` in
+ * worker-src (Replay compresses in a worker); both are in the CSP in
+ * next.config.ts. Without them this fails silently, which is what was already
+ * happening to the worker before this change.
+ *
+ * Failure to load is deliberately non-fatal: no replay is an acceptable
+ * outcome, breaking the page over it is not.
+ */
+void Sentry.lazyLoadIntegration("replayIntegration")
+  .then((replayIntegration) => {
+    Sentry.addIntegration(replayIntegration());
+  })
+  .catch(() => {
+    // CDN unreachable or blocked. Errors and traces still report normally.
+  });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

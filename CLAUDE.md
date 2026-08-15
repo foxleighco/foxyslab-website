@@ -31,7 +31,8 @@ npm run type-check   # Run TypeScript type checking
 - The directory name contains special characters (`Foxy's Lab`) which can cause issues with Next.js dynamic metadata files (sitemap.ts, robots.ts, manifest.ts)
 - Static files (robots.txt, sitemap.xml, manifest.webmanifest) are in the `public/` directory instead
 - All builds complete successfully with static pre-rendering
-- **Pages that show YouTube data are prerendered, so `YOUTUBE_API_KEY` is needed at _build_ time, not just at runtime.** Docker gets it via a build arg in `docker-compose.yml`; `env_file` alone is too late. A build with a missing or invalid key fails deliberately rather than baking an empty page into the static output — never satisfy it with a placeholder value. Builds that never deploy (CI) set `ALLOW_MISSING_API_KEYS=true`.
+- **Pages that show YouTube data are prerendered, so `YOUTUBE_API_KEY` is needed at _build_ time, not just at runtime.** A build with a missing or invalid key fails deliberately rather than baking an empty page into the static output — never satisfy it with a placeholder value, which passes the "is it set" check and then gets rejected by the API. Builds that never deploy (CI) set `ALLOW_MISSING_API_KEYS=true`.
+- Docker passes `YOUTUBE_API_KEY` and `FLAGS_SECRET` as **BuildKit secrets** (`secrets:` in `docker-compose.yml` + `RUN --mount=type=secret` in the `Dockerfile`), so neither ends up in image history or layer metadata. `env_file` alone is too late — it only applies at runtime. Both are sourced from `.env`, so `docker compose up --build` needs no extra step. Note that BuildKit excludes secret _contents_ from the cache key: after rotating a key, rebuild with `--no-cache` or the old value may be reused.
 
 ## Design System
 

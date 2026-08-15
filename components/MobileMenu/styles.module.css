@@ -82,3 +82,27 @@
 .cta:hover {
   opacity: 0.9;
 }
+
+/* Secondary CTA, matching the outlined treatment used in the desktop nav. */
+.supportCta {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.supportCta:hover {
+  color: #fff;
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 18%, transparent);
+}

@@ -80,6 +80,13 @@ export const siteConfig = {
       label: "Subscribe",
       ariaLabel: "Subscribe on YouTube",
     },
+    // Secondary CTA, sat to the left of Subscribe. Internal link, so it stays
+    // visually quieter than the primary button rather than competing with it.
+    supportCta: {
+      href: "/supporters",
+      label: "Support",
+      ariaLabel: "Ways to support the channel",
+    },
   },
 
   // SEO Defaults

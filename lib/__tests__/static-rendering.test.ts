@@ -26,17 +26,17 @@ import { join } from "path";
 const ROOT = join(__dirname, "..", "..");
 
 /**
- * Module specifiers that can hand back a callable flag. `app/flags.ts` is
- * passed wholesale to `getProviderData()`, so it may only contain flag
- * definitions — which is what makes this set complete.
- */
-/**
  * Any path pointing at the flag-definitions module, however it is spelled:
  * `./flags`, `@/app/flags`, `../../app/flags`. Requiring a trailing `/flags`
  * path segment is what keeps it from also matching `@/lib/feature-flags`.
  */
 const FLAG_DEFS_MODULE = `(?:[^"']*/)flags`;
 
+/**
+ * Module specifiers that can hand back a callable flag. `app/flags.ts` is
+ * passed wholesale to `getProviderData()`, so it may only contain flag
+ * definitions — which is what makes this set complete.
+ */
 const FLAG_MODULE_SPECIFIERS = ["flags/next", "flags", FLAG_DEFS_MODULE];
 
 /**

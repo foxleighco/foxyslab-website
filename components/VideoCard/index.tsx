@@ -14,9 +14,24 @@ interface VideoCardProps {
    * may never scroll to.
    */
   priority?: boolean;
+  /**
+   * Heading level for the card title.
+   *
+   * Cards sit under an `<h2>` section heading on the homepage, so `h3` is
+   * right there. On the listing pages they sit directly under the page `<h1>`
+   * with nothing in between, where `h3` skips a level and breaks heading
+   * navigation for screen reader users. The level belongs to the context, not
+   * the card, so the caller decides.
+   */
+  headingLevel?: 2 | 3;
 }
 
-export function VideoCard({ video, priority = false }: VideoCardProps) {
+export function VideoCard({
+  video,
+  priority = false,
+  headingLevel = 3,
+}: VideoCardProps) {
+  const Heading = `h${headingLevel}` as const;
   return (
     <article className={styles.card}>
       <a
@@ -42,7 +57,7 @@ export function VideoCard({ video, priority = false }: VideoCardProps) {
 
         {/* Content */}
         <div>
-          <h3 className={styles.title}>{video.title}</h3>
+          <Heading className={styles.title}>{video.title}</Heading>
           <div className={styles.meta}>
             <span>{formatViewCount(video.viewCount)} views</span>
             <span>{formatViewCount(video.likeCount)} likes</span>

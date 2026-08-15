@@ -94,7 +94,7 @@ describe("VideoGallery", () => {
 
     await user.click(
       screen.getByRole("button", {
-        name: "Filter by Tutorials, 2 videos",
+        name: "Tutorials (2)",
       })
     );
 

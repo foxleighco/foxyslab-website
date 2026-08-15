@@ -21,10 +21,21 @@ export function PlaylistFilter({
       aria-label="Filter videos by playlist"
     >
       <div className={styles.pills}>
+        {/*
+          No aria-label on these buttons. An accessible name that doesn't
+          contain the visible text breaks WCAG 2.5.3 (Label in Name): someone
+          using voice control says what they can see — "click Uncontrolled
+          Conditions" — and nothing matches if the name is "Filter by
+          Uncontrolled Conditions, 4 videos".
+
+          The count stays part of the name rather than aria-hidden, so the
+          name and the visible text are the same string. The "filter" framing
+          is carried by the navigation landmark wrapping these, which is where
+          that context belongs anyway.
+        */}
         <button
           onClick={() => onSelect(null)}
           aria-pressed={!activeSlug}
-          aria-label="Show all videos"
           className={`${styles.pill} ${!activeSlug ? styles.pillActive : styles.pillInactive}`}
         >
           All Videos
@@ -37,13 +48,12 @@ export function PlaylistFilter({
               key={playlist.id}
               onClick={() => onSelect(playlist.slug)}
               aria-pressed={isActive}
-              aria-label={`Filter by ${playlist.title}, ${playlist.itemCount} videos`}
               className={`${styles.pill} ${isActive ? styles.pillActive : styles.pillInactive}`}
             >
-              {playlist.title}
-              <span className={styles.count} aria-hidden="true">
-                ({playlist.itemCount})
-              </span>
+              {/* Explicit space: without it the accessible name runs together
+                  as "Title(12)", since the gap is only CSS margin. */}
+              {playlist.title}{" "}
+              <span className={styles.count}>({playlist.itemCount})</span>
             </button>
           );
         })}

@@ -143,6 +143,8 @@ export function VideoGallery({
                 /* First thumbnail in the grid is the LCP element on this page.
                    Only the first — see the prop's note in VideoCard. */
                 priority={index === 0}
+                /* Directly under the page h1 — no section heading between. */
+                headingLevel={2}
               />
             ))}
           </div>

@@ -92,7 +92,7 @@ async function BlogGrid() {
   return (
     <div className={styles.blogGrid}>
       {posts.map((post) => (
-        <FeedItem key={post.slug} item={post} />
+        <FeedItem key={post.slug} item={post} headingLevel={2} />
       ))}
     </div>
   );

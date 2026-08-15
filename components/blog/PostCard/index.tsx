@@ -11,6 +11,12 @@ import styles from "./styles.module.css";
 
 interface PostCardProps {
   post: BlogPostMeta;
+  /**
+   * Heading level for the card title. See VideoCard for the rationale: cards
+   * under a section `<h2>` want `h3`, cards directly under the page `<h1>`
+   * want `h2`, and only the caller knows which it is.
+   */
+  headingLevel?: 2 | 3;
 }
 
 function formatDate(date: Date): string {
@@ -21,7 +27,8 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, headingLevel = 3 }: PostCardProps) {
+  const Heading = `h${headingLevel}` as const;
   const { frontmatter, slug, excerpt, readingTime } = post;
 
   return (
@@ -78,7 +85,7 @@ export function PostCard({ post }: PostCardProps) {
           )}
 
           {/* Title */}
-          <h3 className={styles.title}>{frontmatter.title}</h3>
+          <Heading className={styles.title}>{frontmatter.title}</Heading>
 
           {/* Excerpt */}
           <p className={styles.excerpt}>{excerpt}</p>

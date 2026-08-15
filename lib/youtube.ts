@@ -381,10 +381,10 @@ export async function getLatestVideos(
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return failBuildOnMissingData("latest videos", {
-          success: false,
-          error: channelResult.error,
-        });
+        return failBuildOnMissingData<YouTubeVideo[]>(
+          "latest videos",
+          channelResult
+        );
       }
 
       const uploadsPlaylistId =
@@ -483,10 +483,10 @@ export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return failBuildOnMissingData("channel info", {
-          success: false,
-          error: channelResult.error,
-        });
+        return failBuildOnMissingData<YouTubeChannel>(
+          "channel info",
+          channelResult
+        );
       }
 
       const channel = channelResult.data![0];

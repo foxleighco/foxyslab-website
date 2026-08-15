@@ -26,15 +26,34 @@ import { join } from "path";
 const ROOT = join(__dirname, "..", "..");
 
 /**
- * Every module that can hand back a callable flag. `app/flags.ts` is passed
- * wholesale to `getProviderData()`, so it may only contain flag definitions —
- * which means these specifiers are the complete set of ways to reach one.
+ * Module specifiers that can hand back a callable flag. `app/flags.ts` is
+ * passed wholesale to `getProviderData()`, so it may only contain flag
+ * definitions — which is what makes this set complete.
  */
-const FLAG_MODULE_IMPORTS = [
-  /from\s+["']flags\/next["']/,
-  /from\s+["']@\/app\/flags["']/,
-  /from\s+["'][./]+flags["']/,
-];
+/**
+ * Any path pointing at the flag-definitions module, however it is spelled:
+ * `./flags`, `@/app/flags`, `../../app/flags`. Requiring a trailing `/flags`
+ * path segment is what keeps it from also matching `@/lib/feature-flags`.
+ */
+const FLAG_DEFS_MODULE = `(?:[^"']*/)flags`;
+
+const FLAG_MODULE_SPECIFIERS = ["flags/next", "flags", FLAG_DEFS_MODULE];
+
+/**
+ * An explicit file extension is tolerated in these patterns. `bundler` module
+ * resolution accepts `@/app/flags.js` for a `.ts` file, so matching only the
+ * bare specifier would leave a way to import a flag without failing the suite.
+ * (`.ts` specifiers are already rejected by the compiler, since
+ * `allowImportingTsExtensions` is off, but there's no cost to covering them.)
+ */
+const EXT = "(?:\\.(?:ts|tsx|js|jsx|mjs|cjs))?";
+
+/** Matches any import of `spec`. */
+const importOf = (spec: string) => new RegExp(`from\\s*["']${spec}${EXT}["']`);
+
+/** Matches a named import of `spec` — `import { x } from "…"`. */
+const namedImportOf = (spec: string) =>
+  new RegExp(`import\\s*\\{[^}]*\\}\\s*from\\s*["']${spec}${EXT}["']`);
 
 /**
  * Renders inside the root layout, so a flag call here turns the whole site
@@ -76,8 +95,8 @@ describe("static rendering", () => {
     "%s does not import a flag module",
     (file) => {
       const src = read(file);
-      for (const pattern of FLAG_MODULE_IMPORTS) {
-        expect(src).not.toMatch(pattern);
+      for (const spec of FLAG_MODULE_SPECIFIERS) {
+        expect(src).not.toMatch(importOf(spec));
       }
     }
   );
@@ -96,10 +115,7 @@ describe("static rendering", () => {
 
     // A named import would allow calling a flag directly by its own name, so
     // the flag module may only be pulled in as a namespace.
-    expect(src).not.toMatch(/import\s*\{[^}]*\}\s*from\s*["'][./]+flags["']/);
-    expect(src).not.toMatch(
-      /import\s*\{[^}]*\}\s*from\s*["']@\/app\/flags["']/
-    );
+    expect(src).not.toMatch(namedImportOf(FLAG_DEFS_MODULE));
   });
 
   it.each(LAYOUT_TREE.concat(STATIC_PAGES, ["app/layout.tsx"]))(

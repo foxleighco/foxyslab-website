@@ -1,6 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { REMOTE_IMAGE_PATTERNS } from "./lib/image-hosts";
+import { shortLinkRedirects } from "./lib/short-links";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -21,6 +22,8 @@ const nextConfig: NextConfig = {
         destination: "/resources/foxys-smart-home",
         statusCode: 301,
       },
+      // Root-level permalinks (/discord, /youtube, ...) from lib/short-links.ts
+      ...shortLinkRedirects(),
     ];
   },
   async headers() {

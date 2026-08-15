@@ -23,7 +23,9 @@ ARG FLAGS_SECRET
 ARG FLAG_BLOG=false
 ARG FLAG_NEWSLETTER=false
 ARG NEXT_PUBLIC_GA_ID
-ENV YOUTUBE_API_KEY=$YOUTUBE_API_KEY
+# Deliberately not promoted to ENV. Docker already exposes build args to RUN,
+# so the build sees it either way, and an ENV would persist the key in this
+# stage's layer metadata. The runtime stage gets its own copy from env_file.
 ENV FLAGS_SECRET=$FLAGS_SECRET
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 ENV FLAG_BLOG=$FLAG_BLOG

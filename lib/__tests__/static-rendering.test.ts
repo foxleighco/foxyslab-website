@@ -110,8 +110,15 @@ describe("static rendering", () => {
   it("app/layout.tsx does not evaluate a flag", () => {
     const src = read("app/layout.tsx");
 
-    // `flags.newsletterFlag()` — calling through the namespace import.
-    expect(src).not.toMatch(/\bflags\.\w+\s*\(/);
+    /*
+     * Any reach into the namespace, not just call syntax. Checking only for
+     * `flags.someFlag(` would miss `const { newsletterFlag } = flags`, which
+     * detaches the flag from the namespace and calls it under a bare name.
+     * `getProviderData(flags)` passes the namespace as a whole and touches no
+     * property, so it is unaffected by either assertion.
+     */
+    expect(src).not.toMatch(/\bflags\s*\.\s*\w+/);
+    expect(src).not.toMatch(/(?:const|let|var)\s*\{[^}]*\}\s*=\s*flags\b/);
 
     // A named import would allow calling a flag directly by its own name, so
     // the flag module may only be pulled in as a namespace.

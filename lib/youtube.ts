@@ -15,13 +15,30 @@ const RETRYABLE_STATUS_CODES = [429, 500, 502, 503, 504];
 
 // Result types for proper error handling
 export type ApiResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };
+  { success: true; data: T } | { success: false; error: string };
 
 function getApiKey(): string {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey && process.env.NODE_ENV === "production") {
-    throw new Error("YOUTUBE_API_KEY is required in production");
+    /*
+     * Pages that show YouTube data are statically prerendered, so this runs at
+     * build time, not per request. Failing the build is the point: a deploy
+     * without a key would otherwise bake a permanently degraded page into the
+     * output, where it is far easier to miss than a failed deploy.
+     *
+     * CI is the one production-mode build that legitimately has no credentials
+     * — it only checks that the site compiles and runs Lighthouse, and never
+     * deploys — so it opts out explicitly. Anything that does deploy keeps the
+     * guard, because the opt-out has to be set deliberately.
+     */
+    if (process.env.ALLOW_MISSING_API_KEYS === "true") {
+      return "";
+    }
+    throw new Error(
+      "YOUTUBE_API_KEY is required in production. Pages using YouTube data " +
+        "are prerendered, so the key must be present at build time. Set " +
+        "ALLOW_MISSING_API_KEYS=true for builds that do not deploy."
+    );
   }
   return apiKey || "";
 }

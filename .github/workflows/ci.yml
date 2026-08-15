@@ -91,6 +91,11 @@ jobs:
     env:
       NEXT_PUBLIC_SENTRY_DSN: ""
       FLAGS_SECRET: ${{ secrets.FLAGS_SECRET }}
+      # This job builds to check the site compiles and to run Lighthouse; it
+      # never deploys. Pages using YouTube data are prerendered, so without
+      # this the build fails here on a missing key. Deploys do not set it, so
+      # they still fail loudly if credentials go missing.
+      ALLOW_MISSING_API_KEYS: "true"
     steps:
       - uses: actions/checkout@v4
 

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
 import { PageHeader } from "@/components/PageHeader";
 import {
@@ -57,26 +58,40 @@ export default async function AboutPage() {
       {/* About */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>What&apos;s This All About?</h2>
-        <div>
-          <p className={styles.missionText}>
-            I started Foxy&apos;s Lab in September 2025, originally to impress a
-            prospective employer (honestly). Turns out I loved making videos, so
-            I kept going. What began as a bit of a career stunt turned into
-            something I genuinely care about.
-          </p>
-          <p className={styles.missionText}>
-            The channel covers smart home tech and homelabs in roughly equal
-            measure, with the occasional bit of general tech thrown in when
-            something catches my eye. My thing is local control. I think your
-            smart home should work when your internet goes down. I think your
-            data should stay in your house. And I think you shouldn&apos;t need
-            a monthly subscription for a light switch to function. That
-            doesn&apos;t mean I reject anything cloud-based — if the cloud
-            genuinely adds value for you (not just for the company selling it),
-            that&apos;s fine. But if a device stops working the moment a server
-            goes offline for no good reason, I&apos;m going to have opinions
-            about that.
-          </p>
+        <div className={styles.missionLayout}>
+          <div className={styles.portrait}>
+            <Image
+              src="/images/foxy-portrait.webp"
+              alt="Alex Foxleigh at his desk, chin resting on his hand"
+              width={1200}
+              height={1200}
+              className={styles.portraitImage}
+              /* Same asset as the homepage, so it's likely already cached.
+                 sizes matches the render rather than assuming 100vw. */
+              sizes="(max-width: 767px) 180px, 240px"
+            />
+          </div>
+          <div>
+            <p className={styles.missionText}>
+              I started Foxy&apos;s Lab in September 2025, originally to impress
+              a prospective employer (honestly). Turns out I loved making
+              videos, so I kept going. What began as a bit of a career stunt
+              turned into something I genuinely care about.
+            </p>
+            <p className={styles.missionText}>
+              The channel covers smart home tech and homelabs in roughly equal
+              measure, with the occasional bit of general tech thrown in when
+              something catches my eye. My thing is local control. I think your
+              smart home should work when your internet goes down. I think your
+              data should stay in your house. And I think you shouldn&apos;t
+              need a monthly subscription for a light switch to function. That
+              doesn&apos;t mean I reject anything cloud-based — if the cloud
+              genuinely adds value for you (not just for the company selling
+              it), that&apos;s fine. But if a device stops working the moment a
+              server goes offline for no good reason, I&apos;m going to have
+              opinions about that.
+            </p>
+          </div>
         </div>
       </section>
 

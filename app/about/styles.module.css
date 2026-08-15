@@ -17,6 +17,44 @@
   margin-bottom: 1.5rem;
 }
 
+/*
+ * The page opens with a personal origin story, so the portrait belongs here
+ * rather than in the header. Stacked on small screens, alongside from 768px.
+ */
+.missionLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .missionLayout {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    gap: 2.5rem;
+  }
+}
+
+.portrait {
+  flex-shrink: 0;
+  width: 11.25rem;
+}
+
+@media (min-width: 768px) {
+  .portrait {
+    width: 15rem;
+  }
+}
+
+.portraitImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
 .missionText {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);

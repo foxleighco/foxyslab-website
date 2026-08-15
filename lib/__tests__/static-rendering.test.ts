@@ -48,8 +48,13 @@ const FLAG_MODULE_SPECIFIERS = ["flags/next", "flags", FLAG_DEFS_MODULE];
  */
 const EXT = "(?:\\.(?:ts|tsx|js|jsx|mjs|cjs))?";
 
-/** Matches any import of `spec`. */
-const importOf = (spec: string) => new RegExp(`from\\s*["']${spec}${EXT}["']`);
+/**
+ * Matches any import of `spec`, in all three forms: `from "spec"`,
+ * `import("spec")` and the side-effect `import "spec"`. A static-import-only
+ * pattern would let `await import("@/app/flags")` through.
+ */
+const importOf = (spec: string) =>
+  new RegExp(`(?:from|import\\s*\\(|import)\\s*["']${spec}${EXT}["']`);
 
 /** Matches a named import of `spec` — `import { x } from "…"`. */
 const namedImportOf = (spec: string) =>
@@ -258,9 +263,17 @@ describe("static rendering", () => {
   it.each(LAYOUT_TREE.concat(STATIC_PAGES, ["app/layout.tsx"]))(
     "%s does not use request-scoped APIs",
     (file) => {
-      // `cookies()`, `headers()` and `draftMode()` force dynamic rendering for
-      // the same reason a flag call does.
-      expect(read(file)).not.toMatch(/\b(cookies|headers|draftMode)\s*\(\s*\)/);
+      const src = read(file);
+
+      /*
+       * `cookies()`, `headers()` and `draftMode()` force dynamic rendering for
+       * the same reason a flag call does. Banning the import is the check that
+       * matters: matching call names alone is defeated by an alias, as in
+       * `import { cookies as c } from "next/headers"`. The call check stays as
+       * a second line of defence.
+       */
+      expect(src).not.toMatch(importOf("next/headers"));
+      expect(src).not.toMatch(/\b(cookies|headers|draftMode)\s*\(\s*\)/);
     }
   );
 

@@ -12,6 +12,7 @@ services:
       secrets:
         - youtube_api_key
         - flags_secret
+        - fourthwall_storefront_token
     ports:
       - "4983:3000"
     env_file:
@@ -26,3 +27,5 @@ secrets:
     environment: YOUTUBE_API_KEY
   flags_secret:
     environment: FLAGS_SECRET
+  fourthwall_storefront_token:
+    environment: FOURTHWALL_STOREFRONT_TOKEN

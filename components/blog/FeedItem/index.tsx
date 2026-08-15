@@ -9,8 +9,9 @@ import { PostCard } from "../PostCard";
 
 interface FeedItemProps {
   item: BlogPostMeta;
+  headingLevel?: 2 | 3;
 }
 
-export function FeedItem({ item }: FeedItemProps) {
-  return <PostCard post={item} />;
+export function FeedItem({ item, headingLevel }: FeedItemProps) {
+  return <PostCard post={item} headingLevel={headingLevel} />;
 }

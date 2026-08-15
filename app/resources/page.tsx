@@ -39,7 +39,11 @@ async function ResourceGrid() {
   return (
     <div className={styles.grid}>
       {resources.map((resource) => (
-        <ResourceCard key={resource.slug} resource={resource} />
+        <ResourceCard
+          key={resource.slug}
+          resource={resource}
+          headingLevel={2}
+        />
       ))}
     </div>
   );

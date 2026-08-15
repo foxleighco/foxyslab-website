@@ -49,6 +49,26 @@ describe("VideoCard", () => {
     expect(img).toHaveAttribute("fetchpriority", "high");
   });
 
+  /*
+   * The listing pages put these directly under the page `<h1>`, so a hardcoded
+   * `h3` skipped a level and made the page awkward to navigate by heading.
+   * The level is the caller's decision because only the caller knows whether a
+   * section heading sits in between.
+   */
+  it("renders the title as h3 by default", () => {
+    render(<VideoCard video={mockVideo} />);
+    expect(
+      screen.getByRole("heading", { level: 3, name: mockVideo.title })
+    ).toBeInTheDocument();
+  });
+
+  it("renders the title at the requested heading level", () => {
+    render(<VideoCard video={mockVideo} headingLevel={2} />);
+    expect(
+      screen.getByRole("heading", { level: 2, name: mockVideo.title })
+    ).toBeInTheDocument();
+  });
+
   it("links to YouTube with external link attributes", () => {
     render(<VideoCard video={mockVideo} />);
     const link = screen.getByRole("link");

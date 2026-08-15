@@ -4,9 +4,19 @@ import styles from "./styles.module.css";
 
 interface ResourceCardProps {
   resource: ResourceMeta;
+  /**
+   * Heading level for the card title. See VideoCard for the rationale: cards
+   * under a section `<h2>` want `h3`, cards directly under the page `<h1>`
+   * want `h2`, and only the caller knows which it is.
+   */
+  headingLevel?: 2 | 3;
 }
 
-export function ResourceCard({ resource }: ResourceCardProps) {
+export function ResourceCard({
+  resource,
+  headingLevel = 3,
+}: ResourceCardProps) {
+  const Heading = `h${headingLevel}` as const;
   const { frontmatter, slug, productCount } = resource;
 
   return (
@@ -29,7 +39,7 @@ export function ResourceCard({ resource }: ResourceCardProps) {
         </div>
         <div>
           <span className={styles.category}>{frontmatter.category}</span>
-          <h3 className={styles.title}>{frontmatter.title}</h3>
+          <Heading className={styles.title}>{frontmatter.title}</Heading>
           <p className={styles.description}>{frontmatter.description}</p>
           <span className={styles.meta}>
             {productCount} {productCount === 1 ? "item" : "items"}

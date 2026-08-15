@@ -42,8 +42,14 @@ export function TransparentVideo({
       playsInline
       onEnded={handleEnded}
       className={className}
+      /*
+       * `role="img"` used to be set here, which ARIA doesn't permit on a video
+       * element. The intent — "treat this as a picture, not a media player" —
+       * is sound, since the clip autoplays once, has no controls and freezes on
+       * its last frame. But the label alone conveys that, and an invalid role
+       * is ignored by assistive tech anyway, so it bought nothing.
+       */
       aria-label={alt}
-      role={alt ? "img" : undefined}
     >
       <source src={`${selectedClip}.webm`} type="video/webm" />
       <source src={`${selectedClip}.mov`} type="video/quicktime" />

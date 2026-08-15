@@ -28,16 +28,16 @@ describe("PlaylistFilter", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "Show all videos" })
+      screen.getByRole("button", { name: "All Videos" })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: `Filter by ${mockPlaylist.title}, ${mockPlaylist.itemCount} videos`,
+        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: `Filter by ${mockPlaylist2.title}, ${mockPlaylist2.itemCount} videos`,
+        name: `${mockPlaylist2.title} (${mockPlaylist2.itemCount})`,
       })
     ).toBeInTheDocument();
   });
@@ -51,9 +51,10 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    expect(
-      screen.getByRole("button", { name: "Show all videos" })
-    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All Videos" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
   });
 
   it("shows playlist as pressed when activeSlug matches", () => {
@@ -67,12 +68,13 @@ describe("PlaylistFilter", () => {
 
     expect(
       screen.getByRole("button", {
-        name: `Filter by ${mockPlaylist.title}, ${mockPlaylist.itemCount} videos`,
+        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
       })
     ).toHaveAttribute("aria-pressed", "true");
-    expect(
-      screen.getByRole("button", { name: "Show all videos" })
-    ).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "All Videos" })).toHaveAttribute(
+      "aria-pressed",
+      "false"
+    );
   });
 
   it("calls onSelect with slug when a playlist pill is clicked", async () => {
@@ -89,7 +91,7 @@ describe("PlaylistFilter", () => {
 
     await user.click(
       screen.getByRole("button", {
-        name: `Filter by ${mockPlaylist.title}, ${mockPlaylist.itemCount} videos`,
+        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
       })
     );
 
@@ -108,7 +110,7 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    await user.click(screen.getByRole("button", { name: "Show all videos" }));
+    await user.click(screen.getByRole("button", { name: "All Videos" }));
 
     expect(onSelect).toHaveBeenCalledWith(null);
   });
@@ -132,7 +134,7 @@ describe("PlaylistFilter", () => {
 
     expect(screen.getAllByRole("button")).toHaveLength(1);
     expect(
-      screen.getByRole("button", { name: "Show all videos" })
+      screen.getByRole("button", { name: "All Videos" })
     ).toBeInTheDocument();
   });
 });

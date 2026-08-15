@@ -44,6 +44,43 @@ function getApiKey(): string {
 }
 
 /**
+ * Turns a failed fetch into a failed build.
+ *
+ * The key guard above only catches a *missing* key. An invalid one is worse:
+ * it passes that check, the API rejects it, and every caller degrades politely
+ * to an empty list — which, now that these pages are prerendered, bakes an
+ * empty page into the static output. That is precisely how a Docker build
+ * shipped a homepage with no videos on it: the image supplied a truthy
+ * `build-placeholder` key.
+ *
+ * Degrading is right at *runtime*, where an empty section beats an error page
+ * and the next revalidation will recover. At *build* time there is nothing to
+ * recover — the empty result is what gets served — so failing is right.
+ *
+ * `NEXT_PHASE` is what separates the two. The opt-out is honoured so CI, which
+ * has no credentials by design, still builds.
+ */
+function failBuildOnMissingData<T>(
+  label: string,
+  result: ApiResult<T>
+): ApiResult<T> {
+  const isProductionBuild = process.env.NEXT_PHASE === "phase-production-build";
+  const optedOut = process.env.ALLOW_MISSING_API_KEYS === "true";
+
+  if (!result.success && isProductionBuild && !optedOut) {
+    throw new Error(
+      `Could not fetch ${label} during the build: ${result.error}. These pages ` +
+        `are prerendered, so this would bake an empty page into the output. ` +
+        `Check YOUTUBE_API_KEY is present and valid for the build environment ` +
+        `(a placeholder value will fail here). Set ALLOW_MISSING_API_KEYS=true ` +
+        `for builds that never deploy.`
+    );
+  }
+
+  return result;
+}
+
+/**
  * Parse ISO 8601 duration to seconds
  * e.g., PT1H30M45S -> 5445 seconds
  */
@@ -344,7 +381,10 @@ export async function getLatestVideos(
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return { success: false, error: channelResult.error };
+        return failBuildOnMissingData("latest videos", {
+          success: false,
+          error: channelResult.error,
+        });
       }
 
       const uploadsPlaylistId =
@@ -443,7 +483,10 @@ export async function getChannelInfo(): Promise<ApiResult<YouTubeChannel>> {
 
       const channelResult = await getChannelData();
       if (!channelResult.success) {
-        return { success: false, error: channelResult.error };
+        return failBuildOnMissingData("channel info", {
+          success: false,
+          error: channelResult.error,
+        });
       }
 
       const channel = channelResult.data![0];

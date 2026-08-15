@@ -3,6 +3,9 @@ services:
     build:
       context: .
       args:
+        # Needed at build time now that the YouTube pages are prerendered.
+        # env_file below only applies at runtime, which is too late for these.
+        YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
         FLAGS_SECRET: ${FLAGS_SECRET}
         FLAG_BLOG: ${FLAG_BLOG:-false}
         FLAG_NEWSLETTER: ${FLAG_NEWSLETTER:-false}

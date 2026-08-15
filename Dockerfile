@@ -12,11 +12,18 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ARG YOUTUBE_API_KEY=build-placeholder
+# No default. A placeholder used to be fine here because the YouTube pages were
+# rendered per request, so the build never called the API. They are prerendered
+# now, so the key is needed at build time — and a truthy placeholder is worse
+# than nothing: it passes the "is the key set" guard, the API rejects it, and
+# the empty result gets baked into the static output. Leaving this unset means
+# a build without a key fails loudly instead.
+ARG YOUTUBE_API_KEY
 ARG FLAGS_SECRET
 ARG FLAG_BLOG=false
 ARG FLAG_NEWSLETTER=false
 ARG NEXT_PUBLIC_GA_ID
+ENV YOUTUBE_API_KEY=$YOUTUBE_API_KEY
 ENV FLAGS_SECRET=$FLAGS_SECRET
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 ENV FLAG_BLOG=$FLAG_BLOG

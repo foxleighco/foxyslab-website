@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "fs";
+import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 
 /**
@@ -155,6 +155,27 @@ function stripComments(src: string): string {
 const read = (rel: string) =>
   stripComments(readFileSync(join(ROOT, rel), "utf8"));
 
+/** Every .ts/.tsx file under the given repo-relative directories. */
+function sourceFiles(dirs: string[]): string[] {
+  const found: string[] = [];
+
+  const walk = (rel: string) => {
+    for (const entry of readdirSync(join(ROOT, rel), { withFileTypes: true })) {
+      const child = `${rel}/${entry.name}`;
+      if (entry.isDirectory()) {
+        if (entry.name !== "__tests__" && entry.name !== "node_modules") {
+          walk(child);
+        }
+      } else if (/\.tsx?$/.test(entry.name)) {
+        found.push(child);
+      }
+    }
+  };
+
+  dirs.forEach(walk);
+  return found;
+}
+
 describe("stripComments", () => {
   it("removes line and block comments", () => {
     expect(stripComments("a // gone\nb")).toBe("a \nb");
@@ -242,6 +263,26 @@ describe("static rendering", () => {
       expect(read(file)).not.toMatch(/\b(cookies|headers|draftMode)\s*\(\s*\)/);
     }
   );
+
+  /*
+   * `FLAG_NEWSLETTER` has no NEXT_PUBLIC_ prefix, so it is not inlined into the
+   * client bundle. A client component importing this module would read
+   * `undefined` and quietly treat the flag as off, rather than failing — the
+   * same shape of silent bug this whole suite exists to prevent.
+   *
+   * `import "server-only"` would enforce this at build time and cover
+   * transitive imports too, but it isn't currently a dependency. This covers
+   * the realistic case (a direct import) without adding one.
+   */
+  it("no client component imports the build-time flag values", () => {
+    const offenders = sourceFiles(["app", "components"]).filter((file) => {
+      const src = read(file);
+      const isClient = /^\s*["']use client["']/m.test(src);
+      return isClient && /from\s*["'][^"']*feature-flags["']/.test(src);
+    });
+
+    expect(offenders).toEqual([]);
+  });
 
   it("feature flags are read from the environment, not a flags/next flag", () => {
     const src = read("lib/feature-flags.ts");

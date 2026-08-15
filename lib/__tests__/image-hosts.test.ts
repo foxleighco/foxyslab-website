@@ -75,25 +75,34 @@ const token = process.env.FOURTHWALL_STOREFRONT_TOKEN;
 
 describe.skipIf(!token)("Fourthwall product images (live)", () => {
   it("serves every product image from an allowlisted host", async (ctx) => {
-    // We're testing our allowlist, not Fourthwall's uptime. A network blip
-    // shouldn't turn into a red build, so bail out rather than fail if the
-    // API is unreachable — a bad host still fails hard below.
+    // We're testing our allowlist, not Fourthwall's uptime, so transient
+    // failures skip rather than redden the build. Anything that suggests the
+    // check itself is broken — a bad token, a moved endpoint — must fail
+    // loudly instead, or it quietly stops guarding anything.
     let res: Response;
     try {
       res = await fetch(
         `https://storefront-api.fourthwall.com/v1/collections/all/products?storefront_token=${encodeURIComponent(token!)}`
       );
     } catch (err) {
+      // Offline or DNS failure: nothing to learn, and not our bug.
       ctx.skip(
         `Fourthwall API unreachable, skipping: ${err instanceof Error ? err.message : String(err)}`
       );
       return;
     }
 
-    if (!res.ok) {
-      ctx.skip(`Fourthwall API returned ${res.status}, skipping`);
+    if (res.status === 429 || res.status >= 500) {
+      ctx.skip(`Fourthwall API returned ${res.status} (transient), skipping`);
       return;
     }
+
+    expect(
+      res.ok,
+      `Fourthwall API returned ${res.status}. If that's 401/403 the storefront ` +
+        `token is missing, expired or wrong — fix it rather than ignoring this, ` +
+        `otherwise the image-host check silently stops running.`
+    ).toBe(true);
 
     const data = await res.json();
     const products = data.results ?? [];

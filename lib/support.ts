@@ -15,9 +15,8 @@ export interface SupportTier {
   /**
    * Formatted with its currency symbol, e.g. "£5".
    *
-   * Optional: YouTube prices memberships per region, so there's no single
-   * figure worth printing. Those tiers omit it and the card renders without
-   * a price line rather than showing a misleading one.
+   * Optional: a tier without a headline figure worth printing omits it, and
+   * the card renders with no price line rather than showing a placeholder.
    */
   price?: string;
   /** e.g. "per month". Only meaningful alongside a price. */
@@ -42,7 +41,8 @@ export interface SupportOption {
   perks?: string[];
   /** Caveat or clarification shown under the perks. */
   perksNote?: string;
-  currencyNote?: string;
+  /** Caveat shown under the tier grid, for anything that spans all tiers. */
+  tiersNote?: string;
   tiers?: SupportTier[];
   ctaLabel: string;
   url: string;

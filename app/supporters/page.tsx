@@ -100,8 +100,8 @@ export default function SupportersPage() {
 
           <p className={styles.optionSummary}>{option.summary}</p>
 
-          {option.body?.map((paragraph) => (
-            <p key={paragraph} className={styles.optionBody}>
+          {option.body?.map((paragraph, i) => (
+            <p key={`${option.id}-body-${i}`} className={styles.optionBody}>
               {paragraph}
             </p>
           ))}
@@ -138,7 +138,7 @@ export default function SupportersPage() {
                       <span className={styles.popularBadge}>Most popular</span>
                     )}
                     <h3 className={styles.tierName}>{tier.name}</h3>
-                    {/* YouTube prices per region, so those tiers carry no price */}
+                    {/* Not every tier has a headline price worth showing */}
                     {tier.price && (
                       <p className={styles.tierPrice}>
                         <span className={styles.tierAmount}>{tier.price}</span>
@@ -163,8 +163,8 @@ export default function SupportersPage() {
                   </div>
                 ))}
               </div>
-              {option.currencyNote && (
-                <p className={styles.perksNote}>{option.currencyNote}</p>
+              {option.tiersNote && (
+                <p className={styles.perksNote}>{option.tiersNote}</p>
               )}
             </>
           )}

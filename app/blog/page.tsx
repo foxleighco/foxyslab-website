@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { getAllBlogPosts, getAllTags } from "@/lib/blog";
 import { FeedItem } from "@/components/blog/FeedItem";
@@ -7,24 +8,12 @@ import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog | Foxy's Lab",
   description:
     "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
-  openGraph: {
-    type: "website",
-    title: "Blog | Foxy's Lab",
-    description:
-      "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
-    url: "https://www.foxyslab.com/blog",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Blog | Foxy's Lab",
-    description:
-      "Articles, tutorials, and updates about smart home technology, home automation, and tech education.",
-  },
-};
+  path: "/blog",
+});
 
 // Revalidate every hour
 export const revalidate = 3600;

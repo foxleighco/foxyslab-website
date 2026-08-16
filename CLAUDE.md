@@ -140,7 +140,8 @@ lib/
 - Metadata in layout.tsx with metadataBase
 - Open Graph and Twitter cards
 - JSON-LD structured data (Organization, WebSite)
-- **Sitemap** (`public/sitemap.xml`) — **must be updated whenever a page is added, amended, or removed**
+- **Sitemap** (`public/sitemap.xml`) — **generated at build time** by `scripts/generate-sitemap.mjs` (runs in `prebuild`). Do not edit it by hand; it is overwritten on every build. Adding a route means adding it to `STATIC_ROUTES` in that script — content pages under `content/` and partners in `data/partners.json` are picked up automatically. `lastmod` comes from frontmatter dates, falling back to file mtime.
+- **Canonical URLs and Open Graph** come from `pageMetadata()` in `lib/seo.ts`. Use it for new pages rather than hand-rolling a `Metadata` object, so a route can't ship without a canonical.
 - Robots.txt (public/robots.txt)
 - Web manifest (public/manifest.webmanifest)
 

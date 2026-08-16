@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { VideoCard } from "@/components/VideoCard";
@@ -7,8 +8,20 @@ import { TransparentVideo } from "@/components/TransparentVideo";
 import { getLatestVideos } from "@/lib/youtube";
 import { getProducts } from "@/lib/fourthwall";
 import { showNewsletter } from "@/lib/feature-flags";
+import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
+
+/*
+ * The homepage inherited everything from the root layout, which covered title
+ * and description but left it as the one page with no canonical of its own —
+ * and it's the page most likely to be linked with tracking parameters.
+ */
+export const metadata: Metadata = pageMetadata({
+  title: `${siteConfig.name} | ${siteConfig.tagline}`,
+  description: siteConfig.description,
+  path: "/",
+});
 
 const labCoatClips = Array.from(
   { length: 7 },

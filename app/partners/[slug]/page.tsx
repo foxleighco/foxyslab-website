@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +10,17 @@ import styles from "./styles.module.css";
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
+
+/*
+ * Every slug is known at build time from generateStaticParams, so anything else
+ * is genuinely not found. Without this, Next renders unknown slugs on demand and
+ * returns HTTP 200 with the not-found UI — a soft 404, which search engines may
+ * index and which wastes crawl budget. Disabled partners hit this too.
+ *
+ * The trade is that new content requires a rebuild to become reachable, which is
+ * already true: it all comes from the repo.
+ */
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return partners.map((p) => ({ slug: p.slug }));
@@ -25,6 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description: partner.shortDescription,
+    alternates: { canonical: canonicalUrl(`/partners/${slug}`) },
     openGraph: {
       type: "website",
       title,

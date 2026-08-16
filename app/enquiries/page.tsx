@@ -1,14 +1,16 @@
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Business Enquiries | Foxy's Lab",
   description:
     "Get in touch with Foxy's Lab for product reviews, sponsorships, collaborations, and business partnerships.",
-};
+  path: "/enquiries",
+});
 
 export default function EnquiriesPage() {
   return (

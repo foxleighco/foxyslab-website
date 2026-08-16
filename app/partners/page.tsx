@@ -1,32 +1,43 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
+import { getBreadcrumbSchema, jsonLd } from "@/lib/structured-data";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { partners } from "@/lib/partners";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Partners | Foxy's Lab",
   description:
     "The brands Foxy's Lab has partnered with, plus current affiliate deals and discounts worth knowing about.",
-  openGraph: {
-    type: "website",
-    title: "Partners | Foxy's Lab",
-    description:
-      "The brands Foxy's Lab has partnered with, plus current affiliate deals and discounts worth knowing about.",
-    url: "https://www.foxyslab.com/partners",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Partners | Foxy's Lab",
-    description:
-      "The brands Foxy's Lab has partnered with, plus current affiliate deals and discounts worth knowing about.",
-  },
-};
+  path: "/partners",
+});
 
 export default function PartnersPage() {
+  const breadcrumbSchema = jsonLd(
+    getBreadcrumbSchema([
+      { name: "Home", url: canonicalUrl("/") },
+      { name: "Partners", url: canonicalUrl("/partners") },
+    ])
+  );
+
   return (
     <div className={`container-md ${styles.page}`}>
+      {/*
+        JSON-LD uses dangerouslySetInnerHTML by design: the content is
+        generated server-side from trusted config and content, never user
+        input. A plain <script> rather than next/script — the latter injects
+        client-side, so the markup only existed in the RSC payload and never
+        reached crawlers that don't run JavaScript.
+      */}
+      <script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />
+
       <PageHeader
         title={
           <>
@@ -35,7 +46,6 @@ export default function PartnersPage() {
         }
         subtitle="The brands we've teamed up with, and the affiliate deals currently on offer"
       />
-
       <section className={styles.intro}>
         <p className={styles.introText}>
           Foxy&apos;s Lab works with a handful of brands whose products we
@@ -46,7 +56,6 @@ export default function PartnersPage() {
           doesn&apos;t make the cut.
         </p>
       </section>
-
       <section className={styles.grid}>
         {partners.map((partner) => (
           <article key={partner.slug} className={styles.card}>

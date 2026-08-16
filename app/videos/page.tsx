@@ -1,4 +1,11 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { pageMetadata, canonicalUrl } from "@/lib/seo";
+import {
+  getVideoListSchema,
+  getBreadcrumbSchema,
+  jsonLd,
+} from "@/lib/structured-data";
 import {
   getLatestVideos,
   getPlaylists,
@@ -10,24 +17,12 @@ import { PageHeader } from "@/components/PageHeader";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Videos | Foxy's Lab",
   description:
     "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
-  openGraph: {
-    type: "website",
-    title: "Videos | Foxy's Lab",
-    description:
-      "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
-    url: "https://www.foxyslab.com/videos",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Videos | Foxy's Lab",
-    description:
-      "Watch all the latest smart home tutorials, automation guides, and tech education videos from Foxy's Lab.",
-  },
-};
+  path: "/videos",
+});
 
 export const revalidate = 3600;
 
@@ -116,14 +111,73 @@ export default async function VideosPage() {
   // Only include playlists that have at least one matching video
   const visiblePlaylists = playlistInfos.filter((p) => p.itemCount > 0);
 
+  /*
+   * Only the first 30 are described. The full list is 200 videos, and a
+   * multi-hundred-KB JSON-LD blob on every request costs more than the tail of
+   * it could ever return in rich results.
+   */
+  const videoListSchema = jsonLd(
+    getVideoListSchema(
+      videos.slice(0, 30).map((video) => ({
+        title: video.title,
+        description: video.description,
+        videoId: video.id,
+        publishedAt: video.publishedAt,
+      }))
+    )
+  );
+
+  const breadcrumbSchema = jsonLd(
+    getBreadcrumbSchema([
+      { name: "Home", url: canonicalUrl("/") },
+      { name: "Videos", url: canonicalUrl("/videos") },
+    ])
+  );
+
   return (
     <div className={`container ${styles.page}`}>
-      <VideoGallery
-        videos={videos}
-        playlists={visiblePlaylists}
-        playlistVideoMap={playlistVideoMap}
-        playlistSlugMap={playlistSlugMap}
+      {/*
+        JSON-LD uses dangerouslySetInnerHTML by design: the content is
+        generated server-side from trusted config and content, never user
+        input. A plain <script> rather than next/script — the latter injects
+        client-side, so the markup only existed in the RSC payload and never
+        reached crawlers that don't run JavaScript.
+      */}
+      <script
+        id="video-list-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: videoListSchema }}
       />
+      <script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />
+      {/*
+        VideoGallery reads search params for playlist filtering. Without a
+        Suspense boundary around it, Next bails the *whole route* out to client
+        rendering — which is why this page's server HTML contained no h1, no
+        structured data and no markup at all, only an RSC payload.
+
+        The fallback renders the unfiltered heading server-side, which is the
+        state that matches the canonical URL. The client swaps in the
+        playlist-specific title once it takes over.
+      */}
+      <Suspense
+        fallback={
+          <PageHeader
+            title="All Videos"
+            subtitle="Browse through our complete collection of tutorials and guides"
+          />
+        }
+      >
+        <VideoGallery
+          videos={videos}
+          playlists={visiblePlaylists}
+          playlistVideoMap={playlistVideoMap}
+          playlistSlugMap={playlistSlugMap}
+        />
+      </Suspense>
 
       <div className={styles.ctaWrapper}>
         <a

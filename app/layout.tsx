@@ -8,7 +8,11 @@ import { getProviderData } from "flags/next";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { getOrganizationSchema, getWebsiteSchema } from "@/lib/structured-data";
+import {
+  getOrganizationSchema,
+  getWebsiteSchema,
+  jsonLd,
+} from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
 import * as flags from "./flags";
 
@@ -89,8 +93,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const orgSchema = JSON.stringify(getOrganizationSchema());
-  const webSchema = JSON.stringify(getWebsiteSchema());
+  const orgSchema = jsonLd(getOrganizationSchema());
+  const webSchema = jsonLd(getWebsiteSchema());
   const definitions = await encryptFlagDefinitions(
     getProviderData(flags).definitions
   );

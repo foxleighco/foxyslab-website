@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { canonicalUrl } from "@/lib/seo";
-import { getBreadcrumbSchema } from "@/lib/structured-data";
+import { getBreadcrumbSchema, jsonLd } from "@/lib/structured-data";
 import { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { getAllResources } from "@/lib/resources";
@@ -40,7 +40,7 @@ async function ResourceGrid() {
     );
   }
 
-  const breadcrumbSchema = JSON.stringify(
+  const breadcrumbSchema = jsonLd(
     getBreadcrumbSchema([
       { name: "Home", url: canonicalUrl("/") },
       { name: "Resources", url: canonicalUrl("/resources") },
@@ -60,7 +60,8 @@ async function ResourceGrid() {
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
-      />{" "}
+      />
+
       {resources.map((resource) => (
         <ResourceCard
           key={resource.slug}

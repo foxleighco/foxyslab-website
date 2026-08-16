@@ -1,5 +1,9 @@
 import { Metadata } from "next";
-import { getPersonSchema, getBreadcrumbSchema } from "@/lib/structured-data";
+import {
+  getPersonSchema,
+  getBreadcrumbSchema,
+  jsonLd,
+} from "@/lib/structured-data";
 import { pageMetadata, canonicalUrl } from "@/lib/seo";
 import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
@@ -33,8 +37,8 @@ export default async function AboutPage() {
         .reduce((sum, v) => sum + parseInt(v.commentCount, 10), 0)
         .toString()
     : "0";
-  const personSchema = JSON.stringify(getPersonSchema());
-  const breadcrumbSchema = JSON.stringify(
+  const personSchema = jsonLd(getPersonSchema());
+  const breadcrumbSchema = jsonLd(
     getBreadcrumbSchema([
       { name: "Home", url: canonicalUrl("/") },
       { name: "About", url: canonicalUrl("/about") },

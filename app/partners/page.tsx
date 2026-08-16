@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { canonicalUrl } from "@/lib/seo";
-import { getBreadcrumbSchema } from "@/lib/structured-data";
+import { getBreadcrumbSchema, jsonLd } from "@/lib/structured-data";
 import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function PartnersPage() {
-  const breadcrumbSchema = JSON.stringify(
+  const breadcrumbSchema = jsonLd(
     getBreadcrumbSchema([
       { name: "Home", url: canonicalUrl("/") },
       { name: "Partners", url: canonicalUrl("/partners") },

@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { pageMetadata, canonicalUrl } from "@/lib/seo";
-import { getVideoListSchema, getBreadcrumbSchema } from "@/lib/structured-data";
+import {
+  getVideoListSchema,
+  getBreadcrumbSchema,
+  jsonLd,
+} from "@/lib/structured-data";
 import {
   getLatestVideos,
   getPlaylists,
@@ -112,7 +116,7 @@ export default async function VideosPage() {
    * multi-hundred-KB JSON-LD blob on every request costs more than the tail of
    * it could ever return in rich results.
    */
-  const videoListSchema = JSON.stringify(
+  const videoListSchema = jsonLd(
     getVideoListSchema(
       videos.slice(0, 30).map((video) => ({
         title: video.title,
@@ -123,7 +127,7 @@ export default async function VideosPage() {
     )
   );
 
-  const breadcrumbSchema = JSON.stringify(
+  const breadcrumbSchema = jsonLd(
     getBreadcrumbSchema([
       { name: "Home", url: canonicalUrl("/") },
       { name: "Videos", url: canonicalUrl("/videos") },

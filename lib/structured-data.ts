@@ -11,6 +11,29 @@ import {
 import { siteConfig } from "@/site.config";
 
 /**
+ * Serialises a schema object for embedding in a `<script>` tag.
+ *
+ * `JSON.stringify` alone is not safe here. It leaves `<` untouched, so a string
+ * containing `</script>` closes the tag early and everything after it is parsed
+ * as HTML. That is not hypothetical for this site: the video schema is built
+ * from YouTube titles and descriptions, which are external input that neither
+ * we nor the API sanitise for this context.
+ *
+ * The escapes are ordinary JSON `\uXXXX` sequences, so the parsed value is
+ * byte-for-byte what it was — only the HTML representation changes. U+2028 and
+ * U+2029 are included because they are valid in JSON strings but terminate a
+ * line in JavaScript.
+ */
+export function jsonLd(schema: object): string {
+  return JSON.stringify(schema)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
+/**
  * The profiles that establish this is the same entity across the web.
  *
  * Shared between the Organization and the Person: the channel and the man

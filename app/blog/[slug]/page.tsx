@@ -14,6 +14,7 @@ import {
   getArticleSchema,
   getBreadcrumbSchema,
   getVideoObjectSchema,
+  jsonLd,
 } from "@/lib/structured-data";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
@@ -128,7 +129,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const adjacentResult = await getAdjacentPosts(slug);
   const adjacent = adjacentResult.success ? adjacentResult.data : {};
 
-  const articleSchema = JSON.stringify(
+  const articleSchema = jsonLd(
     getArticleSchema({
       title: frontmatter.title,
       description: frontmatter.description,
@@ -141,7 +142,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     })
   );
 
-  const breadcrumbSchema = JSON.stringify(
+  const breadcrumbSchema = jsonLd(
     getBreadcrumbSchema([
       { name: "Home", url: siteConfig.url },
       { name: "Blog", url: `${siteConfig.url}/blog` },
@@ -150,7 +151,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 
   const videoSchema = frontmatter.videoId
-    ? JSON.stringify(
+    ? jsonLd(
         getVideoObjectSchema({
           title: frontmatter.title,
           description: frontmatter.description,

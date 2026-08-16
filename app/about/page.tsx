@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { getPersonSchema, getBreadcrumbSchema } from "@/lib/structured-data";
+import { pageMetadata, canonicalUrl } from "@/lib/seo";
 import Image from "next/image";
 import { Newsletter } from "@/components/Newsletter";
 import { PageHeader } from "@/components/PageHeader";
@@ -11,24 +13,12 @@ import { showNewsletter } from "@/lib/feature-flags";
 import { siteConfig } from "@/site.config";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About | Foxy's Lab",
   description:
     "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
-  openGraph: {
-    type: "website",
-    title: "About | Foxy's Lab",
-    description:
-      "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
-    url: "https://www.foxyslab.com/about",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About | Foxy's Lab",
-    description:
-      "Meet the person behind Foxy's Lab — a smart home and homelab obsessive with strong opinions about local control and far too many Zigbee devices.",
-  },
-};
+  path: "/about",
+});
 
 export const revalidate = 3600;
 
@@ -43,8 +33,33 @@ export default async function AboutPage() {
         .reduce((sum, v) => sum + parseInt(v.commentCount, 10), 0)
         .toString()
     : "0";
+  const personSchema = JSON.stringify(getPersonSchema());
+  const breadcrumbSchema = JSON.stringify(
+    getBreadcrumbSchema([
+      { name: "Home", url: canonicalUrl("/") },
+      { name: "About", url: canonicalUrl("/about") },
+    ])
+  );
+
   return (
     <div className={`container-md ${styles.page}`}>
+      {/*
+        JSON-LD uses dangerouslySetInnerHTML by design: the content is
+        generated server-side from trusted config and content, never user
+        input. A plain <script> rather than next/script — the latter injects
+        client-side, so the markup only existed in the RSC payload and never
+        reached crawlers that don't run JavaScript.
+      */}
+      <script
+        id="person-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: personSchema }}
+      />
+      <script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />
       <PageHeader
         title={
           <>

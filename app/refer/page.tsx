@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Link unavailable | Foxy's Lab",
   description: "This Foxy's Lab short link has moved or expired.",
-  robots: { index: false, follow: false },
-};
+  path: "/refer",
+  noIndex: true,
+});
 
 export default function ReferFallbackPage() {
   return (

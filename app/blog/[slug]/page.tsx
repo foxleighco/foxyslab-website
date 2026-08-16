@@ -1,8 +1,8 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 import {
   getBlogPostBySlug,
   getAllPostSlugs,
@@ -26,6 +26,17 @@ interface BlogPostPageProps {
 }
 
 // Generate static params for all posts
+/*
+ * Every slug is known at build time from generateStaticParams, so anything else
+ * is genuinely not found. Without this, Next renders unknown slugs on demand and
+ * returns HTTP 200 with the not-found UI — a soft 404, which search engines may
+ * index and which wastes crawl budget. Disabled partners hit this too.
+ *
+ * The trade is that new content requires a rebuild to become reachable, which is
+ * already true: it all comes from the repo.
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const result = await getAllPostSlugs();
 
@@ -56,6 +67,7 @@ export async function generateMetadata({
 
   return {
     title: `${frontmatter.title} | Foxy's Lab Blog`,
+    alternates: { canonical: canonicalUrl(`/blog/${slug}`) },
     description: frontmatter.description,
     authors: [{ name: frontmatter.author }],
     openGraph: {
@@ -150,18 +162,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className={`container ${styles.page}`}>
-      <Script
+      <script
         id="article-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: articleSchema }}
       />
-      <Script
+      <script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
       />
       {videoSchema && (
-        <Script
+        <script
           id="video-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: videoSchema }}

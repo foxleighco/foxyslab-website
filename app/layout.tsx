@@ -109,12 +109,12 @@ export default async function RootLayout({
             </Script>
           </>
         )}
-        <Script
+        <script
           id="organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: orgSchema }}
         />
-        <Script
+        <script
           id="website-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: webSchema }}

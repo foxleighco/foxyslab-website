@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { PageHeader } from "@/components/PageHeader";
 import { supportOptions } from "@/lib/support";
 import { siteConfig } from "@/site.config";
@@ -8,18 +9,11 @@ const title = "Memberships and Support | Foxy's Lab";
 const description =
   "The ways you can support Foxy's Lab — a one-off tip on Ko-fi, a YouTube channel membership, or a Patreon tier — and exactly what you get from each.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title,
   description,
-  alternates: { canonical: `${siteConfig.url}/supporters` },
-  openGraph: {
-    type: "website",
-    title,
-    description,
-    url: `${siteConfig.url}/supporters`,
-  },
-  twitter: { card: "summary_large_image", title, description },
-};
+  path: "/supporters",
+});
 
 /** Tick used in perk lists. Decorative — the list itself carries the meaning. */
 function PerkIcon() {

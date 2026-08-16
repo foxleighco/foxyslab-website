@@ -1,15 +1,19 @@
 import { Suspense } from "react";
+import { canonicalUrl } from "@/lib/seo";
+import { getBreadcrumbSchema } from "@/lib/structured-data";
 import { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getAllResources } from "@/lib/resources";
 import { ResourceCard } from "@/components/ResourceCard";
 import { PageHeader } from "@/components/PageHeader";
 import styles from "./styles.module.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Resources | Foxy's Lab",
   description:
     "Kits, tools, and software recommendations for smart home, homelab, and tech projects.",
-};
+  path: "/resources",
+});
 
 export const revalidate = 3600;
 
@@ -36,8 +40,27 @@ async function ResourceGrid() {
     );
   }
 
+  const breadcrumbSchema = JSON.stringify(
+    getBreadcrumbSchema([
+      { name: "Home", url: canonicalUrl("/") },
+      { name: "Resources", url: canonicalUrl("/resources") },
+    ])
+  );
+
   return (
     <div className={styles.grid}>
+      {/*
+        JSON-LD uses dangerouslySetInnerHTML by design: the content is
+        generated server-side from trusted config and content, never user
+        input. A plain <script> rather than next/script — the latter injects
+        client-side, so the markup only existed in the RSC payload and never
+        reached crawlers that don't run JavaScript.
+      */}
+      <script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbSchema }}
+      />{" "}
       {resources.map((resource) => (
         <ResourceCard
           key={resource.slug}

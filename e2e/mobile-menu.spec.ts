@@ -27,7 +27,7 @@ test.describe("Mobile Menu", () => {
     await page.getByRole("button", { name: "Open menu" }).click();
     await page
       .getByTestId("mobile-menu")
-      .getByRole("link", { name: "About" })
+      .getByRole("link", { name: "About", exact: true })
       .click();
 
     await expect(page).toHaveURL(/\/about/);
@@ -41,7 +41,7 @@ test.describe("Mobile Menu", () => {
     await toggle.click();
     await page
       .getByTestId("mobile-menu")
-      .getByRole("link", { name: "About" })
+      .getByRole("link", { name: "About", exact: true })
       .click();
 
     // After navigation, menu should be closed

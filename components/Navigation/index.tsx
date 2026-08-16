@@ -11,7 +11,7 @@ export async function Navigation() {
       <div className={styles.container}>
         <div className={styles.inner}>
           {/* Desktop Navigation */}
-          <div className={styles.desktopNav}>
+          <div className={styles.desktopNav} data-testid="desktop-nav">
             {navLinks.map((link) =>
               "external" in link && link.external ? (
                 <a

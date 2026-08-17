@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
+// Plain .mjs, shared with the prebuild scripts.
+import { isDraft } from "../../scripts/lib/frontmatter.mjs";
 
 /**
  * Checks the generated feed against the posts it claims to describe.
@@ -28,7 +30,7 @@ const publishedSlugs = readdirSync(join(ROOT, "content", "blog"), {
       join(ROOT, "content", "blog", entry.name, "index.md"),
       "utf8"
     );
-    return !/^status:\s*["']?draft/m.test(source);
+    return !isDraft(source);
   })
   .map((entry) => entry.name);
 

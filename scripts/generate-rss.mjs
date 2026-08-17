@@ -16,6 +16,7 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { parseFrontmatter, isDraft } from "./lib/frontmatter.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = "https://www.foxyslab.com";
@@ -33,21 +34,6 @@ function escapeXml(value) {
     .replace(/'/g, "&apos;");
 }
 
-/** Minimal frontmatter reader — enough for the fields the feed needs. */
-function readFrontmatter(file) {
-  const source = readFileSync(file, "utf8");
-  const block = source.match(/^---\n([\s\S]*?)\n---/);
-  if (!block) return null;
-
-  const fields = {};
-  for (const line of block[1].split("\n")) {
-    const match = line.match(/^(\w+):\s*(.+)$/);
-    if (!match) continue;
-    fields[match[1]] = match[2].trim().replace(/^["']|["']$/g, "");
-  }
-  return fields;
-}
-
 function posts() {
   const base = join(ROOT, "content", "blog");
 
@@ -55,13 +41,16 @@ function posts() {
     .filter((entry) => entry.isDirectory())
     .map((entry) => {
       const file = join(base, entry.name, "index.md");
-      let frontmatter;
+      let source;
       try {
-        frontmatter = readFrontmatter(file);
+        source = readFileSync(file, "utf8");
       } catch {
         return null;
       }
-      if (!frontmatter || frontmatter.status === "draft") return null;
+      if (isDraft(source)) return null;
+
+      const frontmatter = parseFrontmatter(source);
+      if (!frontmatter) return null;
 
       const published = frontmatter.publishedAt
         ? new Date(frontmatter.publishedAt)

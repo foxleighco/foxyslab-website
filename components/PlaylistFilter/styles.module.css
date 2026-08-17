@@ -15,8 +15,7 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  flex: 1 1 15rem;
-  max-width: 24rem;
+  flex: 0 1 22rem;
   min-width: 0;
 }
 

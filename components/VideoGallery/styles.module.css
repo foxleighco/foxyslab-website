@@ -120,14 +120,15 @@
 }
 
 /*
- * One row: search, playlist, count. All three are fixed-size controls now, so
- * the bar no longer grows with the number of playlists. It wraps on narrow
- * viewports rather than shrinking the search field to nothing.
+ * Search on the left, playlist pushed to the right. Both are fixed-size
+ * controls, so the bar no longer grows with the number of playlists. It wraps
+ * on narrow viewports rather than squeezing the search field to nothing.
  */
 .searchRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem 1rem;
 }
 
@@ -206,13 +207,6 @@
 .clearButton:hover {
   background: color-mix(in srgb, #fff 20%, transparent);
   color: #fff;
-}
-
-.resultCount {
-  margin: 0;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

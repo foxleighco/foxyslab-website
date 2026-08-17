@@ -171,7 +171,9 @@ export function VideoGallery({
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search videos"
+              placeholder={`Search ${playlistVideos.length} ${
+                playlistVideos.length === 1 ? "video" : "videos"
+              }`}
               className={styles.searchInput}
             />
             {query && (
@@ -192,17 +194,18 @@ export function VideoGallery({
               onSelect={handlePlaylistSelect}
             />
           )}
-
-          {/*
-            Announced politely so screen reader users hear the list change as
-            they type, rather than only discovering it by exploring the grid.
-          */}
-          <p className={styles.resultCount} role="status" aria-live="polite">
-            {filteredVideos.length}
-            {filteredVideos.length === 1 ? " video" : " videos"}
-            {query || activePlaylist ? ` of ${videos.length}` : ""}
-          </p>
         </div>
+
+        {/*
+          Kept as a live region after the visible count was removed. Sighted
+          users see the grid change as they type; without this, screen reader
+          users would get no feedback at all until they went exploring for it.
+        */}
+        <p className="sr-only" role="status" aria-live="polite">
+          {filteredVideos.length}
+          {filteredVideos.length === 1 ? " video" : " videos"}
+          {query || activePlaylist ? ` of ${videos.length}` : ""}
+        </p>
       </div>
 
       {paginatedVideos.length === 0 ? (

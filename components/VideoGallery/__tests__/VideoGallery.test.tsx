@@ -154,6 +154,28 @@ describe("VideoGallery", () => {
    * box or an annoyance.
    */
   describe("text filter", () => {
+    it("says how many videos are being filtered", () => {
+      // The count that matters is the pool available to search, not the live
+      // result count — the placeholder is only visible while the box is empty.
+      render(<VideoGallery {...defaultProps} />);
+
+      expect(screen.getByRole("searchbox")).toHaveAttribute(
+        "placeholder",
+        "Search 2 videos"
+      );
+    });
+
+    it("keeps announcing the count after the visible one was removed", async () => {
+      // Sighted users see the grid change; without this live region, screen
+      // reader users would get nothing until they went looking.
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "lighting");
+
+      expect(screen.getByRole("status")).toHaveTextContent("1 video of 2");
+    });
+
     it("narrows the list as you type", async () => {
       const user = userEvent.setup();
       render(<VideoGallery {...defaultProps} />);

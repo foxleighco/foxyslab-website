@@ -1,14 +1,66 @@
+/*
+ * A single scrolling track rather than a wrapping block.
+ *
+ * With ten playlists of very uneven name lengths, wrapping produced a ragged
+ * two-row slab above the grid. One row keeps the height fixed no matter how
+ * many playlists exist, and the fades tell you there is more to either side —
+ * the same idiom the blog table of contents uses.
+ */
 .wrapper {
-  margin-bottom: 2rem;
+  position: relative;
+  margin-bottom: 0;
+}
+
+.wrapper::before,
+.wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2.5rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--secondary), transparent);
+}
+
+.wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--secondary), transparent);
 }
 
 .pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  /* Room for the focus ring, which would otherwise be clipped by the scroller. */
+  padding: 0.25rem 0.25rem 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--primary) 45%, transparent)
+    transparent;
+}
+
+.pills::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pills::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--primary) 45%, transparent);
+  border-radius: 9999px;
 }
 
 .pill {
+  /* Longest name is three times the shortest; capping stops one chip
+     dominating the track. The full title stays available as a tooltip. */
+  max-width: 15rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 0 0 auto;
   padding: 0.5rem 1.5rem;
   border-radius: 9999px;
   font-weight: 600;

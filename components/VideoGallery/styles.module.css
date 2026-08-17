@@ -105,3 +105,115 @@
   opacity: 0.3;
   cursor: not-allowed;
 }
+
+/*
+ * Filter bar.
+ *
+ * Ten playlists of very different name lengths wrapped into a ragged two-row
+ * block that took ~100px before any video appeared, and the widest chip was
+ * three times the narrowest. Search is the primary control now and sits on its
+ * own line; the playlists become a single scrolling track below it, so adding
+ * an eleventh playlist lengthens the track rather than reflowing the page.
+ */
+.filters {
+  margin-bottom: 2rem;
+}
+
+.searchRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.searchField {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 18rem;
+  max-width: 26rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.875rem;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  background-color: color-mix(in srgb, var(--secondary) 55%, transparent);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9375rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.searchInput:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--secondary) 75%, transparent);
+}
+
+/* Keyboard focus still needs the site's ring; :focus above only tints. */
+.searchInput:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Safari renders its own clear control on type=search; ours is explicit. */
+.searchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0.5rem;
+  padding: 0.25rem 0.625rem;
+  border: none;
+  border-radius: 9999px;
+  background: color-mix(in srgb, #fff 12%, transparent);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.clearButton:hover {
+  background: color-mix(in srgb, #fff 20%, transparent);
+  color: #fff;
+}
+
+.resultCount {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchInput,
+  .clearButton {
+    transition: none;
+  }
+}

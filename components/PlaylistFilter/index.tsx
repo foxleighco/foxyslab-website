@@ -46,6 +46,7 @@ export function PlaylistFilter({
           return (
             <button
               key={playlist.id}
+              title={playlist.title}
               onClick={() => onSelect(playlist.slug)}
               aria-pressed={isActive}
               className={`${styles.pill} ${isActive ? styles.pillActive : styles.pillInactive}`}

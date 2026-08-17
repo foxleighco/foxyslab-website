@@ -149,4 +149,101 @@ describe("VideoGallery", () => {
       screen.getByText("No videos in this playlist yet")
     ).toBeInTheDocument();
   });
+
+  /*
+   * The filter runs over the video list already in the browser rather than an
+   * index built at deploy time, which is what keeps results as fresh as the
+   * page. These cover the behaviour that decides whether it feels like a search
+   * box or an annoyance.
+   */
+  describe("text filter", () => {
+    it("narrows the list as you type", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "lighting");
+
+      expect(screen.getByText("Smart Lighting Guide")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Getting Started with Home Assistant")
+      ).not.toBeInTheDocument();
+    });
+
+    it("matches each word separately rather than the whole phrase", async () => {
+      // "assistant home" appears in no title in that order. Requiring the
+      // phrase contiguously meant real queries returned nothing.
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "assistant home");
+
+      expect(
+        screen.getByText("Getting Started with Home Assistant")
+      ).toBeInTheDocument();
+    });
+
+    it("searches descriptions, not just titles", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "from scratch");
+
+      expect(
+        screen.getByText("Getting Started with Home Assistant")
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByText("Smart Lighting Guide")
+      ).not.toBeInTheDocument();
+    });
+
+    it("ignores case", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "SMART LIGHTING");
+
+      expect(screen.getByText("Smart Lighting Guide")).toBeInTheDocument();
+    });
+
+    it("announces the result count", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      expect(screen.getByRole("status")).toHaveTextContent("2 videos");
+
+      await user.type(screen.getByRole("searchbox"), "lighting");
+
+      expect(screen.getByRole("status")).toHaveTextContent("1 video of 2");
+    });
+
+    it("restores everything when cleared", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "lighting");
+      await user.click(screen.getByRole("button", { name: /clear/i }));
+
+      expect(
+        screen.getByText("Getting Started with Home Assistant")
+      ).toBeInTheDocument();
+      expect(screen.getByRole("searchbox")).toHaveValue("");
+    });
+
+    it("shows no clear button until there is something to clear", () => {
+      render(<VideoGallery {...defaultProps} />);
+      expect(screen.queryByRole("button", { name: /clear/i })).toBeNull();
+    });
+
+    it("handles a query matching nothing", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "qqqzzz");
+
+      expect(screen.getByRole("status")).toHaveTextContent("0 videos of 2");
+      expect(
+        screen.queryByText("Smart Lighting Guide")
+      ).not.toBeInTheDocument();
+    });
+  });
 });

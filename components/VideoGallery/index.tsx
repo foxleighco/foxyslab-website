@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState, useId } from "react";
 import { YouTubeVideo, PlaylistInfo } from "@/types/youtube";
 import { VideoCard } from "@/components/VideoCard";
 import { PlaylistFilter } from "@/components/PlaylistFilter";
@@ -41,7 +41,16 @@ export function VideoGallery({
     ? playlists.find((p) => p.id === activePlaylistId)
     : null;
 
-  const filteredVideos = useMemo(() => {
+  /*
+   * Held in component state rather than the URL, unlike the playlist. Pushing a
+   * route on every keystroke would spam history and re-run the router for a
+   * filter over an array that is already in memory. The trade is that a typed
+   * query is not shareable, which matters far less than the playlist being so.
+   */
+  const [query, setQuery] = useState("");
+  const searchInputId = useId();
+
+  const playlistVideos = useMemo(() => {
     if (!activePlaylistId) return videos;
 
     const videoIds = playlistVideoMap[activePlaylistId];
@@ -51,7 +60,38 @@ export function VideoGallery({
     return videos.filter((v) => idSet.has(v.id));
   }, [videos, activePlaylistId, playlistVideoMap]);
 
+  /*
+   * Filters the list already in the browser rather than an index built at
+   * deploy time, so results are exactly as fresh as the page — which ISR keeps
+   * within the hour. A new video is findable without a rebuild.
+   */
+  const filteredVideos = useMemo(() => {
+    /*
+     * Every word must appear somewhere, rather than the whole phrase appearing
+     * contiguously. Matching the raw string meant "node-red basics" found
+     * nothing, because no title contains those two words adjacent — which is
+     * not how anyone expects a search box to behave.
+     */
+    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return playlistVideos;
+
+    return playlistVideos.filter((video) => {
+      const haystack = `${video.title} ${video.description}`.toLowerCase();
+      return terms.every((term) => haystack.includes(term));
+    });
+  }, [playlistVideos, query]);
+
+  /*
+   * A query can shrink the list below the current page, which would otherwise
+   * leave the visitor on an empty page wondering where everything went.
+   */
   const totalPages = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
+  /*
+   * Clamped rather than reset. Forcing page 1 whenever a query was present made
+   * the pagination inert mid-search: 18 results span two pages and the second
+   * was unreachable. Clamping still rescues anyone whose current page vanished
+   * as the list narrowed.
+   */
   const safePage = Math.min(currentPage, Math.max(1, totalPages));
   const startIndex = (safePage - 1) * VIDEOS_PER_PAGE;
   const paginatedVideos = filteredVideos.slice(
@@ -109,13 +149,61 @@ export function VideoGallery({
         }
       />
 
-      {playlists.length > 0 && (
-        <PlaylistFilter
-          playlists={playlists}
-          activeSlug={activeSlug}
-          onSelect={handlePlaylistSelect}
-        />
-      )}
+      <div className={styles.filters}>
+        <div className={styles.searchRow}>
+          <label htmlFor={searchInputId} className="sr-only">
+            Search videos by title or description
+          </label>
+          <div className={styles.searchField}>
+            <svg
+              className={styles.searchIcon}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" strokeLinecap="round" />
+            </svg>
+            <input
+              id={searchInputId}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search videos"
+              className={styles.searchInput}
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                className={styles.clearButton}
+              >
+                Clear<span className="sr-only"> search</span>
+              </button>
+            )}
+          </div>
+
+          {/*
+            Announced politely so screen reader users hear the list change as
+            they type, rather than only discovering it by exploring the grid.
+          */}
+          <p className={styles.resultCount} role="status" aria-live="polite">
+            {filteredVideos.length}
+            {filteredVideos.length === 1 ? " video" : " videos"}
+            {query || activePlaylist ? ` of ${videos.length}` : ""}
+          </p>
+        </div>
+
+        {playlists.length > 0 && (
+          <PlaylistFilter
+            playlists={playlists}
+            activeSlug={activeSlug}
+            onSelect={handlePlaylistSelect}
+          />
+        )}
+      </div>
 
       {paginatedVideos.length === 0 ? (
         <div className={styles.emptyState}>

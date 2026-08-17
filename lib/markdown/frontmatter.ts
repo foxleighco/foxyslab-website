@@ -34,7 +34,20 @@ export const frontmatterSchema = z.object({
   // Optional media fields
   heroImage: z.string().optional(),
   thumbnail: z.string().optional(),
+  /**
+   * The video this post is the companion to. Shown as an embed at the top, and
+   * used to link the video back here from the video listings.
+   */
   videoId: z.string().optional(),
+  /**
+   * Every video this post is the companion to, for articles covering a series.
+   * Takes precedence over `videoId`, matching how resources already work.
+   *
+   * This exists because one post covering three videos could previously only
+   * declare one of them, so the other two had no route back to the article —
+   * which read as arbitrary rather than as the gap it was.
+   */
+  videoIds: z.array(z.string()).optional(),
 
   // Related content
   relatedPosts: z.array(z.string()).optional(),

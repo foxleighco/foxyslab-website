@@ -21,6 +21,7 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { isDraft } from "./lib/frontmatter.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = "https://www.foxyslab.com";
@@ -89,7 +90,7 @@ function contentRoutes(dir, urlPrefix) {
     .filter(({ file }) => {
       try {
         // Drafts stay out of the sitemap.
-        return !/^status:\s*["']?draft/m.test(readFileSync(file, "utf8"));
+        return !isDraft(readFileSync(file, "utf8"));
       } catch {
         return false;
       }

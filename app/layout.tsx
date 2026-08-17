@@ -102,6 +102,18 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${sink.variable} ${poppins.variable}`}>
       <head>
+        {/*
+          Declared here rather than through `alternates.types` in the metadata
+          object. Page-level metadata *replaces* the layout's `alternates` key
+          rather than merging into it, so every page that sets its own canonical
+          — which is now all of them — silently dropped the feed declaration.
+        */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${siteConfig.name} — Blog`}
+          href="/rss.xml"
+        />
         {gaId && (
           <>
             <Script

@@ -121,6 +121,18 @@
   border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 9999px;
   color: rgba(255, 255, 255, 0.7);
+  /* Now links to /blog/tag/[tag] rather than inert text. */
+  display: inline-block;
+  text-decoration: none;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.postTag:hover,
+.postTag:focus-visible {
+  color: #fff;
+  border-color: var(--primary);
 }
 
 /* Video Embed */

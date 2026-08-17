@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/sync-blog-assets.mjs && next dev",
-    "prebuild": "node scripts/sync-blog-assets.mjs && node scripts/generate-sitemap.mjs",
+    "prebuild": "node scripts/sync-blog-assets.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-rss.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

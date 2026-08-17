@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { getArticleSlugsByVideoId } from "@/lib/blog";
 import { pageMetadata, canonicalUrl } from "@/lib/seo";
 import {
   getVideoListSchema,
@@ -116,6 +117,13 @@ export default async function VideosPage() {
    * multi-hundred-KB JSON-LD blob on every request costs more than the tail of
    * it could ever return in rich results.
    */
+  /*
+   * Reverse index for the companion-article links on each card. Posts declare
+   * their video with `videoId` in frontmatter; nothing pointed the other way,
+   * so a visitor browsing videos had no route to the written version.
+   */
+  const articleSlugByVideoId = await getArticleSlugsByVideoId();
+
   const videoListSchema = jsonLd(
     getVideoListSchema(
       videos.slice(0, 30).map((video) => ({
@@ -176,6 +184,7 @@ export default async function VideosPage() {
           playlists={visiblePlaylists}
           playlistVideoMap={playlistVideoMap}
           playlistSlugMap={playlistSlugMap}
+          articleSlugByVideoId={articleSlugByVideoId}
         />
       </Suspense>
 

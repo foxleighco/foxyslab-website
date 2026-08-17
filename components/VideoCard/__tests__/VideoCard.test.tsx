@@ -32,16 +32,15 @@ describe("VideoCard", () => {
    * regression that costs real seconds while looking completely fine.
    */
   it("lazy-loads the thumbnail by default", () => {
-    render(<VideoCard video={mockVideo} />);
-    expect(screen.getByAltText(mockVideo.title)).toHaveAttribute(
-      "loading",
-      "lazy"
-    );
+    // The thumbnail is decorative — the title beside it names the video — so
+    // it is selected structurally rather than by alt text.
+    const { container } = render(<VideoCard video={mockVideo} />);
+    expect(container.querySelector("img")).toHaveAttribute("loading", "lazy");
   });
 
   it("eagerly loads the thumbnail when marked as the LCP candidate", () => {
-    render(<VideoCard video={mockVideo} priority />);
-    const img = screen.getByAltText(mockVideo.title);
+    const { container } = render(<VideoCard video={mockVideo} priority />);
+    const img = container.querySelector("img")!;
 
     // next/image signals priority by omitting `loading`, not by setting
     // "eager" — verified against the rendered output in a real browser.
@@ -67,6 +66,68 @@ describe("VideoCard", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: mockVideo.title })
     ).toBeInTheDocument();
+  });
+
+  /*
+   * Posts point at their video through `videoId` in frontmatter; this is the
+   * return journey, which previously had no route at all.
+   */
+  it("shows no article link when there is no companion post", () => {
+    render(<VideoCard video={mockVideo} />);
+    expect(
+      screen.queryByRole("link", { name: /read the article/i })
+    ).toBeNull();
+  });
+
+  it("offers both destinations when there is a companion article", () => {
+    render(<VideoCard video={mockVideo} articleSlug="my-post" />);
+
+    expect(
+      screen.getByRole("link", { name: /watch on youtube/i })
+    ).toHaveAttribute("href", mockVideo.url);
+    expect(
+      screen.getByRole("link", { name: /read the article/i })
+    ).toHaveAttribute("href", "/blog/my-post");
+  });
+
+  it("keeps the decorative cover link out of the accessibility tree", () => {
+    // Without an article the thumbnail is a plain link to the video, which
+    // duplicates the title link. Exposing both would announce the same
+    // destination twice on every card.
+    render(<VideoCard video={mockVideo} />);
+
+    expect(screen.getAllByRole("link")).toHaveLength(1);
+  });
+
+  it("never nests one link inside another", () => {
+    // Two destinations on one thumbnail is precisely the situation that tempts
+    // an anchor inside an anchor.
+    const { container } = render(
+      <VideoCard video={mockVideo} articleSlug="my-post" />
+    );
+
+    for (const link of container.querySelectorAll("a")) {
+      expect(link.parentElement?.closest("a")).toBeNull();
+    }
+  });
+
+  it("links to the companion article when one exists", () => {
+    render(<VideoCard video={mockVideo} articleSlug="my-post" />);
+    expect(
+      screen.getByRole("link", { name: /read the article/i })
+    ).toHaveAttribute("href", "/blog/my-post");
+  });
+
+  it("keeps the article link outside the card's own anchor", () => {
+    // The whole card is an anchor to YouTube. An anchor inside an anchor is
+    // invalid HTML and ambiguous for keyboard and screen reader users.
+    const { container } = render(
+      <VideoCard video={mockVideo} articleSlug="my-post" />
+    );
+    const articleLink = container.querySelector('a[href="/blog/my-post"]');
+
+    expect(articleLink).not.toBeNull();
+    expect(articleLink?.parentElement?.closest("a")).toBeNull();
   });
 
   it("links to YouTube with external link attributes", () => {

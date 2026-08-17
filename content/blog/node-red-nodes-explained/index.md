@@ -17,7 +17,7 @@ status: "published"
 featured: true
 heroImage: "/images/blog/node-red-nodes-explained/hero.webp"
 thumbnail: "/images/blog/node-red-nodes-explained/thumbnail.webp"
-videoId: "rq9jzgeZ3G8"
+videoIds: ["rq9jzgeZ3G8", "mjCOosMBd84", "8cZrrImYKVY"]
 ---
 
 If you've been playing around with Node-RED, you've probably noticed there's a _lot_ of nodes in that palette. And if you're anything like me when I started, you felt pretty overwhelmed the moment you got dropped onto that scary blank canvas.

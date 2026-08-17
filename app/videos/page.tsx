@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getArticleSlugsByVideoId } from "@/lib/blog";
 import { pageMetadata, canonicalUrl } from "@/lib/seo";
 import {
   getVideoListSchema,
@@ -122,14 +122,7 @@ export default async function VideosPage() {
    * their video with `videoId` in frontmatter; nothing pointed the other way,
    * so a visitor browsing videos had no route to the written version.
    */
-  const postsResult = await getAllBlogPosts({ status: "published" });
-  const articleSlugByVideoId: Record<string, string> = {};
-  if (postsResult.success) {
-    for (const post of postsResult.data) {
-      const id = post.frontmatter.videoId;
-      if (id) articleSlugByVideoId[id] = post.slug;
-    }
-  }
+  const articleSlugByVideoId = await getArticleSlugsByVideoId();
 
   const videoListSchema = jsonLd(
     getVideoListSchema(

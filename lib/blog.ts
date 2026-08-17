@@ -18,8 +18,7 @@ import type { BlogPost, BlogPostMeta, BlogQueryOptions } from "@/types/blog";
 
 // Re-use ApiResult pattern from youtube.ts
 export type ApiResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };
+  { success: true; data: T } | { success: false; error: string };
 
 // Content directory
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
@@ -339,4 +338,29 @@ export async function getAdjacentPosts(
         currentIndex < posts.length - 1 ? posts[currentIndex + 1] : undefined,
     },
   };
+}
+
+/**
+ * Maps every video a post is the companion to, back to that post's slug.
+ *
+ * Posts declare their videos with `videoIds`, or the older single `videoId`.
+ * Both are explicit: a video links back to an article only because the article
+ * says so. Nothing here inspects video titles or guesses at relationships.
+ *
+ * Lives here rather than in each page so /videos and the homepage cannot drift
+ * apart on which videos count as linked.
+ */
+export async function getArticleSlugsByVideoId(): Promise<
+  Record<string, string>
+> {
+  const result = await getAllBlogPosts({ status: "published" });
+  if (!result.success) return {};
+
+  const index: Record<string, string> = {};
+  for (const post of result.data) {
+    const { videoIds, videoId } = post.frontmatter;
+    const ids = videoIds ?? (videoId ? [videoId] : []);
+    for (const id of ids) index[id] = post.slug;
+  }
+  return index;
 }

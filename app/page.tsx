@@ -7,7 +7,7 @@ import { ShopPreview } from "@/components/ShopPreview";
 import { TransparentVideo } from "@/components/TransparentVideo";
 import { getLatestVideos } from "@/lib/youtube";
 import { getProducts } from "@/lib/fourthwall";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getArticleSlugsByVideoId } from "@/lib/blog";
 import { showNewsletter } from "@/lib/feature-flags";
 import { pageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/site.config";
@@ -32,24 +32,13 @@ const labCoatClips = Array.from(
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [videosResult, productsResult, postsResult] = await Promise.all([
-    getLatestVideos(6),
-    getProducts(3),
-    getAllBlogPosts({ status: "published" }),
-  ]);
+  const [videosResult, productsResult, articleSlugByVideoId] =
+    await Promise.all([
+      getLatestVideos(6),
+      getProducts(3),
+      getArticleSlugsByVideoId(),
+    ]);
 
-  /*
-   * Same reverse index as /videos. The homepage shows the six most recent
-   * videos, which is exactly where a new companion article is most likely to
-   * be worth surfacing.
-   */
-  const articleSlugByVideoId: Record<string, string> = {};
-  if (postsResult.success) {
-    for (const post of postsResult.data) {
-      const id = post.frontmatter.videoId;
-      if (id) articleSlugByVideoId[id] = post.slug;
-    }
-  }
   const videos = videosResult.success ? videosResult.data : [];
   const featuredProducts = productsResult.success ? productsResult.data : [];
 

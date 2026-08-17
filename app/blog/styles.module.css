@@ -29,9 +29,14 @@
     border-color 0.2s,
     color 0.2s;
   cursor: pointer;
+  /* These became links to /blog/tag/[tag]; they were previously inert spans. */
+  display: inline-block;
+  text-decoration: none;
 }
 
-.tag:hover {
+/* Focus added alongside the existing hover, now that these are real links. */
+.tag:hover,
+.tag:focus-visible {
   border-color: color-mix(in srgb, var(--primary) 40%, transparent);
   color: white;
 }

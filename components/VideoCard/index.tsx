@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { YouTubeVideo } from "@/types/youtube";
 import { formatViewCount, formatDuration } from "@/lib/youtube";
 import styles from "./styles.module.css";
@@ -24,12 +25,21 @@ interface VideoCardProps {
    * the card, so the caller decides.
    */
   headingLevel?: 2 | 3;
+  /**
+   * Slug of the companion article, when one exists.
+   *
+   * Posts already link out to their video via `videoId` in frontmatter; this is
+   * the return journey, which had no route at all. Someone landing on the video
+   * list had no way of knowing a written version existed.
+   */
+  articleSlug?: string;
 }
 
 export function VideoCard({
   video,
   priority = false,
   headingLevel = 3,
+  articleSlug,
 }: VideoCardProps) {
   const Heading = `h${headingLevel}` as const;
   return (
@@ -65,6 +75,20 @@ export function VideoCard({
           </div>
         </div>
       </a>
+
+      {/*
+        Deliberately a sibling of the card link, not a child. The whole card is
+        an anchor to YouTube, and an anchor inside an anchor is invalid HTML —
+        browsers recover from it unpredictably and it is ambiguous to keyboard
+        and screen reader users either way.
+      */}
+      {articleSlug && (
+        <Link href={`/blog/${articleSlug}`} className={styles.articleLink}>
+          Read the article
+          <span aria-hidden="true"> →</span>
+          <span className="sr-only"> about {video.title}</span>
+        </Link>
+      )}
     </article>
   );
 }

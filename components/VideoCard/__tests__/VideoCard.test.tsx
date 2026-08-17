@@ -69,6 +69,36 @@ describe("VideoCard", () => {
     ).toBeInTheDocument();
   });
 
+  /*
+   * Posts point at their video through `videoId` in frontmatter; this is the
+   * return journey, which previously had no route at all.
+   */
+  it("shows no article link when there is no companion post", () => {
+    render(<VideoCard video={mockVideo} />);
+    expect(
+      screen.queryByRole("link", { name: /read the article/i })
+    ).toBeNull();
+  });
+
+  it("links to the companion article when one exists", () => {
+    render(<VideoCard video={mockVideo} articleSlug="my-post" />);
+    expect(
+      screen.getByRole("link", { name: /read the article/i })
+    ).toHaveAttribute("href", "/blog/my-post");
+  });
+
+  it("keeps the article link outside the card's own anchor", () => {
+    // The whole card is an anchor to YouTube. An anchor inside an anchor is
+    // invalid HTML and ambiguous for keyboard and screen reader users.
+    const { container } = render(
+      <VideoCard video={mockVideo} articleSlug="my-post" />
+    );
+    const articleLink = container.querySelector('a[href="/blog/my-post"]');
+
+    expect(articleLink).not.toBeNull();
+    expect(articleLink?.parentElement?.closest("a")).toBeNull();
+  });
+
   it("links to YouTube with external link attributes", () => {
     render(<VideoCard video={mockVideo} />);
     const link = screen.getByRole("link");

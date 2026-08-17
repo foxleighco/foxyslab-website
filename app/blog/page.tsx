@@ -117,9 +117,13 @@ async function TagCloud() {
   return (
     <div className={styles.tagList}>
       {result.data.map((tag) => (
-        <span key={tag} className={styles.tag}>
+        <Link
+          key={tag}
+          href={`/blog/tag/${encodeURIComponent(tag)}`}
+          className={styles.tag}
+        >
           {tag}
-        </span>
+        </Link>
       ))}
     </div>
   );

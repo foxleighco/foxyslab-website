@@ -15,6 +15,8 @@ interface VideoGalleryProps {
   playlists: PlaylistInfo[];
   playlistVideoMap: Record<string, string[]>;
   playlistSlugMap: Record<string, string>;
+  /** videoId -> blog slug, for videos that have a companion article. */
+  articleSlugByVideoId?: Record<string, string>;
 }
 
 export function VideoGallery({
@@ -22,6 +24,7 @@ export function VideoGallery({
   playlists,
   playlistVideoMap,
   playlistSlugMap,
+  articleSlugByVideoId = {},
 }: VideoGalleryProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -145,6 +148,7 @@ export function VideoGallery({
                 priority={index === 0}
                 /* Directly under the page h1 — no section heading between. */
                 headingLevel={2}
+                articleSlug={articleSlugByVideoId[video.id]}
               />
             ))}
           </div>

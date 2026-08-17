@@ -140,6 +140,8 @@ lib/
 - Metadata in layout.tsx with metadataBase
 - Open Graph and Twitter cards
 - JSON-LD structured data (Organization, WebSite)
+- **RSS feed** (`public/rss.xml`) — **generated at build time** by `scripts/generate-rss.mjs` (runs in `prebuild`). Do not edit by hand. Published blog posts are picked up automatically; drafts are excluded. Discovery is a plain `<link rel="alternate">` in the layout head, _not_ `alternates.types` in metadata — page metadata replaces the layout's `alternates` key rather than merging, so the feed declaration was silently dropped by every page that sets a canonical.
+- **Blog tags** link to `/blog/tag/[tag]`, generated from published frontmatter. Adding a tag to a post creates the page on the next build.
 - **Sitemap** (`public/sitemap.xml`) — **generated at build time** by `scripts/generate-sitemap.mjs` (runs in `prebuild`). Do not edit it by hand; it is overwritten on every build. Adding a route means adding it to `STATIC_ROUTES` in that script — content pages under `content/` and partners in `data/partners.json` are picked up automatically. `lastmod` comes from frontmatter dates, falling back to file mtime.
 - **Canonical URLs and Open Graph** come from `pageMetadata()` in `lib/seo.ts`. Use it for new pages rather than hand-rolling a `Metadata` object, so a route can't ship without a canonical.
 - Robots.txt (public/robots.txt)

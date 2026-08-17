@@ -69,3 +69,25 @@
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.7);
 }
+
+/*
+ * Sits below the card link rather than inside it — see the note in index.tsx
+ * about nested anchors. Styled as a quiet secondary action so it doesn't
+ * compete with the thumbnail for attention.
+ */
+.articleLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0 1rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--primary-text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.articleLink:hover,
+.articleLink:focus-visible {
+  color: #fff;
+}

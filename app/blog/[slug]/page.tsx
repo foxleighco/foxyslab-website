@@ -257,9 +257,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {frontmatter.tags.length > 0 && (
               <div className={styles.postTags}>
                 {frontmatter.tags.map((tag) => (
-                  <span key={tag} className={styles.postTag}>
+                  <Link
+                    key={tag}
+                    href={`/blog/tag/${encodeURIComponent(tag)}`}
+                    className={styles.postTag}
+                  >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

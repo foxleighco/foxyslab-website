@@ -17,8 +17,26 @@ const mockPlaylist2 = {
   itemCount: 8,
 };
 
+/*
+ * The filter was a row of toggle pills and is now a select, so these assert
+ * option semantics rather than `aria-pressed` buttons. The behaviour under test
+ * is unchanged: choosing a playlist reports its slug, choosing the default
+ * reports null.
+ */
 describe("PlaylistFilter", () => {
-  it("renders 'All Videos' pill plus playlist pills", () => {
+  it("is a labelled control", () => {
+    render(
+      <PlaylistFilter
+        playlists={[mockPlaylist]}
+        activeSlug={null}
+        onSelect={vi.fn()}
+      />
+    );
+
+    expect(screen.getByLabelText("Playlist")).toBeInTheDocument();
+  });
+
+  it("offers every playlist plus a default", () => {
     render(
       <PlaylistFilter
         playlists={[mockPlaylist, mockPlaylist2]}
@@ -28,21 +46,21 @@ describe("PlaylistFilter", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "All Videos" })
+      screen.getByRole("option", { name: "All videos" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", {
+      screen.getByRole("option", {
         name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
       })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", {
+      screen.getByRole("option", {
         name: `${mockPlaylist2.title} (${mockPlaylist2.itemCount})`,
       })
     ).toBeInTheDocument();
   });
 
-  it("'All Videos' is pressed when no playlist is selected", () => {
+  it("shows all videos by default", () => {
     render(
       <PlaylistFilter
         playlists={[mockPlaylist]}
@@ -51,13 +69,10 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "All Videos" })).toHaveAttribute(
-      "aria-pressed",
-      "true"
-    );
+    expect(screen.getByLabelText("Playlist")).toHaveValue("");
   });
 
-  it("shows playlist as pressed when activeSlug matches", () => {
+  it("reflects the active playlist", () => {
     render(
       <PlaylistFilter
         playlists={[mockPlaylist]}
@@ -66,18 +81,10 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    expect(
-      screen.getByRole("button", {
-        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
-      })
-    ).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "All Videos" })).toHaveAttribute(
-      "aria-pressed",
-      "false"
-    );
+    expect(screen.getByLabelText("Playlist")).toHaveValue(mockPlaylist.slug);
   });
 
-  it("calls onSelect with slug when a playlist pill is clicked", async () => {
+  it("reports the slug when a playlist is chosen", async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
 
@@ -89,16 +96,14 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    await user.click(
-      screen.getByRole("button", {
-        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
-      })
-    );
+    await user.selectOptions(screen.getByLabelText("Playlist"), [
+      mockPlaylist.slug,
+    ]);
 
     expect(onSelect).toHaveBeenCalledWith(mockPlaylist.slug);
   });
 
-  it("calls onSelect with null when 'All Videos' is clicked", async () => {
+  it("reports null when the default is chosen", async () => {
     const onSelect = vi.fn();
     const user = userEvent.setup();
 
@@ -110,12 +115,13 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    await user.click(screen.getByRole("button", { name: "All Videos" }));
+    await user.selectOptions(screen.getByLabelText("Playlist"), [""]);
 
+    // Empty string is the option's value; the caller wants an explicit null.
     expect(onSelect).toHaveBeenCalledWith(null);
   });
 
-  it("displays item count for each playlist", () => {
+  it("shows the video count alongside each playlist", () => {
     render(
       <PlaylistFilter
         playlists={[mockPlaylist]}
@@ -124,17 +130,21 @@ describe("PlaylistFilter", () => {
       />
     );
 
-    expect(screen.getByText(`(${mockPlaylist.itemCount})`)).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", {
+        name: `${mockPlaylist.title} (${mockPlaylist.itemCount})`,
+      })
+    ).toBeInTheDocument();
   });
 
-  it("renders empty state with just 'All Videos'", () => {
+  it("still offers the default when there are no playlists", () => {
     render(
       <PlaylistFilter playlists={[]} activeSlug={null} onSelect={vi.fn()} />
     );
 
-    expect(screen.getAllByRole("button")).toHaveLength(1);
+    expect(screen.getAllByRole("option")).toHaveLength(1);
     expect(
-      screen.getByRole("button", { name: "All Videos" })
+      screen.getByRole("option", { name: "All videos" })
     ).toBeInTheDocument();
   });
 });

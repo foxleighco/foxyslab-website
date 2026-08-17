@@ -79,6 +79,7 @@ describe("VideoGallery", () => {
   });
 
   it("calls router.push with slug when playlist is selected", async () => {
+    const user = userEvent.setup();
     const mockPush = vi.fn();
     vi.mocked(useRouter).mockReturnValue({
       push: mockPush,
@@ -89,14 +90,10 @@ describe("VideoGallery", () => {
       prefetch: vi.fn(),
     });
 
-    const user = userEvent.setup();
     render(<VideoGallery {...defaultProps} />);
 
-    await user.click(
-      screen.getByRole("button", {
-        name: "Tutorials (2)",
-      })
-    );
+    // The filter is a select now rather than a row of toggle pills.
+    await user.selectOptions(screen.getByLabelText("Playlist"), ["tutorials"]);
 
     expect(mockPush).toHaveBeenCalledWith("/videos?playlist=tutorials", {
       scroll: false,

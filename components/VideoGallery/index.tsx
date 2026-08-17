@@ -185,6 +185,14 @@ export function VideoGallery({
             )}
           </div>
 
+          {playlists.length > 0 && (
+            <PlaylistFilter
+              playlists={playlists}
+              activeSlug={activeSlug}
+              onSelect={handlePlaylistSelect}
+            />
+          )}
+
           {/*
             Announced politely so screen reader users hear the list change as
             they type, rather than only discovering it by exploring the grid.
@@ -195,14 +203,6 @@ export function VideoGallery({
             {query || activePlaylist ? ` of ${videos.length}` : ""}
           </p>
         </div>
-
-        {playlists.length > 0 && (
-          <PlaylistFilter
-            playlists={playlists}
-            activeSlug={activeSlug}
-            onSelect={handlePlaylistSelect}
-          />
-        )}
       </div>
 
       {paginatedVideos.length === 0 ? (

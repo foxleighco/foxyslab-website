@@ -85,7 +85,9 @@ export function VideoCard({
       {articleSlug && (
         <Link href={`/blog/${articleSlug}`} className={styles.articleLink}>
           Read the article
-          <span aria-hidden="true"> →</span>
+          <span aria-hidden="true" className={styles.articleArrow}>
+            →
+          </span>
           <span className="sr-only"> about {video.title}</span>
         </Link>
       )}

@@ -1,11 +1,21 @@
+/*
+ * A column so the companion-article link can be pinned to the bottom edge.
+ * Grid rows stretch cards to equal height, so pinning makes every link in a
+ * row line up — otherwise it floats directly under the meta row and sits at a
+ * different height depending on whether the title wrapped to two lines.
+ */
 .card {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .link {
   display: block;
   text-decoration: none;
   color: inherit;
+  /* Takes the slack so the article link below is pushed to the card's base. */
+  flex: 1;
 }
 
 .thumbnail {
@@ -71,23 +81,49 @@
 }
 
 /*
- * Sits below the card link rather than inside it — see the note in index.tsx
- * about nested anchors. Styled as a quiet secondary action so it doesn't
- * compete with the thumbnail for attention.
+ * Companion-article link.
+ *
+ * A sibling of the card anchor rather than a child — see the note in index.tsx
+ * about nested anchors — so it needs to look attached rather than like loose
+ * text that happens to follow the card. The hairline does that, and matching
+ * the card's flush left edge stops it reading as an indented afterthought.
  */
 .articleLink {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
-  margin: 0 1rem 1rem;
+  gap: 0.375rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--primary-text);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.18s ease;
 }
 
 .articleLink:hover,
 .articleLink:focus-visible {
   color: #fff;
+}
+
+/* Nudges toward the article on hover, echoing the footer's link idiom. */
+.articleArrow {
+  transition: transform 0.18s ease;
+}
+
+.articleLink:hover .articleArrow,
+.articleLink:focus-visible .articleArrow {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .articleArrow {
+    transition: none;
+  }
+
+  .articleLink:hover .articleArrow,
+  .articleLink:focus-visible .articleArrow {
+    transform: none;
+  }
 }

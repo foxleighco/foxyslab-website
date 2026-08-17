@@ -1,21 +1,11 @@
-/*
- * A column so the companion-article link can be pinned to the bottom edge.
- * Grid rows stretch cards to equal height, so pinning makes every link in a
- * row line up — otherwise it floats directly under the meta row and sits at a
- * different height depending on whether the title wrapped to two lines.
- */
 .card {
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .link {
   display: block;
   text-decoration: none;
   color: inherit;
-  /* Takes the slack so the article link below is pushed to the card's base. */
-  flex: 1;
 }
 
 .thumbnail {
@@ -80,50 +70,125 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+@media (prefers-reduced-motion: reduce) {
+}
+
 /*
- * Companion-article link.
- *
- * A sibling of the card anchor rather than a child — see the note in index.tsx
- * about nested anchors — so it needs to look attached rather than like loose
- * text that happens to follow the card. The hairline does that, and matching
- * the card's flush left edge stops it reading as an indented afterthought.
+ * Full-bleed link over the thumbnail, for videos with no companion article.
+ * Mouse convenience only — see the note in index.tsx about why it is hidden
+ * from the accessibility tree.
  */
-.articleLink {
+.cover {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * Overlay actions, shown when a video has a companion article.
+ *
+ * Two destinations mean the thumbnail cannot be one link, so this replaces the
+ * cover entirely rather than sitting on top of it. Revealed on hover *and*
+ * focus-within: hover alone would strand keyboard users, who would otherwise
+ * be tabbing to controls they cannot see.
+ */
+.actions {
+  position: absolute;
+  inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.375rem;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--secondary) 82%, transparent);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.thumbnail:hover .actions,
+.actions:focus-within {
+  opacity: 1;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
   font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--primary-text);
+  font-weight: 700;
   text-decoration: none;
-  transition: color 0.18s ease;
-}
-
-.articleLink:hover,
-.articleLink:focus-visible {
+  white-space: nowrap;
   color: #fff;
+  background: var(--primary);
+  border: 1px solid transparent;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
 }
 
-/* Nudges toward the article on hover, echoing the footer's link idiom. */
-.articleArrow {
-  transition: transform 0.18s ease;
+.action:hover {
+  background: color-mix(in srgb, var(--primary) 82%, #fff);
 }
 
-.articleLink:hover .articleArrow,
-.articleLink:focus-visible .articleArrow {
-  transform: translateX(3px);
+.actionSecondary {
+  background: transparent;
+  border-color: color-mix(in srgb, #fff 55%, transparent);
+}
+
+.actionSecondary:hover {
+  background: color-mix(in srgb, #fff 14%, transparent);
+  border-color: #fff;
+}
+
+/*
+ * Touch devices have no hover, so an overlay that only appears on hover would
+ * never appear at all. Rather than covering the image permanently, the actions
+ * become a bar along the bottom of the thumbnail.
+ */
+@media (hover: none) {
+  .actions {
+    inset: auto 0 0 0;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.375rem;
+    padding: 0.5rem;
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85),
+      rgba(0, 0, 0, 0.55) 60%,
+      transparent
+    );
+  }
+
+  .action {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  /* The duration badge shares that corner, so move it clear of the bar. */
+  .thumbnail:has(.actions) .duration {
+    bottom: auto;
+    top: 0.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .articleArrow {
+  .actions,
+  .action {
     transition: none;
   }
+}
 
-  .articleLink:hover .articleArrow,
-  .articleLink:focus-visible .articleArrow {
-    transform: none;
-  }
+/* The title carries the video link now that the whole card is not an anchor. */
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.titleLink:hover {
+  color: var(--primary-text);
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { PlaylistInfo } from "@/types/youtube";
 import styles from "./styles.module.css";
 
@@ -9,54 +10,61 @@ interface PlaylistFilterProps {
   onSelect: (slug: string | null) => void;
 }
 
+/**
+ * Playlist filter.
+ *
+ * A native select rather than a row of pills. Ten playlists with names of very
+ * uneven length made a ragged block that dominated the page above the grid, and
+ * every playlist added made it worse — a control that grows with the content it
+ * filters is the wrong shape here.
+ *
+ * Native rather than a custom dropdown on purpose: it is keyboard accessible
+ * with no focus management of ours, and gets the platform picker on mobile,
+ * which beats anything worth hand-rolling for this. Only the closed state is
+ * styleable, which is a fair trade.
+ *
+ * The counts stay in the option text, so the accessible name matches what is
+ * shown — the WCAG 2.5.3 problem the old pills had, avoided by construction
+ * this time rather than by removing an aria-label.
+ */
 export function PlaylistFilter({
   playlists,
   activeSlug,
   onSelect,
 }: PlaylistFilterProps) {
+  const selectId = useId();
+
   return (
-    <div
-      className={styles.wrapper}
-      role="navigation"
-      aria-label="Filter videos by playlist"
-    >
-      <div className={styles.pills}>
-        {/*
-          No aria-label on these buttons. An accessible name that doesn't
-          contain the visible text breaks WCAG 2.5.3 (Label in Name): someone
-          using voice control says what they can see — "click Uncontrolled
-          Conditions" — and nothing matches if the name is "Filter by
-          Uncontrolled Conditions, 4 videos".
+    <div className={styles.wrapper}>
+      <label htmlFor={selectId} className={styles.label}>
+        Playlist
+      </label>
 
-          The count stays part of the name rather than aria-hidden, so the
-          name and the visible text are the same string. The "filter" framing
-          is carried by the navigation landmark wrapping these, which is where
-          that context belongs anyway.
-        */}
-        <button
-          onClick={() => onSelect(null)}
-          aria-pressed={!activeSlug}
-          className={`${styles.pill} ${!activeSlug ? styles.pillActive : styles.pillInactive}`}
+      <div className={styles.field}>
+        <select
+          id={selectId}
+          value={activeSlug ?? ""}
+          onChange={(event) => onSelect(event.target.value || null)}
+          className={styles.select}
         >
-          All Videos
-        </button>
-        {playlists.map((playlist) => {
-          const isActive = activeSlug === playlist.slug;
+          <option value="">All videos</option>
+          {playlists.map((playlist) => (
+            <option key={playlist.id} value={playlist.slug}>
+              {playlist.title} ({playlist.itemCount})
+            </option>
+          ))}
+        </select>
 
-          return (
-            <button
-              key={playlist.id}
-              onClick={() => onSelect(playlist.slug)}
-              aria-pressed={isActive}
-              className={`${styles.pill} ${isActive ? styles.pillActive : styles.pillInactive}`}
-            >
-              {/* Explicit space: without it the accessible name runs together
-                  as "Title(12)", since the gap is only CSS margin. */}
-              {playlist.title}{" "}
-              <span className={styles.count}>({playlist.itemCount})</span>
-            </button>
-          );
-        })}
+        <svg
+          className={styles.chevron}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
     </div>
   );

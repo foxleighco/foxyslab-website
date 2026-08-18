@@ -142,10 +142,21 @@ export function VideoGallery({
     <>
       <PageHeader
         title={activePlaylist ? activePlaylist.title : "All Videos"}
+        /*
+         * The count is whatever survived both filters, so calling it the
+         * playlist total is wrong the moment someone types. Say which filter
+         * produced the number rather than asserting the wrong one.
+         */
         subtitle={
-          activePlaylist
-            ? `${filteredVideos.length} videos in this playlist`
-            : "Browse through our complete collection of tutorials and guides"
+          query
+            ? `${filteredVideos.length} ${
+                filteredVideos.length === 1 ? "video matches" : "videos match"
+              } "${query}"${activePlaylist ? " in this playlist" : ""}`
+            : activePlaylist
+              ? `${filteredVideos.length} ${
+                  filteredVideos.length === 1 ? "video" : "videos"
+                } in this playlist`
+              : "Browse through our complete collection of tutorials and guides"
         }
       />
 
@@ -174,7 +185,9 @@ export function VideoGallery({
               placeholder={`Search ${playlistVideos.length} ${
                 playlistVideos.length === 1 ? "video" : "videos"
               }`}
-              className={styles.searchInput}
+              className={`${styles.searchInput} ${
+                query ? styles.searchInputClearable : ""
+              }`}
             />
             {query && (
               <button
@@ -189,8 +202,15 @@ export function VideoGallery({
 
           {playlists.length > 0 && (
             <PlaylistFilter
+              /*
+               * Normalised: the raw param is whatever is in the URL, and an
+               * unknown slug leaves a controlled select with no matching
+               * option — blank, while the grid shows everything. The gallery
+               * already treats an unknown slug as "no filter"; this makes the
+               * control agree with it.
+               */
+              activeSlug={activePlaylistId ? activeSlug : null}
               playlists={playlists}
-              activeSlug={activeSlug}
               onSelect={handlePlaylistSelect}
             />
           )}
@@ -225,7 +245,25 @@ export function VideoGallery({
               />
             </svg>
           </div>
-          <p className={styles.emptyText}>No videos in this playlist yet</p>
+          {/*
+            An empty grid now has two causes. Telling someone their search
+            found nothing is useful; telling them the playlist is empty when
+            it is not just sends them looking for a fault that isn't there.
+          */}
+          <p className={styles.emptyText}>
+            {query
+              ? `No videos match "${query}"`
+              : "No videos in this playlist yet"}
+          </p>
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              className={styles.emptyAction}
+            >
+              Clear search
+            </button>
+          )}
         </div>
       ) : (
         <>

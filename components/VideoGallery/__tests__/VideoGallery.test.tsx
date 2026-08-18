@@ -176,6 +176,60 @@ describe("VideoGallery", () => {
       expect(screen.getByRole("status")).toHaveTextContent("1 video of 2");
     });
 
+    it("does not call a query-filtered count the playlist total", async () => {
+      // "N videos in this playlist" stops being true the moment someone types.
+      const user = userEvent.setup();
+      vi.mocked(useSearchParams).mockReturnValue(
+        new URLSearchParams("playlist=tutorials") as never
+      );
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "lighting");
+
+      expect(screen.queryByText(/videos in this playlist/i)).toBeNull();
+      expect(screen.getByText(/matches "lighting"/i)).toBeInTheDocument();
+    });
+
+    it("says the search found nothing, not that the playlist is empty", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "qqqzzz");
+
+      expect(screen.getByText(/no videos match "qqqzzz"/i)).toBeInTheDocument();
+      expect(screen.queryByText(/no videos in this playlist/i)).toBeNull();
+    });
+
+    it("offers a way out of a search that found nothing", async () => {
+      const user = userEvent.setup();
+      render(<VideoGallery {...defaultProps} />);
+
+      await user.type(screen.getByRole("searchbox"), "qqqzzz");
+
+      // Two controls legitimately clear the search — the one in the field and
+      // the one offered alongside the no-results message. This is the latter.
+      const [, emptyStateClear] = screen.getAllByRole("button", {
+        name: /clear search/i,
+      });
+      await user.click(emptyStateClear);
+
+      expect(screen.getByRole("searchbox")).toHaveValue("");
+      expect(
+        screen.getByText("Getting Started with Home Assistant")
+      ).toBeInTheDocument();
+    });
+
+    it("leaves the playlist control unset for an unknown slug", () => {
+      // The grid falls back to showing everything; the control should agree
+      // rather than sitting blank with no option matching.
+      vi.mocked(useSearchParams).mockReturnValue(
+        new URLSearchParams("playlist=does-not-exist") as never
+      );
+      render(<VideoGallery {...defaultProps} />);
+
+      expect(screen.getByLabelText("Playlist")).toHaveValue("");
+    });
+
     it("narrows the list as you type", async () => {
       const user = userEvent.setup();
       render(<VideoGallery {...defaultProps} />);

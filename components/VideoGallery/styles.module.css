@@ -215,3 +215,39 @@
     transition: none;
   }
 }
+
+/*
+ * Extra right padding only while the Clear button is rendered. The button is
+ * absolutely positioned inside the field, so without this a long query runs
+ * underneath it.
+ */
+.searchInputClearable {
+  padding-right: 4.5rem;
+}
+
+.emptyAction {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, transparent);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--primary-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.emptyAction:hover {
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emptyAction {
+    transition: none;
+  }
+}

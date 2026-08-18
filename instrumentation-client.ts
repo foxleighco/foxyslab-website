@@ -42,13 +42,21 @@ Sentry.init({
  *
  * Failure to load is deliberately non-fatal: no replay is an acceptable
  * outcome, breaking the page over it is not.
+ *
+ * Guarded on the DSN. Without one Sentry cannot report anything, so fetching
+ * the replay bundle buys nothing and costs a request to an external origin on
+ * every page load. That was happening in CI, where no DSN is set: the hanging
+ * request meant pages never reached network idle, and the E2E suite went from
+ * seconds to eighteen minutes with nine timeouts.
  */
-void Sentry.lazyLoadIntegration("replayIntegration")
-  .then((replayIntegration) => {
-    Sentry.addIntegration(replayIntegration());
-  })
-  .catch(() => {
-    // CDN unreachable or blocked. Errors and traces still report normally.
-  });
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  void Sentry.lazyLoadIntegration("replayIntegration")
+    .then((replayIntegration) => {
+      Sentry.addIntegration(replayIntegration());
+    })
+    .catch(() => {
+      // CDN unreachable or blocked. Errors and traces still report normally.
+    });
+}
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

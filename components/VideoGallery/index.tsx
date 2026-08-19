@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useId } from "react";
 import { YouTubeVideo, PlaylistInfo } from "@/types/youtube";
 import { VideoCard } from "@/components/VideoCard";
-import { PlaylistFilter } from "@/components/PlaylistFilter";
+import { PlaylistFilter } from "@/components/data-input/PlaylistFilter";
 import { PageHeader } from "@/components/PageHeader";
 import styles from "./styles.module.css";
 

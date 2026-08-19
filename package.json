@@ -18,7 +18,10 @@
     "test:lighthouse": "lhci autorun",
     "test:all": "vitest run && playwright test",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs": "node scripts/generate-sb-docs.mjs",
+    "storybook": "npm run docs && storybook dev -p 6006",
+    "build-storybook": "npm run docs && storybook build"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -52,6 +55,9 @@
     "@axe-core/playwright": "^4.11.1",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.58.2",
+    "@storybook/addon-a11y": "^10.5.9",
+    "@storybook/addon-docs": "^10.5.9",
+    "@storybook/nextjs-vite": "^10.5.9",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -70,7 +76,9 @@
     "postcss": "^8",
     "prettier": "^3.8.1",
     "schema-dts": "^1.1.5",
+    "storybook": "^10.5.9",
     "typescript": "^5",
+    "vite": "^8.2.1",
     "vitest": "^4.0.18"
   }
 }

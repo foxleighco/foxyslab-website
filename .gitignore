@@ -49,3 +49,7 @@ public/images/blog/
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Storybook docs are generated from /docs — see ADR 008 and scripts/generate-sb-docs.mjs
+.storybook/.docs
+storybook-static

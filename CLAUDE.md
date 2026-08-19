@@ -164,6 +164,13 @@ Currently using mock data in `lib/youtube.ts`. To integrate with YouTube Data AP
 3. Replace mock data functions in `lib/youtube.ts` with API calls
 4. Update channel ID constant
 
+## Documentation and Decisions
+
+- **ADRs** live in `docs/architectural-decisions/`. Record significant or counter-intuitive decisions there, including the consequences you would rather not admit to. Supersede rather than rewrite.
+- **Docs** are plain markdown in `/docs` — the single source of truth. `npm run docs` mirrors them into Storybook as MDX; the generated `.storybook/.docs` is gitignored.
+- **Storybook** (`npm run storybook`) documents components and runs axe against individual states. Vitest and Testing Library remain the behavioural tests — see [ADR 010](docs/architectural-decisions/adr-010-storybook.md).
+- Components are moving into functional category folders (`components/<category>/<ComponentName>/`) as they gain stories — see [ADR 011](docs/architectural-decisions/adr-011-component-organisation.md). Not all have moved yet.
+
 ## Important Patterns
 
 ### Component Split

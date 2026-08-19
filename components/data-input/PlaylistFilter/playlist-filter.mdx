@@ -1,0 +1,60 @@
+import { Meta, Story, Canvas, Controls } from "@storybook/addon-docs/blocks";
+import * as Stories from "./playlist-filter.stories";
+
+<Meta of={Stories} />
+
+# PlaylistFilter
+
+Filters the video list on `/videos` by playlist. Reports the chosen slug to its
+parent; it holds no state of its own, so the URL stays the source of truth and a
+filtered view is shareable.
+
+<Canvas of={Stories.Default} />
+<Controls />
+
+## Why a select
+
+It was a row of toggle pills. With ten playlists of very uneven name lengths
+those wrapped into a ragged two-row block that took roughly 100px above the
+grid, and every playlist added made it worse. A control that grows with the
+content it filters is the wrong shape.
+
+A native select is a fixed size whatever the number of playlists, and it is
+keyboard accessible without any focus management of ours — a custom dropdown
+would need arrow keys, escape handling, focus trapping and `aria-activedescendant`
+to reach the same place. On a phone it gets the platform picker.
+
+The trade is that only the closed state is styleable. The open list is drawn by
+the operating system and will not match the site palette.
+
+## Long names
+
+<Canvas of={Stories.LongPlaylistName} />
+
+A select sizes itself to its longest option. "Every single core Node-RED Node
+explained" is wider than a phone, and the control ran off the side of the
+viewport rather than truncating.
+
+The fix is `min-width: 0` on the flex parent — without it a flex item refuses to
+shrink below its content width. It looks removable and is not.
+
+## Accessibility
+
+The video counts are part of the option text rather than an `aria-label`. That
+keeps the accessible name identical to the visible text, which is what
+[WCAG 2.5.3 Label in Name](https://www.w3.org/WAI/WCAG21/Understanding/label-in-name.html)
+requires — someone using voice control says what they can see.
+
+The previous pills failed this: their visible text read "Uncontrolled Conditions
+(4)" while their accessible name was "Filter by Uncontrolled Conditions, 4
+videos", so saying what was on screen matched nothing. Building the counts into
+the option text avoids the problem by construction rather than by removing an
+attribute.
+
+## Empty state
+
+<Canvas of={Stories.NoPlaylists} />
+
+With no playlists the default option remains, so the control is never empty. In
+practice `VideoGallery` does not render the filter at all in that case, but the
+component does not depend on that.
